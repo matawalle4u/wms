@@ -1,0 +1,10 @@
+ <?php
+
+    /*
+        Authentication
+        Access Rights
+    */
+
+    
+
+?>
