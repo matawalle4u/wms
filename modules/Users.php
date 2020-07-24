@@ -6,9 +6,6 @@
 
     abstract class Users extends Auth implements NormalUsers {
 
-        
-        
-
         public function get_notification($id, $type){
 
         }
@@ -19,10 +16,11 @@
     # No any other class can inherit from this class
     final class Admin extends SuperAuth implements SuperUsers {
 
-        //public function create_user(){}
         public function assign_previleges($assignee, $user, array $actions, array $menus){
-            $flag = false;
+
+            //TODO Check user status wether active or inactive
             $admin_prevs = $this->get_previleges($assignee);
+            $flag = false;
 
             if(in_array(__FUNCTION__, $admin_prevs) ){
 
@@ -43,8 +41,10 @@
 
         //Revoking user Privelge
         public function revoke_previlege($revoker, $user, $prev_name){
-            $flag = false;
+            //TODO Check user status wether active or inactive
+            
             $user_privs = $this->get_previleges($user);
+            $flag = false;
            
 
             if(in_array(__FUNCTION__, $this->get_previleges($revoker)) && in_array($prev_name, $user_privs) ){
@@ -81,7 +81,11 @@
     class WareHouseManager extends Users implements WareHouseAdmin {
        
         //Only Implemented by Admin
-        private function add_ware_house_stafff(){ }
+        public function add_staff(){
+
+            $r = $this->get('users', ['name'], ['phone'], ["'2349028163380'"], 'single');
+            print_r($r);
+        }
         private function validate_contract(){}
         private function pay_staffs(){}
         private function make_sales_management(){ }//Organize sales put and validate Task on sales agents}
@@ -180,8 +184,21 @@
 
     
 
-    $a = new Admin("users", "phone", "crm");
+    $dri = new Driver("users", "phone", "crm");
+    $lo = $dri->login("2349028163380", "a");
+    if($lo){
+        echo 1;
+    }
+
+    //$a = new Admin("users", "phone", "crm");
    
     //$a->update_previlege(1, 3, "added_new");
+    //$dri = new Driver("users", "phone", "crm");
+    //$lo = $dri->login("2349028163380", "a");
+   
+
+    //$wman = new WareHouseManager("users", "phone", "crm");
+    //$wman->add_staff();
+
     
 ?>

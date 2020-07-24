@@ -76,6 +76,7 @@
 
 
         public function get($table, array $columns, array $conditions, array $values, $limit){
+            
             $all_ent = array();
             $cols = implode(',', $columns);
             $cond =$this->gen_conds($conditions, $values);
@@ -143,7 +144,11 @@
         
         
     }
+
 $d = new Dele();
+
+$r = $d->get('users', ['name'], ['phone'], ["'2349028163380'"], 'single');
+print_r($r);
 /*
 $dbs = array("", "", "", "", "");
 $delet = $d->create_or_del('DROP', 'adam');

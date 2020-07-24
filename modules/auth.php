@@ -38,7 +38,7 @@
 
         public function authenticate($user, $password){
             $auth_flag = false;
-            $result = $this->get($this->__auth_table, [$this->__auth_column], [$this->__auth_column, 'password'],[$user, $password], 'single');
+            $result = $this->get($this->__auth_table, [$this->__auth_column], [$this->__auth_column, 'password','status'],[$user, $password, '1'], 'single');
             if($result){
                 $auth_flag = true;
             }
