@@ -17,28 +17,16 @@
 --   UNIQUE KEY (`staff_code`)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `staffs_rotation` (
-  `rotation_id` int(11) NOT NULL AUTO_INCREMENT,
-  `staff` int(65) NOT NULL,
-  `days` TEXT NOT NULL,
-  `hours` TEXT NOT NULL,
-  ``
-  UNIQUE KEY `staff_code`,
-  FOREIGN KEY `staff` REFERENCES `staffs`(`staff_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `staffs_rotation` (
+--   `rotation_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `staff` int(11) NOT NULL,
+--   `days_hours` TEXT NOT NULL,
+--   PRIMARY KEY (`rotation_id`),
+--   UNIQUE KEY (`staff`),
+--   FOREIGN KEY (`staff`) REFERENCES `staffs`(`staff_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
-
-CREATE TABLE `staffs_rotation` (
-  `rotation_id` int(11) NOT NULL AUTO_INCREMENT,
-  `staff` int(65) NOT NULL,
-  `days` TEXT NOT NULL,
-  `hours` TEXT NOT NULL,
-  ``
-  UNIQUE KEY (`staff_code`),
-  FOREIGN KEY (`staff`) REFERENCES `staffs`(`staff_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+--days = {Monday:"12-11", Tues:"12-3"}
 
 -- CREATE TABLE `attendance` (
 --   `attendance_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -55,6 +43,7 @@ CREATE TABLE `staffs_rotation` (
 CREATE TABLE `attend_config` (
   `atten_config_id` int(11) NOT NULL AUTO_INCREMENT,
   `attendance` varchar(65) NOT NULL,
+  ``
   FOREIGN KEY (`attendance`) REFERENCES `attendance`(`staff_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -82,17 +71,17 @@ CREATE TABLE `attend_config` (
 --   FOREIGN KEY (`staff`) REFERENCES `staffs`(`staff_id`) ON DELETE CASCADE
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `equipments_records` (
-  `record_id` int(11) NOT NULL AUTO_INCREMENT,
-  `staff` int(65) NOT NULL,
-  `duration` TEXT NOT NULL,
-  `status` int(3) NOT NULL,
-  `description` TEXT NOT NULL,
-  `item_code` int(11) NOT NULL,
-   PRIMARY KEY (`record_id`),
-  UNIQUE KEY (`staff_code`),
-  FOREIGN KEY `staff` REFERENCES `staffs`(`staff_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `equipments_records` (
+--   `record_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `staff` int(11) NOT NULL,
+--   `duration` TEXT NOT NULL,
+--   `status` int(3) NOT NULL,
+--   `description` TEXT NOT NULL,
+--   `item_code` int(11) NOT NULL,
+--   `doc_src` varchar(65),
+--    PRIMARY KEY (`record_id`),
+--   FOREIGN KEY `staff` REFERENCES `staffs`(`staff_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- CREATE TABLE `users`(
 --   `user_id` int(11) NOT NULL AUTO_INCREMENT,

@@ -14,25 +14,26 @@ CREATE TABLE `reception` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE `warehouses`(
-  `warehouse_id` int(11) NOT NULL,
-  `name` varchar(65) NOT NULL,
-  `delivery_zone` varchar(65) NOT NULL,
-  `reception_zone` varchar(65) NOT NULL,
-  `damage_zone` varchar(65) NOT NULL,
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `warehouses`(
+--   `warehouse_id` int(11) NOT NULL,
+--   `name` varchar(65) NOT NULL,
+--   `delivery_zone` varchar(65) NOT NULL,
+--   `reception_zone` varchar(65) NOT NULL,
+--   `damage_zone` varchar(65) NOT NULL,
+--   PRIMARY KEY (`order_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE  `racks`(
-  `rack_id` int(11) NOT NULL AUTO_INCREMENT,
-  `warehouse` int(11) NOT NULL,
-  `location` int(11),
-  `row` int(11) NOT NULL,
-  `column` int(11) NOT NULL,
-  `position` varchar(65) NOT NULL,
-   PRIMARY KEY (`rack_id`),
-  FOREIGN KEY (`warehoue`) REFERENCES `warehouses`(`warehouse_id`),
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE  `racks`(
+--   `rack_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `warehouse` int(11) NOT NULL,
+--   `location` int(11),
+--   `row` int(11) NOT NULL,
+--   `column` int(11) NOT NULL,
+--   `position` varchar(65) NOT NULL,
+--    PRIMARY KEY (`rack_id`),
+--   FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `orders`(
   `order_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -43,7 +44,7 @@ CREATE TABLE `orders`(
   `status` varchar(65) NOT NULL,
   `order_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
   `arrived_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  PRIMARY KEY `order_id`,
+  PRIMARY KEY (`order_id`),
   FOREIGN KEY (`product`) REFERENCES `products`(`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

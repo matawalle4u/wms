@@ -6,20 +6,20 @@ CREATE TABLE `products` (
   `product_code` varchar(65) NOT NULL,
   `img_src` varchar(65) NOT NULL,
   `supplier` varchar(65),
-  `expire_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+  `expiry_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
   `rack` int(11) NOT NULL,
    PRIMARY KEY (`product_id`),
-   FOREIGN KEY (`supplier`) REFERENCES `partner`(`partner_code`)
-   FOREIGN KEY (`rack`) REFERENCES `racks` (`rack_id`)
+   FOREIGN KEY (`supplier`) REFERENCES `partner`(`partner_code`) ON DELETE CASCADE,
+   FOREIGN KEY (`rack`) REFERENCES `racks` (`rack_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `products_settings` (
+CREATE TABLE `product_config` (
   `setting_id` int(11) NOT NULL AUTO_INCREMENT,
   `product` varchar(65) NOT NULL,
   `unit_measure` varchar(65) NOT NULL,
   `unit_restr` varchar(65) NOT NULL,
    PRIMARY KEY (`product_id`),
-   FOREIGN KEY (`product`) REFERENCES `products`(`product_id`)
+   FOREIGN KEY (`product`) REFERENCES `products`(`product_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `stocks` (
@@ -31,9 +31,18 @@ CREATE TABLE `stocks` (
    FOREIGN KEY (`rack`) REFERENCES `racks` (`rack_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `supplier` (
+  `setting_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product` varchar(65) NOT NULL,
+  `unit_measure` varchar(65) NOT NULL,
+  `unit_restr` varchar(65) NOT NULL,
+   PRIMARY KEY (`product_id`),
+   FOREIGN KEY (`product`) REFERENCES `products`(`product_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE IF NOT EXISTS `damages`(
+
+CREATE TABLE `damages`(
   `product` int(11) NOT NULL,
   `details` TEXT NOT NULL,
   `img_src` varchar(65) NOT NULL,
