@@ -32,7 +32,7 @@
 --   `attendance_id` int(11) NOT NULL AUTO_INCREMENT,
 --   `staff` int(11) NOT NULL,
 --   `supervisor` int(11) NOT NULL,
---   `arrived_time` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL,
+--   `arrived_time` s(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL,
 --   `closing_time` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL,
 --   `tumb_print` TEXT NOT NULL,
 --    PRIMARY KEY (`attendance_id`),
@@ -112,4 +112,20 @@ CREATE TABLE `attend_config` (
 --   UNIQUE KEY (`user`),
 --   FOREIGN KEY (`user`) REFERENCES `users` (`user_id`),
 --   FOREIGN KEY (`assigner`) REFERENCES `users`(`user_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- CREATE TABLE `supplier` (
+--   `supplier_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `supplier_code` varchar(65) NOT NULL,
+--   `reg_code` varchar(65)
+--   `name` varchar(65) NOT NULL,
+--   `category` varchar(65) NOT NULL,
+--   `phone` varchar(30) NOT NULL,
+--   `email` varchar(256) NOT NULL,
+--   `address`TEXT NOT NULL,
+--   `status` int(2) NOT NULL,
+--   `added_date` DATE NOT NULL,
+--   PRIMARY KEY (`supplier_id`),
+--   UNIQUE KEY (`supplier_code`)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

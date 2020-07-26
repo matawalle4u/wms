@@ -5,8 +5,9 @@ CREATE TABLE `vehicles` (
   `description` varchar(65) NOT NULL,
   `licence_expiry`
   `insurance_expiry`,
-  `other_expiries`
-  `gps_data` varchar(256)
+  `other_expiries` NOT NULL,
+  `category` varchar(65) NOT NULL,
+  `gps_data` varchar(256) NOT N
   UNIQUE KEY (`vehicle_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
