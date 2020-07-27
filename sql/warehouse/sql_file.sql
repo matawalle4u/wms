@@ -66,33 +66,36 @@ CREATE TABLE `orders`(
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE `assets` (
-  `asset_id` int(11) NOT NULL AUTO_INCREMENT,
-  `asset_code` varchar(65) NOT NULL,
-  `category` varchar(65) NOT NULL,
-  `warehouse` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `status` varchar(65) NOT NULL,
-  `purchase_date` DATE NOT NULL,
-  `barcode` varchar(65) NOT NULL,
-  UNIQUE KEY `staff_code`
-  FOREIGN KEY `warehouse` REFERENCES `warehouse`(`staff_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `assets` (
+--   `asset_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `asset_code` varchar(65) NOT NULL,
+--   `asset_description` TEXT NOT NULL,
+--   `category` varchar(65) NOT NULL,
+--   `warehouse` int(11) NOT NULL,
+--   `quantity` int(11) NOT NULL,
+--   `status` varchar(65) NOT NULL,
+--   `purchase_date` DATE NOT NULL,
+--   `barcode` varchar(65) NOT NULL,
+--   PRIMARY KEY (`asset_id`),
+--   UNIQUE KEY (`asset_code`),
+--   FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE `transfer` (
-  `transfer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product` int(11) NOT NULL,
-  `driver` int(11) NOT NULL,
-  `reception` int(11) NOT NULL,
-  `warehouse` int(11) NOT NULL,
-  `transfer_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  PRIMARY KEY (`transfer_id`),
-  FOREIGN KEY `warehouse` REFERENCES `warehouses`(`warehouse_id`),
-  FOREIGN KEY `driver` REFERENCES `drivers`(`delivery_id`),
-  FOREIGN KEY `product` REFERENCES `products`(`product_id`),
-  FOREIGN KEY `reception` REFERENCES `receptions`(`reception_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `transfer` (
+--   `transfer_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `product` int(11) NOT NULL,
+--   `quantity` int(11) NOT NULL,
+--   `driver` int(11) NOT NULL,
+--   `sender` int(11) NOT NULL,
+--   `receiver` int(11) NOT NULL,
+--   `transfer_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+--   PRIMARY KEY (`transfer_id`),
+--   FOREIGN KEY (`driver`) REFERENCES `drivers`(`driver_id`) ON DELETE CASCADE,
+--   FOREIGN KEY (`product`) REFERENCES `products`(`product_id`) ON DELETE CASCADE,
+--   FOREIGN KEY (`sender`) REFERENCES `receptions`(`reception_id`) ON DELETE CASCADE, 
+--   FOREIGN KEY (`receiver`) REFERENCES `receptions`(`reception_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 -- CREATE TABLE `requests` (
