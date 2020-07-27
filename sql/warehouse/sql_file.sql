@@ -1,17 +1,12 @@
 
-CREATE TABLE `reception` (
-  `reception_id` int(11) NOT NULL AUTO_INCREMENT,
-  `order` int(11) NOT NULL,
-  `supplier` int(11) NOT NULL,
-  `warehouse` int(11) NOT NULL,
-  `paper_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  `arrived_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  `doc_type` varchar(65) NOT NULL,
-  `doc_num` int(11) NOT NULL,
-  FOREIGN KEY (`order`) REFERENCES `orders`(`order_id`),
-  FOREIGN KEY (`supplier`) REFERENCES `supplier`(`supplier_id`),
-  FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `receptions` (
+--   `reception_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `warehouse` int(11) NOT NULL,
+--   `created_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+--   `details` TEXT NOT NULL,
+--   PRIMARY KEY (`reception_id`)
+--   FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 -- CREATE TABLE `warehouses`(
@@ -38,6 +33,7 @@ CREATE TABLE `reception` (
 CREATE TABLE `orders`(
   `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `updater` int(11) NOT NULL,
+   `paper_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
   `customer` int(11) NOT NULL,
   `product` int(11) NOT NULL,
   `details` varchar(65) NOT NULL,
@@ -45,9 +41,9 @@ CREATE TABLE `orders`(
   `order_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
   `arrived_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`order_id`),
-  FOREIGN KEY (`product`) REFERENCES `products`(`product_id`)
+  FOREIGN KEY (`reception`) REFERENCES `receptions`(`reception_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`product`) REFERENCES `products`(`product_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 -- CREATE TABLE `partner` (
 --   `partner_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -70,15 +66,6 @@ CREATE TABLE `orders`(
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE `suppliers` (
-  `supplier_id` int(11) NOT NULL AUTO_INCREMENT,
-  `supplier_code` varchar(65) NOT NULL,
-  `role` varchar(65) NOT NULL,
-  `db_table`
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-
 CREATE TABLE `assets` (
   `asset_id` int(11) NOT NULL AUTO_INCREMENT,
   `asset_code` varchar(65) NOT NULL,
@@ -95,39 +82,43 @@ CREATE TABLE `assets` (
 
 CREATE TABLE `transfer` (
   `transfer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product` varchar(65) NOT NULL,
-  `delivery`
+  `product` int(11) NOT NULL,
+  `driver` int(11) NOT NULL,
   `reception` int(11) NOT NULL,
   `warehouse` int(11) NOT NULL,
   `transfer_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  UNIQUE KEY `staff_code`,
-  FOREIGN KEY `warehouse` REFERENCES `warehouse`(`warehouse_id`),
-  FOREIGN KEY `delivery` REFERENCES `delivery`(`delivery_id`),
+  PRIMARY KEY (`transfer_id`),
+  FOREIGN KEY `warehouse` REFERENCES `warehouses`(`warehouse_id`),
+  FOREIGN KEY `driver` REFERENCES `drivers`(`delivery_id`),
   FOREIGN KEY `product` REFERENCES `products`(`product_id`),
   FOREIGN KEY `reception` REFERENCES `receptions`(`reception_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE `requests` (
-  `request_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `warehouse` int(11) NOT NULL,
-  `request_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  FOREIGN KEY `invoice` REFERENCES `invoice`(`vehicle_code`)
-  FOREIGN KEY `product` REFERENCES `products`(`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `requests` (
+--   `request_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `product` int(11) NOT NULL,
+--   `quantity` int(11) NOT NULL,
+--   `warehouse` int(11) NOT NULL,
+--   `status` varchar(65) NOT NULL,
+--   `supplier` int(11) NOT NULL,
+--   `request_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+--   PRIMARY KEY (`request_id`),
+--   FOREIGN KEY (`supplier`) REFERENCES `supplier`(`supplier_id`) ON DELETE CASCADE,
+--   FOREIGN KEY (`product`) REFERENCES `products`(`product_id`) ON DELETE CASCADE,
+--   FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-
-
-CREATE TABLE `requests_hist` (
-  `request_hist_id` int(11) NOT NULL AUTO_INCREMENT,
-  `negotiated_price` varchar(65) NOT NULL,
-  `contract_price` int(11) NOT NULL,
-  `history_price` varchar(65) NOT NULL,
-  FOREIGN KEY `invoice` REFERENCES `invoice`(`vehicle_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `requests_hist` (
+--   `request_hist_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `negotiated_price` int(11) NOT NULL,
+--   `request` int(11) NOT NULL,
+--   `contract_price` int(11) NOT NULL,
+--   `history_price` int(11) NOT NULL,
+--   PRIMARY KEY (`request_hist_id`),
+--   FOREIGN KEY (`request`) REFERENCES `requests`(`request_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 
