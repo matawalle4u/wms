@@ -8,6 +8,7 @@
 --   `supplier` int(11) NOT NULL,
 --   `expiry_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
 --   `rack` int(11) NOT NULL,
+--   `item_type` varcha(65) NOT NULL,
 --    PRIMARY KEY (`product_id`),
 --    FOREIGN KEY (`supplier`) REFERENCES `supplier`(`supplier_id`) ON DELETE CASCADE,
 --    FOREIGN KEY (`rack`) REFERENCES `racks` (`rack_id`) ON DELETE CASCADE
@@ -22,7 +23,7 @@
 --    FOREIGN KEY (`product`) REFERENCES `products`(`product_id`) ON DELETE CASCADE
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `stocks` (
+CREATE TABLE `price` (
   `stock_id` int(11) NOT NULL AUTO_INCREMENT,
   `product` varchar(65) NOT NULL,
   `quantity` varchar(20) NOT NULL,
@@ -31,19 +32,25 @@ CREATE TABLE `stocks` (
    FOREIGN KEY (`rack`) REFERENCES `racks` (`rack_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- CREATE TABLE `stocks` (
+--   `stock_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `product` int(11) NOT NULL,
+--   `warehouse` int(11) NOT NULL,
+--   `quantity` int(11) NOT NULL,
+--   `status` varchar(65) NOT NULL,
+--    PRIMARY KEY (`stock_id`),
+--    FOREIGN KEY (`product`) REFERENCES `products`(`product_code`) ON DELETE CASCADE,
+--    FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `damages`(
-  `product` int(11) NOT NULL,
-  `details` TEXT NOT NULL,
-  `img_src` varchar(65) NOT NULL,
-  `damaged_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  FOREIGN KEY (`product`) REFERENCES `products`(`product_id`),
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
-CREATE TABLE `sales` (
-  `sales_id` int(11) NOT NULL AUTO_INCREMENT,
-  `tailor` int(11) NOT NULL,
-   PRIMARY KEY (`sales_id`),
-  CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`tailor`) REFERENCES `followup`.`tailors` (`tailor_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `damages`(
+--   `damage_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `product` int(11) NOT NULL,
+--   `quantity` int(11) NOT NULL,
+--   `details` TEXT NOT NULL,
+--   `img_src` varchar(65),
+--   `damaged_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+--   PRIMARY KEY (`damage_id`),
+--   FOREIGN KEY (`product`) REFERENCES `products`(`product_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

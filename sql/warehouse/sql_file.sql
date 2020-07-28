@@ -30,15 +30,10 @@
 --   FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `orders`(
-  `order_id` int(11) NOT NULL AUTO_INCREMENT,
-  `updater` int(11) NOT NULL,
-   `paper_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  `customer` int(11) NOT NULL,
-  `product` int(11) NOT NULL,
-  `details` varchar(65) NOT NULL,
-  `status` varchar(65) NOT NULL,
-  `order_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+CREATE TABLE `supplier_orders`(
+  `supplier_order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `request` int(11) NOT NULL,
+  `date_confirmation` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
   `arrived_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`order_id`),
   FOREIGN KEY (`reception`) REFERENCES `receptions`(`reception_id`) ON DELETE CASCADE,
@@ -129,6 +124,9 @@ CREATE TABLE `invoices` (
   `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
   `invoice_code` varchar(65) NOT NULL,
   `delivery_note_code` varchar(65) NOT NULL,
+  `invoice_date`
+  `product`
+  `details`
   FOREIGN KEY `delivery_note_code` REFERENCES `delivery`(`delivery_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
