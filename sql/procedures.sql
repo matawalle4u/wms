@@ -1,4 +1,3 @@
--- IDENTIFY ALL TABLES AND TABLES THEY AFFECT
 
 -- Sales -> Stocks|Request
 
