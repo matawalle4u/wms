@@ -71,7 +71,7 @@
     }
 
     public function isLeap(){
-        if($this->_year % 400 =0 ($this->_year % 4==0 && $this->_year % 100 !=0) ){
+        if($this->_year % 400 =0 || ($this->_year % 4==0 && $this->_year % 100 !=0) ){
             return true;
 
         }else{
