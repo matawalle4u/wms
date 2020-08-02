@@ -54,7 +54,29 @@
                 $this->_year +=($result/12)-1;
             }
         }
+        $this->lastDayOfMonth();
+        parent::setDate($this->_year, $this->_month, $this->_day);
+    }
 
+
+    final protected function lastDayOfMonth(){
+        if(!checkdate($this->_month, $this->_day, $this->_year)){
+            $month30Days = array(4,6,9,11);
+            if(in_array($this->_month, $month30Days)){
+                $this->_day = 30;
+            }else{
+                $this->_day = $this->isLeap() ? 29 : 28;
+            }
+        }
+    }
+
+    public function isLeap(){
+        if($this->_year % 400 =0 ($this->_year % 4==0 && $this->_year % 100 !=0) ){
+            return true;
+
+        }else{
+            return false;
+        }
     }
 
 
