@@ -1,13 +1,56 @@
  <?php
-
-    
     include('../interfaces/Users.php');
-   include('auth.php');
+    include('auth.php');
 
     abstract class Users extends Auth implements NormalUsers {
 
         public function get_notification($id, $type){
 
+        }
+
+        public function update_user_info($updater, array $columns, array $values, array $conditions, array $conditional_values){
+
+            /*Get the user prevelages
+            */
+            $new_prevs = array();
+            $new_vals = array();
+
+            $prevs  = $this->get_previleges($updater);
+            $i = 0;
+            foreach($columns as $column){
+                $operation = 'update_'.$column;
+                //echo $operation."<br />";
+                if(in_array($operation, $prevs)){
+                
+                    //echo "You can ".$operation;
+                    array_push($new_prevs, $column);
+                    array_push($new_vals, $values[$i]);
+
+                }
+                $i+=1;
+            }
+
+           // echo "<h1>". print_r($prevs). "</h1>";
+           //print_r($new_prevs);
+           if(!empty($new_prevs)){
+               //User can now update prevs.
+               print_r($new_prevs);
+               print_r($new_vals);
+               echo $this->__auth_table;
+               $update = $this->update($this->__auth_table, $new_prevs, $new_vals, $conditions, $conditional_values);
+               if($update){
+                //Success message
+               }else{
+                   //Err message Update failed
+                   
+               }
+            //echo"Update sxxxx";
+           }else{
+               //User has empty preveleges to update
+               echo"errrr";
+           }
+
+            //$this->update($this->__auth_table, $columns, $values, $conditions, $conditional_values);
         }
         
     }
@@ -46,12 +89,10 @@
             $user_privs = $this->get_previleges($user);
             $flag = false;
            
-
             if(in_array(__FUNCTION__, $this->get_previleges($revoker)) && in_array($prev_name, $user_privs) ){
 
-                unset($user_privs[array_search($prev_name, $user_privs)]);
-
                 //TODO Remove some MENUS and Check Wether update is successful else repeat the process
+                unset($user_privs[array_search($prev_name, $user_privs)]);
                 $this->update('privelages', ['actions'], [implode(',',$user_privs)], ['user'], [$user]);
 
                 $flag =true;
@@ -185,7 +226,11 @@
     
 
     $dri = new Driver("users", "phone", "crm");
-    $lo = $dri->login("2349028163380", "a");
+
+    $dri->update_user_info(1, ['name', 'role'], ["DDDDD Adam", "Deve"], ['phone'], ["2349028163380"]);
+    //update_user_info(array $columns, array $values, array $conditions, array $conditional_values)
+    
+    $lo = $dri->login("2349028163380", "as");
     if($lo){
         echo 1;
     }
@@ -200,5 +245,6 @@
     //$wman = new WareHouseManager("users", "phone", "crm");
     //$wman->add_staff();
 
+    //$users = new Users("users", "phone", "crm");
     
 ?>
