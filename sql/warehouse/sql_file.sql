@@ -54,10 +54,21 @@ CREATE TABLE `supplier_orders`(
 --   `phone`
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+
 -- CREATE TABLE `orders` (
 --   `order_id` int(11) NOT NULL AUTO_INCREMENT,
---   `customer` varchar(65) NOT NULL,
+--   `customer` int(11) NOT NULL,
 --   `catgory` varchar(65) NOT NULL,
+--   `quantity` int(11) NOT NULL,
+--   `price` int(11) NOT NULL,
+--   `product` int(11) NOT NULL,
+--   `delivery_items` TEXT,
+--   `delivery_items_price` int(11) DEFAULT 0,
+--   `order_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+--   PRIMARY KEY (`order_id`),
+--   FOREIGN KEY (`price`) REFERENCES `prices`(`price_id`) ON DELETE CASCADE,
+--   FOREIGN KEY (`product`) REFERENCES `products`(`product_id`) ON DELETE CASCADE
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -120,15 +131,7 @@ CREATE TABLE `supplier_orders`(
 
 
 
-CREATE TABLE `invoices` (
-  `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
-  `invoice_code` varchar(65) NOT NULL,
-  `delivery_note_code` varchar(65) NOT NULL,
-  `invoice_date`
-  `product`
-  `details`
-  FOREIGN KEY `delivery_note_code` REFERENCES `delivery`(`delivery_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 CREATE TABLE `delivery` (
   `delivery_id` int(11) NOT NULL AUTO_INCREMENT,

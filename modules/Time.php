@@ -1,11 +1,11 @@
  <?php
- class DateManip extends DateTime{
+ class DateManip extends DateTime {
 
     public function add_days($days){
         if(!is_numeric($days) || $days <1){
             //Throw an exception
         }
-        parent::modify('+', . intval($days) . 'days');
+        parent::modify('+' . intval($days) . 'days');
     }
 
     public function sub_days($days){
@@ -13,7 +13,7 @@
         if(!is_numeric($days) || $days <1){
             //Throw an exception
         }
-        parent::modify('-', . abs(intval($days)) . 'days');
+        parent::modify('-' . abs(intval($days)) . 'days');
     }
 
 
@@ -21,7 +21,7 @@
         if(!is_numeric($weeks) || $weeks <1){
             //Throw an exception
         }
-        parent::modify('+', . intval($weeks) . 'weeks');
+        parent::modify('+' . intval($weeks) . 'weeks');
     }
 
 
@@ -30,7 +30,7 @@
         if(!is_numeric($weeks) || $weeks <1){
             //Throw an exception
         }
-        parent::modify('-', . abs(intval($weeks)) . 'weeks');
+        parent::modify('-' . abs(intval($weeks)) . 'weeks');
     }
 
     //
@@ -71,7 +71,7 @@
     }
 
     public function isLeap(){
-        if($this->_year % 400 =0 || ($this->_year % 4==0 && $this->_year % 100 !=0) ){
+        if($this->_year % 400 ==0 || ($this->_year % 4==0 && $this->_year % 100 !=0) ){
             return true;
 
         }else{
@@ -82,5 +82,7 @@
 
 
 }
-    
+
+$m = new DateManip();
+
 ?>

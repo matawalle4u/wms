@@ -21,3 +21,14 @@
 --   FOREIGN KEY (`seller`) REFERENCES `staffs`(`staff_id`) ON DELETE CASCADE
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+
+-- CREATE TABLE `sales` (
+--   `sales_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `invoice` varchar(65) NOT NULL,
+--   `seller` int(11) NOT NULL,
+--   `product` int(11) NOT NULL,
+--   `sold_qty` int(11) NOT NULL,
+--   `sales_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+--   FOREIGN KEY (`seller`) REFERENCES `staffs`(`staff_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

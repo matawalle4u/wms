@@ -6,7 +6,7 @@
 # https://www.logiwa.com/warehouse-management-system-features
 # FrontEnd, BackEndDeveloper, Database Designer, System Analyst, Project Management
 
-include('modules/Users.php');
+//include('modules/Users.php');
 
 /*
     Testing for authentication
@@ -61,6 +61,17 @@ function Dan(){
     }
 }
 
-Dan();
+function make_order(array $items, array $quantity, array $prices){
+
+    //Conversion e.g 20 mangos makes one box, three boxes make one pallet
+    $mangoQty = 20;
+    $noBox =1;
+    $box = $mangoQty/$noBox;
+    echo"$box";
+    return $result;
+    
+
+}
+make_order([], [], []);
 
 ?>

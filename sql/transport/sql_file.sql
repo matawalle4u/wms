@@ -27,28 +27,23 @@
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --TODO Review the architecutrue for performance
-CREATE TABLE `transactions` (
-  `transaction_id` int(11) NOT NULL AUTO_INCREMENT,
-  `unique_code` int(11) NOT NULL,
-  `transaction_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-  `table` varchar(65) NOT NULL,
-  `table_id` int(11) NOT NULL,
-  PRIMARY KEY (`transport_id`),
-  FOREIGN KEY (`driver`) REFERENCES `drivers`(`driver_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- CREATE TABLE `transactions` (
+--   `transaction_id` int(11) NOT NULL AUTO_INCREMENT,
+--   `transaction_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+--   `transaction_able` varchar(65) NOT NULL,
+--   `table_id` int(11) NOT NULL,
+--   PRIMARY KEY (`transport_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 -- Review
 
+
+
 CREATE TABLE `truck_rents` (
-  `transport_id` int(11) NOT NULL AUTO_INCREMENT,
-  `transaction` int(11) NOT NULL,
-  `transport_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+  `truck_rent_id` int(11) NOT NULL AUTO_INCREMENT,
+  `rent_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+  `company` int(11) NOT NULL,
   `details` varchar(65) NOT NULL,
-  `product` int(11) NOT NULL,
-  `price` int(11) NOT NULL,
-  `type` int(11) NOT NULL,
-  `doc_no` ,
-  PRIMARY KEY (`transport_id`),
-  FOREIGN KEY (`driver`) REFERENCES `drivers`(`driver_id`) ON DELETE CASCADE
+  FOREIGN KEY (`company`) REFERENCES `supplier`(`supplier_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `transportation` (
@@ -56,6 +51,7 @@ CREATE TABLE `transportation` (
   `driver` int(11) NOT NULL,
   `transport_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
   `type_of_transport` varchar(65) NOT NULL,
+  `connector` int(11) NOT NULL,
   `product` int(11) NOT NULL,
   `price` int(11) NOT NULL
   PRIMARY KEY (`transport_id`),

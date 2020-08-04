@@ -3,7 +3,7 @@
     ini_set('display_errors', 1);
     include('database.php');
 
-    Abstract class Auth extends DataBase {
+    abstract class Auth extends DataBase {
 
         private static $instance;
         

@@ -8,8 +8,7 @@
 
         }
 
-        public function update_user_info($updater, array $columns, array $values, array $conditions, array $conditional_values){
-
+        public function update_user_info($user_table, $updater, array $columns, array $values, array $conditions, array $conditional_values){
             /*Get the user prevelages
             */
             $new_prevs = array();
@@ -19,10 +18,9 @@
             $i = 0;
             foreach($columns as $column){
                 $operation = 'update_'.$column;
-                //echo $operation."<br />";
+
                 if(in_array($operation, $prevs)){
-                
-                    //echo "You can ".$operation;
+
                     array_push($new_prevs, $column);
                     array_push($new_vals, $values[$i]);
 
@@ -30,24 +28,18 @@
                 $i+=1;
             }
 
-           // echo "<h1>". print_r($prevs). "</h1>";
-           //print_r($new_prevs);
+           
            if(!empty($new_prevs)){
-               //User can now update prevs.
-               print_r($new_prevs);
-               print_r($new_vals);
-               echo $this->__auth_table;
-               $update = $this->update($this->__auth_table, $new_prevs, $new_vals, $conditions, $conditional_values);
+               $update = $this->update($user_table, $new_prevs, $new_vals, $conditions, $conditional_values);
                if($update){
-                //Success message
+                //Success message front end
                }else{
-                   //Err message Update failed
-                   
+                   //Err message Update failed  
                }
-            //echo"Update sxxxx";
+
            }else{
                //User has empty preveleges to update
-               echo"errrr";
+               
            }
 
             //$this->update($this->__auth_table, $columns, $values, $conditions, $conditional_values);
@@ -79,6 +71,13 @@
            
             return $flag;
             
+        }
+
+        public function view_update_history($table, array $columns, array $conditions, array $values, $limit){
+            //$this->get('privelages', ['actions'], ['user'],[$id], 'single');
+            $history = $this->get($table, $columns, $conditions, $values, $limit);
+            //print_r($history);
+            return $history;
         }
 
 
@@ -122,13 +121,23 @@
     class WareHouseManager extends Users implements WareHouseAdmin {
        
         //Only Implemented by Admin
-        public function add_staff(){
+        public function add_staff(array $columns, array $values){
+            //Rules and Access rights for users
+            $add = $this->put('staffs', $columns, $values);
+            if($add){
+                return true;
+            }else{
+                return false;
+            }
 
-            $r = $this->get('users', ['name'], ['phone'], ["'2349028163380'"], 'single');
-            print_r($r);
+
+
+
         }
         private function validate_contract(){}
-        private function pay_staffs(){}
+        private function pay_staffs(){
+
+        }
         private function make_sales_management(){ }//Organize sales put and validate Task on sales agents}
         private function implement_contract(){}
         
@@ -226,14 +235,23 @@
     
 
     $dri = new Driver("users", "phone", "crm");
+    $col = ['staff_code', 'first_name', 'last_name', 'identity_card', 'role', 'dept', 'phone', 'email', 'address', 'img_src', 'status'];
+    $vas = ["'test_Code101'", "'Popa Adam'", "'Daniel'", "'890987'", "'Manager'", "'Production'", "'09023467777'", "'matawallepopa@gmail.com'", "'Romania'", "'uploads/logo.png'", "'1'"];
+    $mana = new WareHouseManager("users", "phone", "crm");
+    $mana->add_staff($col, $vas);
 
-    $dri->update_user_info(1, ['name', 'role'], ["DDDDD Adam", "Deve"], ['phone'], ["2349028163380"]);
+
+    //$mana->view_update_history('user_updates', ['updater', 'update_user'], [], [], 'many');
+
+
+
+    //$dri->update_user_info(1, ['name', 'role'], ["DDDDD Adam", "Deve"], ['phone'], ["2349028163380"]);
     //update_user_info(array $columns, array $values, array $conditions, array $conditional_values)
     
-    $lo = $dri->login("2349028163380", "as");
-    if($lo){
-        echo 1;
-    }
+    // $lo = $dri->login("2349028163380", "as");
+    // if($lo){
+    //     echo 1;
+    // }
 
     //$a = new Admin("users", "phone", "crm");
    
@@ -244,7 +262,20 @@
 
     //$wman = new WareHouseManager("users", "phone", "crm");
     //$wman->add_staff();
+    
 
-    //$users = new Users("users", "phone", "crm");
+    $users = new Admin("users", "phone", "crm");
+    $hist  = $users->view_update_history('user_updates', ['updater', 'updated_user', 'update_time'], [], [], 'many');
+    
     
 ?>
+
+<script type="text/javascript">
+    var comp = <?php echo json_encode($hist);?>;
+    for(var i=0; i<=comp.length-1; i++){
+        document.write(comp[i]['update_time']);
+    }
+
+    //alert('hell');
+    
+</script>

@@ -1,62 +1,19 @@
 <?php
     require('../modules/Manifest.php');
+    ini_set('display_errors', 1);
 
-    Abstract class DataBase extends DatabaseManifest{
+     class DataBase extends DatabaseManifest{
 
-        public $database_obj;
-        protected $current_db;
+        //public $database_obj;
+        //protected $current_db;
+
 
         public function __construct(){
-            $this->database_obj = $this->establish_conn();
-            $this->current_db = NULL;
+
+            $this->establish_conn();
         }
 
-
-        public function create_or_del($operation, $name){
-            $newname = "`{$name}`";
-
-            //TODO if operation is CREATE check wether db exists
-            $execute = $this->database_obj->query("$operation DATABASE $newname");
-            if($execute){
-
-                //connect to the the database created and select it
-                $this->database_obj = new mysqli($this->host, $this->username, $this->password, $name);
-                $this->database_obj->select_db($name);
-
-                return true;
-            }else{
-                return false;
-            }
-            
-        }
-
-        public function get_active_db(){
-            $result = $this->database_obj->query("SELECT DATABASE()");
-            if($result){
-                $row = $result->fetch_row();
-                $this->current_db= $row[0];
-                $result->close();
-                return $this->current_db;
-            }else{
-                return false;
-            }
-        }
-
-
-        public function set_active_db($name){
-
-
-            // TODO check if DB Exists before setting to avoid error
-
-            //$this->database_obj->select_db($name);
-            $this->current_db = $name;
-            $this->database_obj = new mysqli($this->host, $this->username, $this->password, $this->current_db);
-            
-            return $this->database_obj;
-
-        }
-
-
+        
         public function put($table, array $columns, array $values){
             //"'{$name}'"
 
@@ -64,6 +21,9 @@
             $put_flag = false;
             $cols = implode(',', $columns);
             $vals = implode(',', $values);
+
+            //echo $cols,$vals;
+            
 
             $result = $this->database_obj->query("INSERT INTO $table ($cols) VALUES ($vals)");
 
@@ -74,34 +34,6 @@
             return $put_flag;
         }
 
-
-        public function get($table, array $columns, array $conditions, array $values, $limit){
-            
-            $all_ent = array();
-            $cols = implode(',', $columns);
-            $cond =$this->gen_conds($conditions, $values);
-
-            if($limit !='many'){
-                $cond.=' LIMIT 1';
-            }
-
-            
-            $result = $this->database_obj->query("SELECT  $cols FROM $table $cond");
-
-            while($row=$result->fetch_array()){
-
-                $group = array();
-
-                for($i=0; $i<=sizeof($columns)-1; $i++){
-                    $group[$columns[$i]] = $row[$columns[$i]];
-                    //$entri  = $row[$columns[$i]];
-                }
-                array_push($all_ent, $group);
-            }
-			
-            return $all_ent;
-            
-        }
 
         private function gen_conds(array $conditions, array $values){
             $query_cond ='';
@@ -117,8 +49,34 @@
             return $query_cond;
         }
 
+
+        public function get($table, array $columns, array $conditions, array $values, $limit){
+            $this->establish_conn();
+            $all_ent = array();
+            $cols = implode(',', $columns);
+            $cond =$this->gen_conds($conditions, $values);
+
+            if($limit !='many'){
+                $cond.=' LIMIT 1';
+            }
+
+            $r =  $this->database_obj->query("SELECT DATABASE()");
+
+            $row2 = $r->fetch_row();
+            echo "<h1>".$cond . " ".$this->host . " ". $this->username. " " .md5($this->password) . " ". $row2[0] ."</h1>";
+           
+            $result = $this->database_obj->query("SELECT  $cols FROM $table $cond");
+            while($row=$result->fetch_array()){
+                $group = array();
+                for($i=0; $i<=sizeof($columns)-1; $i++){
+                    $group[$columns[$i]] = $row[$columns[$i]];    
+                }
+                array_push($all_ent, $group);
+            }
+            return $all_ent;
+        }
+
         public function update($table, array $columns, array $values, array $conditions, array $cond_values){
-            
             $counter = 0;
             $cond =$this->gen_conds($conditions, $cond_values);
             $coll='';
@@ -131,27 +89,37 @@
                 $counter+=1;
             }
             $this->database_obj->query("UPDATE $table SET $coll $cond");
-           
         }
-
-
-       
         
     }
 
     class Dele extends DataBase {
+
+        public function truct(){
+
+            //$sql = new mysqli($this->host, $this->username, $this->password, 'crm');
+            //$this->establish_conn();
+            //parent::__construct();
+            //DataBase::__construct();
+
+            $r =  $this->database_obj->query("SELECT DATABASE()");
+
+            $row2 = $r->fetch_row();
+            echo "<h1>sss ".$row2[0] ."</h1>";
+
+            $r  = $this->get('users', ['name', 'phone'], ['phone'],["2349028163380"], 'many');
+            print_r($r);
+
+        }
 
         
         
     }
 
 $d = new Dele();
+$d->truct();
 
-$r = $d->get('users', ['name'], ['phone'], ["'2349028163380'"], 'single');
-print_r($r);
-/*
-$dbs = array("", "", "", "", "");
-$delet = $d->create_or_del('DROP', 'adam');
- */   
+
+
 
 ?>
