@@ -7,13 +7,14 @@
    class Warehouse extends DataBase{
 
     private $tables = array(
-        "warehouses",
-        "warehouse_zones"
+        'warehouses',
+        'warehouse_zones',
+        'racks'
     );
    
 
     public function create_ware_house(array $columns, array $values){
-        
+
         $create = $this->put($this->tables[0], $columns,$values);
         if($create){
             return true;
@@ -29,7 +30,7 @@
 
 
 
-    public function create_warehouse_zone(){
+    public function create_warehouse_zone(array $columns, array $values){
 
         $create = $this->put($this->tables[1], $columns,$values);
         if($create){
@@ -44,7 +45,10 @@
     }
 
 
-    public function view_rack(){
+    public function view_rack(array $columns, array $conditions, array $values, $limit){
+
+        $racks = $this->get($this->tables[2], $columns, $conditions, $values, $limit);
+        return $racks;
 
     }
 
@@ -71,5 +75,10 @@
    echo $www[0]['name'];
    echo "<br />". $www[1]['name'];
    echo "<br />". $www[2]['name'];
+
+//    $zon = $wh->create_warehouse_zone(['name', 'warehouse'], ["'Damage Zone'", "'3'"]);
+//    if($zon){
+//     echo 'sxxxx';
+//    }
 
 ?>
