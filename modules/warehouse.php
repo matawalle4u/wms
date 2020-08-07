@@ -6,6 +6,11 @@
 
    class Warehouse extends DataBase{
 
+
+    private $warehouse_tbl = 'warehouses';
+    private $zone_tbl = 'warehouse_zones';
+    private $racks_tbl = 'racks'
+
     private $tables = array(
         'warehouses',
         'warehouse_zones',
@@ -15,7 +20,7 @@
 
     public function create_ware_house(array $columns, array $values){
 
-        $create = $this->put($this->tables[0], $columns,$values);
+        $create = $this->put($this->warehouse_tbl, $columns,$values);
         if($create){
             return true;
         }else{
@@ -25,14 +30,14 @@
     }
 
     public function update_warehouse(array $columns, array $values, array $conds, array $conds_vals){
-        $update = $this->update($this->tables[0], $columns, $values, $conds, $conds_vals);
+        $update = $this->update($this->warehouse_tbl, $columns, $values, $conds, $conds_vals);
     }
 
 
 
     public function create_warehouse_zone(array $columns, array $values){
 
-        $create = $this->put($this->tables[1], $columns,$values);
+        $create = $this->put($this->zone_tbl, $columns,$values);
         if($create){
             return true;
         }else{
@@ -47,7 +52,7 @@
 
     public function view_rack(array $columns, array $conditions, array $values, $limit){
 
-        $racks = $this->get($this->tables[2], $columns, $conditions, $values, $limit);
+        $racks = $this->get($this->racks_tbl, $columns, $conditions, $values, $limit);
         return $racks;
 
     }
