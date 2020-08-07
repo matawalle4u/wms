@@ -12,11 +12,20 @@
 -- CREATE TABLE `warehouses`(
 --   `warehouse_id` int(11) NOT NULL,
 --   `name` varchar(65) NOT NULL,
---   `delivery_zone` varchar(65) NOT NULL,
---   `reception_zone` varchar(65) NOT NULL,
---   `damage_zone` varchar(65) NOT NULL,
---   PRIMARY KEY (`order_id`)
+--   `address` TEXT NOT NULL,
+--   PRIMARY KEY (`zone_id`)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE `warehouse_zones`(
+  `zone_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(65) NOT NULL,
+  `warehouse` int(11) NOT NULL,
+  PRIMARY KEY (`zone_id`),
+  FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 
 -- CREATE TABLE  `racks`(

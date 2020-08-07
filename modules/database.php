@@ -63,7 +63,7 @@
             $r =  $this->database_obj->query("SELECT DATABASE()");
 
             $row2 = $r->fetch_row();
-            echo "<h1>".$cond . " ".$this->host . " ". $this->username. " " .md5($this->password) . " ". $row2[0] ."</h1>";
+            //echo "<h1>".$cond . " ".$this->host . " ". $this->username. " " .md5($this->password) . " ". $row2[0] ."</h1>";
            
             $result = $this->database_obj->query("SELECT  $cols FROM $table $cond");
             while($row=$result->fetch_array()){
@@ -117,7 +117,7 @@
     }
 
 $d = new Dele();
-$d->truct();
+//$d->truct();
 
 
 

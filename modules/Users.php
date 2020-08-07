@@ -2,6 +2,8 @@
     include('../interfaces/Users.php');
     include('auth.php');
 
+
+
     abstract class Users extends Auth implements NormalUsers {
 
         public function get_notification($id, $type){
@@ -11,6 +13,7 @@
         public function update_user_info($user_table, $updater, array $columns, array $values, array $conditions, array $conditional_values){
             /*Get the user prevelages
             */
+            $error_messages = array();
             $new_prevs = array();
             $new_vals = array();
 
@@ -18,33 +21,27 @@
             $i = 0;
             foreach($columns as $column){
                 $operation = 'update_'.$column;
-
                 if(in_array($operation, $prevs)){
-
                     array_push($new_prevs, $column);
                     array_push($new_vals, $values[$i]);
-
                 }
                 $i+=1;
             }
 
-           
            if(!empty($new_prevs)){
                $update = $this->update($user_table, $new_prevs, $new_vals, $conditions, $conditional_values);
                if($update){
                 //Success message front end
+                return true;
                }else{
                    //Err message Update failed  
                }
-
            }else{
-               //User has empty preveleges to update
-               
+               //User has empty preveleges to update  
            }
 
             //$this->update($this->__auth_table, $columns, $values, $conditions, $conditional_values);
         }
-        
     }
     
 
@@ -73,11 +70,16 @@
             
         }
 
+        public function view_staffs(array $columns, array $conditions, array $values, $limit){
+
+            $staffs = $this->get('staffs', $columns, $conditions, $values, $limit);
+            return $staffs;
+
+        }
+
         public function view_update_history($table, array $columns, array $conditions, array $values, $limit){
-            //$this->get('privelages', ['actions'], ['user'],[$id], 'single');
-            $history = $this->get($table, $columns, $conditions, $values, $limit);
-            //print_r($history);
-            return $history;
+
+            return $this->get($table, $columns, $conditions, $values, $limit);
         }
 
 
@@ -87,13 +89,11 @@
             
             $user_privs = $this->get_previleges($user);
             $flag = false;
-           
-            if(in_array(__FUNCTION__, $this->get_previleges($revoker)) && in_array($prev_name, $user_privs) ){
 
+            if(in_array(__FUNCTION__, $this->get_previleges($revoker)) && in_array($prev_name, $user_privs) ){
                 //TODO Remove some MENUS and Check Wether update is successful else repeat the process
                 unset($user_privs[array_search($prev_name, $user_privs)]);
                 $this->update('privelages', ['actions'], [implode(',',$user_privs)], ['user'], [$user]);
-
                 $flag =true;
             }
 
@@ -127,6 +127,7 @@
             if($add){
                 return true;
             }else{
+                
                 return false;
             }
 
@@ -234,11 +235,11 @@
 
     
 
-    $dri = new Driver("users", "phone", "crm");
-    $col = ['staff_code', 'first_name', 'last_name', 'identity_card', 'role', 'dept', 'phone', 'email', 'address', 'img_src', 'status'];
-    $vas = ["'test_Code101'", "'Popa Adam'", "'Daniel'", "'890987'", "'Manager'", "'Production'", "'09023467777'", "'matawallepopa@gmail.com'", "'Romania'", "'uploads/logo.png'", "'1'"];
-    $mana = new WareHouseManager("users", "phone", "crm");
-    $mana->add_staff($col, $vas);
+    // $dri = new Driver("users", "phone", "crm");
+    // $col = ['staff_code', 'first_name', 'last_name', 'identity_card', 'role', 'dept', 'phone', 'email', 'address', 'img_src', 'status'];
+    // $vas = ["'test_Code102'", "'Popa Adam'", "'Daniel'", "'890988'", "'Manager'", "'Production'", "'09023467777'", "'matawallepopa@gmail.com'", "'Romania'", "'uploads/logo.png'", "'1'"];
+    // $mana = new WareHouseManager("users", "phone", "crm");
+    // $mana->add_staff($col, $vas);
 
 
     //$mana->view_update_history('user_updates', ['updater', 'update_user'], [], [], 'many');
@@ -265,17 +266,24 @@
     
 
     $users = new Admin("users", "phone", "crm");
-    $hist  = $users->view_update_history('user_updates', ['updater', 'updated_user', 'update_time'], [], [], 'many');
-    
+    // $hist  = $users->view_update_history('user_updates', ['updater', 'updated_user', 'update_time'], [], [], 'many');
+   $dd = $users->view_staffs(['first_name', 'last_name', 'status'], ['role'], ["Manager"], 'single');
+   
+  foreach($dd as $va){
+      echo $va['first_name']."<br />";
+  }
     
 ?>
 
-<script type="text/javascript">
+
+
+<!-- <script type="text/javascript">
+    function tee(){
     var comp = <?php echo json_encode($hist);?>;
     for(var i=0; i<=comp.length-1; i++){
-        document.write(comp[i]['update_time']);
+        document.write(comp[i]['update_time']+"<br />");
     }
-
+    }
     //alert('hell');
     
-</script>
+</script> -->

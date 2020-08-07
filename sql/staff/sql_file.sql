@@ -15,10 +15,10 @@
 --   `employment_date` DATE NOT NULL,
 --   PRIMARY KEY (`staff_id`),
 --   UNIQUE KEY (`staff_code`),
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- ) ENGINE=InnoDB DEFAULT CHARSuser_updatesET=latin1;
 
 
-CREATE TABLE `user_updates` (
+CREATE TABLE `` (
   `user_updates_id` int(11) NOT NULL AUTO_INCREMENT,
   `updater` int(11) NOT NULL,
   `updated_user` int(11) NOT NULL,
