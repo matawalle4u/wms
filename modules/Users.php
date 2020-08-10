@@ -1,6 +1,7 @@
  <?php
     include('../interfaces/Users.php');
     include('auth.php');
+    include('warehouse.php');
 
 
 
@@ -119,6 +120,8 @@
     
 
     class WareHouseManager extends Users implements WareHouseAdmin {
+
+        public $warehouse_obj = new Warehouse();
        
         //Only Implemented by Admin
         public function add_staff(array $columns, array $values){
@@ -169,6 +172,19 @@
 
        
         */
+
+        public function create_ware_zone(array $values){
+            $flag  = false;
+            $created  = $warehouse_obj->create_warehouse_zone($values);
+            if($created){
+                $flag = true;
+            }
+
+            return $flag;
+
+        }
+
+        
 
     }
 

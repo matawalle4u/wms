@@ -6,11 +6,19 @@
 
         //public $database_obj;
         //protected $current_db;
+        private static $instance;
 
 
         public function __construct(){
 
             $this->establish_conn();
+
+            if (!isset(self::$instance)){
+                self::$instance = $this;
+                return self::$instance;
+            }else{
+                return self::$instance;
+            }
         }
 
         
