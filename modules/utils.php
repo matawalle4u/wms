@@ -43,7 +43,8 @@
            
             $date = $day.$month . $year;
             $time = $date.$h.$m.$s.$format;
-            $picN = 'uploads/'.$year.'/'.$month.'/'.$doc .'/'.$owner. '/'. $owner. ($time.$unique_param). '.'.array_pop(explode("/", $_FILES[$fil]['type']));
+            $poped  = explode("/", $_FILES[$fil]['type']);
+            $picN = 'uploads/'.$year.'/'.$month.'/'.$doc .'/'.$owner. '/'. $owner. ($time.$unique_param). '.'.array_pop($poped);
 
             $temp_file  = $_FILES[$fil]['tmp_name'];
             
@@ -53,11 +54,9 @@
 
                     //Push to the folder
                    if((move_uploaded_file($temp_file, $picN) )){
-
                         if(move_uploaded_file($temp_file, 'uploads/'.$year.'/'.$month.'/'.$doc. '/'.$owner)){
                             $upload_flag = true;
-                        }
-                        
+                        } 
                     }
                     
                 }else{
@@ -68,11 +67,9 @@
                         $upload_flag = true;
                     }
                 }
-                
             }
         }
 
-        
         public function __destruct(){
         }
     }
