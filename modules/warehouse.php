@@ -95,7 +95,23 @@
 
 
 $z = $wh->view_warehouse_zone(['name', 'warehouse'], [], [], 'many');
+$wh = $wh->view_warehouse(['name', 'address'], [], [], 'many');
 
-echo $z[0]['name'];
+$ss = array("Popa", "Adam", "Daniel");
+
+//echo $z[0]['name'];
+//echo $wh[0]['name'];
 
 ?>
+
+<select name="">
+    <script>
+        const names = <?php echo json_encode($wh); ?>;
+        names.map(
+            (b)=>{
+                document.write('<option>'+b['name'] +'</option>');
+            }
+        )
+    </script>
+
+</select>

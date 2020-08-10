@@ -53,7 +53,6 @@
 
             $time = $date.$h.$m.$s.$format;
             $picN = $uploaddir.'/'.$month_year . ($time.$unique_param). '.'.array_pop(explode("/", $_FILES[$fil]['type']));
-            
 
             $temp_file  = $_FILES[$fil]['tmp_name'];
             
@@ -70,7 +69,6 @@
                         }
                         
                     }
-
                     
                 }else{
                    //Create the folder and push
