@@ -22,16 +22,28 @@
 
 ?>
 
-<form method="post" action="">
+<form method="post" action="" ENCTYPE="multipart/form-data">
 
-   <input name="phone" id="exampleInputEmail1" type="text" placeholder="Enter phone number" class="form-control">            
-    <input name="password" id="exampleInputPassword1" type="password" placeholder="Password" class="form-control">
-    <span class="fa fa-lock form-control-feedback text-muted"></span>            
-    <input type="submit" class="btn btn-block btn-primary" value="Login" name="login">
+   <input name="file" type="file" reuired>            
+             
+    <input type="submit" class="btn btn-block btn-primary" value="Upload" name="upload">
+    
 
 </form>
 
 <?php
+include('modules/utils.php');
+date_default_timezone_set('Africa/Lagos');
+echo date("Y.m.d");
+if(isset($_POST['upload'])){
+    //$file  = $_POST['file'];
+
+    $util = new Utils();
+
+    //$file_types = array("image/jpg", "image/png", "image/jpeg");
+
+    $util->upload('file', "Daniel_Popa");
+}
 
 // $us = new Driver('tailors', 'phone', 'followup');
 
@@ -61,17 +73,17 @@ function Dan(){
     }
 }
 
-function make_order(array $items, array $quantity, array $prices){
+// function make_order(array $items, array $quantity, array $prices){
 
-    //Conversion e.g 20 mangos makes one box, three boxes make one pallet
-    $mangoQty = 20;
-    $noBox =1;
-    $box = $mangoQty/$noBox;
-    echo"$box";
-    return $result;
+//     //Conversion e.g 20 mangos makes one box, three boxes make one pallet
+//     $mangoQty = 20;
+//     $noBox =1;
+//     $box = $mangoQty/$noBox;
+//     echo"$box";
+//     return $result;
     
 
-}
-make_order([], [], []);
+// }
+//make_order([], [], []);
 
 ?>
