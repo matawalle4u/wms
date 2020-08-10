@@ -27,8 +27,8 @@
     public function create_warehouse_zone(array $values){
 
         $columns = array(
-            "name",
-            "warehouse"
+            'name',
+            'warehouse'
         );
 
         $create = $this->put($this->zone_tbl, $columns,$values);
@@ -39,7 +39,16 @@
         }
     }
 
-    public function create_rack(array $columns, array $values){
+    public function create_rack(array $values){
+        $columns = array(
+            'warehouse',
+            'zone',
+            'row',
+            'column',
+            'level',
+            'position',
+
+        );
         $create = $this->put($this->racks_tbl, $columns,$values);
         if($create){
             return true;
@@ -129,6 +138,8 @@ $wh = $wh->view_warehouse(['name','warehouse_id', 'address'], [], [], 'many');
 //echo $wh[0]['name'];
 
 ?>
+
+<h1>Create Zone</h1>
 <form action="" method="post">
 
 WareHouse <select name="warehouse">
@@ -154,33 +165,81 @@ WareHouse <select name="warehouse">
 </form>
 
 
+<h1>Edit Zone</h1>
+
 <form action="" method="post">
 
-WareHouse <select name="zone">
+Zone <select name="zone">
     <script>
         
         const zones = <?php echo json_encode($zones); ?>;
         
         zones.map(
             (element)=>{
-
-                var item = element['name'];
-                var index = element['zone_id'];
                 var warehouse = element['warehouse'];
-               
-                document.write('<option value='+index +'>'+ item + ' ' +warehouse + '</option>');
+                document.write('<option value='+element['zone_id'] +'>'+ element['name'] + ' ' +warehouse + '</option>');
             }
         )
     </script>
 
 </select>
 
-<input type="text" name="name" placeholder="New name">
+<input type="text" name="name" placeholder="New zone name">
 
 
 <input type="submit" name="editted" value="Add">
 
 </form>
+
+<h1>Create Rack</h1>
+<form action="" method="post">
+
+WareHouse <select name="warehouse">
+    <script>
+        const waree = <?php echo json_encode($wh); ?>;
+        
+        waree.map(
+            (element)=>{
+
+                var item = element['name'];
+                var index = element['warehouse_id'];
+
+                document.write('<option value='+index +'>'+ item +'</option>');
+            }
+        )
+    </script>
+
+</select>
+
+
+Zone <select name="zone">
+    <script>
+        const nam = <?php echo json_encode($zones); ?>;
+        
+        nam.map(
+            (element)=>{
+
+                var item = element['name'];
+                var index = element['zone_id'];
+
+                document.write('<option value='+index +'>'+ item +'</option>');
+            }
+        )
+    </script>
+
+</select>
+
+
+<input type="number" name="row" placeholder="Enter row">
+<input type="number" name="column" placeholder="Enter column">
+<input type="text" name="level" placeholder="Enter Level">
+<input type="text" name="position" placeholder="Enter position">
+<input type="submit" name="rack_created" value="Create">
+
+</form>
+
+
+
 
 <?php 
 $wh2 = new Warehouse();
@@ -203,6 +262,23 @@ if(isset($_POST['editted'])){
     $name = $_POST['name'];
     $u = $wh2->update_warehouse_zone(['name'], ["$name"],['zone_id'], ["$zone_id"]);
 
+
+
+
+}
+
+
+if(isset($_POST['rack_created'])){
+
+    $warehouse =$_POST['warehouse'];
+    $zone =$_POST['zone'];
+    $row =$_POST['row'];
+    $column =$_POST['column'];
+    $level =$_POST['level'];
+    $position =$_POST['position'];
+    echo $warehouse. $zone. $row .$column. $level.$position;
+   
+    $wh2->create_rack(["'$warehouse'", "'$zone'", "'$row'", "'$column'", "'$level'", "'$position'"]);
 }
             
 

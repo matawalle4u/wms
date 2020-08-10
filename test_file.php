@@ -42,7 +42,7 @@ if(isset($_POST['upload'])){
 
     //$file_types = array("image/jpg", "image/png", "image/jpeg");
 
-    $util->upload('file', "Daniel_Popa");
+    $util->upload('file', "Daniel_Popa", 'Invoice');
 }
 
 // $us = new Driver('tailors', 'phone', 'followup');

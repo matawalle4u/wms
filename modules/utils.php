@@ -29,10 +29,8 @@
             }
         }
 
-        public function upload($fil, $unique_param){
+        public function upload($fil, $unique_param, $doc){
 
-            
-            
             $h = date('g');
             $m = date('i');
             $s = date('s');
@@ -51,19 +49,19 @@
             $date = $day.$month . $year;
 
             $time = $date.$h.$m.$s.$format;
-            $picN = $uploaddir.'/'.$month_year . ($time.$unique_param). '.'.array_pop(explode("/", $_FILES[$fil]['type']));
+            $picN = 'uploads/'.$year.'/'.$month.'/'.$doc .'/'.$doc. ($time.$unique_param). '.'.array_pop(explode("/", $_FILES[$fil]['type']));
 
             $temp_file  = $_FILES[$fil]['tmp_name'];
             
             
             if(in_array($_FILES[$fil]['type'], $this->upload_types)) {
 
-                if(file_exists('uploads/'.$month_year)){
+                if(file_exists('uploads/'.$year.'/'.$month.'/'.$doc)){
 
                     //Push to the folder
                    if((move_uploaded_file($temp_file, $picN) )){
 
-                        if(move_uploaded_file($temp_file, 'uploads/'.$month_year)){
+                        if(move_uploaded_file($temp_file, 'uploads/'.$year.'/'.$month.'/'.$doc)){
                             $upload_flag = true;
                         }
                         
@@ -71,7 +69,7 @@
                     
                 }else{
                    //Create the folder and push
-                    mkdir('uploads/'.$month_year, 0777, true);
+                    mkdir('uploads/'.$year.'/'.$month.'/'.$doc, 0777, true);
 
                     if((move_uploaded_file($_FILES[$fil]['tmp_name'], $picN) )){
                         $upload_flag = true;
