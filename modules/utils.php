@@ -39,20 +39,13 @@
             $month = date('M');
             $year =  date('Y');
             $format = date('a');
-
             $upload_flag=false;
-
-            $month_year = $month.$year;
-
-            $uploaddir = 'uploads/'.$month_year;
-            
+           
             $date = $day.$month . $year;
-
             $time = $date.$h.$m.$s.$format;
             $picN = 'uploads/'.$year.'/'.$month.'/'.$doc .'/'.$owner. '/'. $owner. ($time.$unique_param). '.'.array_pop(explode("/", $_FILES[$fil]['type']));
 
             $temp_file  = $_FILES[$fil]['tmp_name'];
-            
             
             if(in_array($_FILES[$fil]['type'], $this->upload_types)) {
 
@@ -71,7 +64,7 @@
                    //Create the folder and push
                     mkdir('uploads/'.$year.'/'.$month.'/'.$doc .'/'. $owner, 0777, true);
 
-                    if((move_uploaded_file($_FILES[$fil]['tmp_name'], $picN) )){
+                    if((move_uploaded_file($temp_file, $picN) )){
                         $upload_flag = true;
                     }
                 }
