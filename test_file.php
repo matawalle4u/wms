@@ -24,7 +24,10 @@
 
 <form method="post" action="" ENCTYPE="multipart/form-data">
 
-   <input name="file" type="file" reuired>            
+   <input name="file" type="file" reuired>  
+
+   <input type="radio" name="doc" value="invoice">Invoice
+   <input type="radio" name="doc" value="receipt">Receipt     
              
     <input type="submit" class="btn btn-block btn-primary" value="Upload" name="upload">
     
@@ -42,7 +45,9 @@ if(isset($_POST['upload'])){
 
     //$file_types = array("image/jpg", "image/png", "image/jpeg");
 
-    $util->upload('file', "Daniel_Popa", 'Invoice', 'Mamar');
+    $doc = $_POST['doc'];
+
+    $util->upload('file', "Daniel_Popa", $doc, 'Adam');
 }
 
 // $us = new Driver('tailors', 'phone', 'followup');

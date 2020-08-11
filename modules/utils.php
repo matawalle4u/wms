@@ -60,7 +60,7 @@
                     }
                     
                 }else{
-                   //Create the folder and push
+                   
                     mkdir('uploads/'.$year.'/'.$month.'/'.$doc .'/'. $owner, 0777, true);
 
                     if((move_uploaded_file($temp_file, $picN) )){
