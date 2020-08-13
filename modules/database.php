@@ -27,19 +27,48 @@
 
             //TODO make this prepared statement
             $put_flag = false;
+            $data_types = '';
+            $filtered_values =[];
+            $question_marks ='';
+
+            foreach ($values as $key => $value) {
+               
+                 //array_push($data_types, substr(gettype($value), 0,1));
+                 if(gettype($value)=='integer'){
+                    
+                    array_push($filtered_values, $value);
+
+                 }else{
+                    echo gettype($value)." ";
+                    array_push($filtered_values, "'{$value}'");
+                 }
+                 
+                 $question_marks .=',?';
+                 $data_types .=substr(gettype($value), 0,1);
+    
+            }
+            $new_qs = substr($question_marks, 1);
+            print_r($data_types) ."<br />";
+
             $cols = implode(',', $columns);
-            $vals = implode(',', $values);
+            $vals = implode(',', $filtered_values);
 
             //echo $cols,$vals;
             
+            //$vals
+            echo "INSERT INTO $table ($cols) VALUES ($data_types, $vals, $new_qs)";
+            echo "<br />".strlen($data_types), ':'. $vals ."<br />";
 
-            $result = $this->database_obj->query("INSERT INTO $table ($cols) VALUES ($vals)");
+            $prepare_st = $this->database_obj->prepare("INSERT INTO $table ($cols) VALUES ($new_qs)");
 
-            if($result==true){
-                $put_flag = true;
-            }
+            $prepare_st->bind_param($data_types, $vals);
+            $prepare_st->close();
 
-            return $put_flag;
+            // if($result==true){
+            //     $put_flag = true;
+            // }
+
+            // return $put_flag;
         }
 
 
@@ -99,7 +128,7 @@
             $this->database_obj->query("UPDATE $table SET $coll $cond");
         }
         
-        //
+        
         public function join_get($table, $second_table, $first, $second , array $columns, array $conditions, array $values, $limit){
 			
 			$all_ent = array();
@@ -112,6 +141,43 @@
 
             
             $result =$this->database_obj->query("SELECT  $cols FROM $table INNER JOIN $second_table ON $first=$second $cond");
+            while($row=$result->fetch_array()){
+                $group = array();
+                for($i=0; $i<=sizeof($columns)-1; $i++){
+                    $group[$columns[$i]] = $row[$columns[$i]];
+                }
+                array_push($all_ent, $group);
+            }
+			
+            return $all_ent;
+        }
+
+
+        public function start_transaction(){
+            return $this->database_obj->query("START TRANSACTION");
+        }
+
+        public function roll_or_commit($choise){
+
+            return $this->database_obj->query($choise);
+        }
+        
+
+        public function join_3_get($table, $second_table, $third_tbl, $first, $second,$third, array $columns, array $conditions, array $values, $limit){
+			
+			$all_ent = array();
+            $cols = implode(',', $columns);
+            $cond =$this->gen_conds($conditions, $values);
+
+            if($limit !='many'){
+                $cond.=' LIMIT 1';
+            }
+
+            
+            
+            $result =$this->database_obj->query("SELECT  $cols FROM $table INNER JOIN $second_table ON $first=$second INNER JOIN $third_tbl ON $first=$third $cond");
+           // 'racks', 'warehouses','warehouse_zones', 'racks.rack_id', 'warehouses.warehouse_id', 'warehouse_zones.zone_id',
+            //`racks` INNER JOIN `warehouses` ON `racks.rack_id`= `warehouses.warehouse_id` INNER JOIN warehouse_zones ON 
             while($row=$result->fetch_array()){
                 $group = array();
                 for($i=0; $i<=sizeof($columns)-1; $i++){

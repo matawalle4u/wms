@@ -37,7 +37,7 @@
 <?php
 include('modules/utils.php');
 date_default_timezone_set('Africa/Lagos');
-echo date("Y.m.d");
+
 if(isset($_POST['upload'])){
     //$file  = $_POST['file'];
 
@@ -90,5 +90,7 @@ function Dan(){
 
 // }
 //make_order([], [], []);
+$f = "1";
+echo gettype($f);
 
 ?>
