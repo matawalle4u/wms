@@ -3,6 +3,15 @@
 -- Sales -> Stocks|Request
 
 
+CREATE TRIGGER `after_stock_update` 
+  AFTER UPDATE ON `stocks` 
+    FOR EACH ROW
+      insert into transfers (product, sender, receiver, quantity, driver, transfer_docs, transfer_date) VALUES (old.product, old.warehouse, old.warehouse, old.quantity, 1, 'Testss', now())
+     
+
+
+
+
 CREATE TRIGGER `after_sales_insert` 
   AFTER INSERT ON `users` 
     FOR EACH ROW 

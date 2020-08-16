@@ -31,44 +31,71 @@
             $filtered_values =[];
             $question_marks ='';
 
+
+            $rr =[];
+
             foreach ($values as $key => $value) {
+
+                array_push($rr, "$$columns[$key]");
                
-                 //array_push($data_types, substr(gettype($value), 0,1));
                  if(gettype($value)=='integer'){
-                    
+                    $data_types .='i';
+                    //array_push($data_types, 'i');
+
                     array_push($filtered_values, $value);
 
                  }else{
-                    echo gettype($value)." ";
+                   $data_types .='s';
+                   //array_push($data_types, 'i');
                     array_push($filtered_values, "'{$value}'");
                  }
                  
                  $question_marks .=',?';
-                 $data_types .=substr(gettype($value), 0,1);
+                 //$data_types .=substr(gettype($value), 0,1);
     
             }
+
             $new_qs = substr($question_marks, 1);
-            print_r($data_types) ."<br />";
+            $dtyp = "'{$data_types}'";
+            //echo "'{$dtyp}'" ."<br />";
 
             $cols = implode(',', $columns);
             $vals = implode(',', $filtered_values);
+            $vals3 = implode(',', $rr);
 
-            //echo $cols,$vals;
+            $explo = explode(',', $vals3);
+
+           //$str = strlen($new_qs);
+            //echo "<br />INSERT INTO $table ($cols) VALUES ($new_qs)";
+            //echo "<br />".strlen($data_types), ':'. $vals ."<br />";
+
+            $prepare_st = $this->database_obj->query("INSERT INTO $table ($cols) VALUES ($vals)");
+            if($prepare_st){
+                return true;
+            }else{
+                return false;
+            }
+
+            // echo "$dtyp, $vals3";
+            // $prepare_st->bind_param($data_types, $email, $suna);
+           
             
-            //$vals
-            echo "INSERT INTO $table ($cols) VALUES ($data_types, $vals, $new_qs)";
-            echo "<br />".strlen($data_types), ':'. $vals ."<br />";
-
-            $prepare_st = $this->database_obj->prepare("INSERT INTO $table ($cols) VALUES ($new_qs)");
-
-            $prepare_st->bind_param($data_types, $vals);
-            $prepare_st->close();
-
-            // if($result==true){
-            //     $put_flag = true;
+            // foreach ($explo as $key => $value) {
+            //     # code...
+            //     echo $value;
+            //     //$value  == $values[$key];
+            //    $email = 'makan@gmail.com';
+            //    $suna = 'Kwadi';
             // }
 
-            // return $put_flag;
+            // $email = 'makan@gmail.com';
+            // $suna = 'Kwadi';
+
+           
+            // $prepare_st->execute();
+            // $prepare_st->close();
+
+           
         }
 
 
@@ -126,6 +153,20 @@
                 $counter+=1;
             }
             $this->database_obj->query("UPDATE $table SET $coll $cond");
+        }
+
+
+        public function delete($table, array $conditions, array $cond_values){
+            // 
+            $cond =$this->gen_conds($conditions, $cond_values);
+            $result =$this->database_obj->query("DELETE FROM $table $cond");
+            //echo "DELETE FROM $table $cond";
+            if($result->num_rows_affected >0){
+                echo "Done";
+            }else{
+                echo "No";
+            }
+
         }
         
         

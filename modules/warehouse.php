@@ -12,6 +12,7 @@
     private $zone_tbl = 'warehouse_zones';
     private $racks_tbl = 'racks';
     private $transfer_tbl = 'transfers';
+    private $stocks_tbl = 'stocks';
 
     
     public function create_ware_house(array $values){
@@ -43,6 +44,27 @@
             return false;
         }
     }
+
+    public function create_stock(array $values){
+
+        $columns = array(
+            'product',
+            'warehouse',
+            'quantity',
+            'status'
+        );
+
+        $create = $this->put($this->stocks_tbl, $columns,$values);
+        if($create){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+
 
     public function create_rack(array $values){
         $columns = array(
@@ -120,9 +142,27 @@
     }
 
 
+    public function tee_test($values){
+
+        $columns = array("email", "suna");
+
+        //print_r($this->database_obj);autocommit(FALSE);
+        //$this->database_obj->begin_transaction();
+
+        $insert  = $this->put('tee', $columns, $values);
+
+        if($insert){
+            return true;
+        }else{
+            return false;
+        }
+        
+
+    }
 
     public function transfer(array $values){
         $columns = array(
+
             'product',
             'quantity',
             'driver',
@@ -146,26 +186,32 @@
         //$this->roll_or_commit("COMMIT");
     }
 
+    public function update_transfer(array $columns, array $values, array $conds, array $conds_vals){
+
+        //Update the warehouse
+
+        $update = $this->update($this->transfer_tbl, $columns, $values, $conds, $conds_vals);
+        if($update){
+            return true;
+        }else{
+            return false;
+        }
+    
+    }
+
+    public function delete_transfer(array $conds, array $conds_vals){
+        $this->delete($this->transfer_tbl, $conds, $conds_vals);
+
+
+    }
+
 
 
 
    }
 
    $wh = new Warehouse();
-   
-   //$wh->create_ware_house(['name', 'address'], ["'Warehouse Iasi'", "'Iasi Nigeria Romania'"]);
-
-   //$wh->update_warehouse(['name'], ["Updated Name 3333"], ['warehouse_id'],["3"]);
-   //echo $wh->tables[0];
-//    $www = $wh->view_warehouse(['name', 'address'], [], [], 'many');
-//    echo $www[0]['name'];
-//    echo "<br />". $www[1]['name'];
-//    echo "<br />". $www[2]['name'];
-
-//    $zon = $wh->create_warehouse_zone(['name', 'warehouse'], ["'Damage Zone'", "'3'"]);
-//    if($zon){
-//     echo 'sxxxx';
-//    }
+  
 
 
 $zones = $wh->view_warehouse_zone(['zone_name','zone_id', 'zone_warehouse'], [], [], 'many');
@@ -345,8 +391,16 @@ $driver = 1;
 $sender =3;
 $receiver =5;
 $transfer_docs = "The docs";
+$id =45;
+$time ='20/20/2020';
 
-$trr = $wh2->transfer([$product, $qty, $driver, $sender, $receiver, $transfer_docs]);
+
+//$trr = $wh2->transfer([$product, $qty, $driver, $sender, $receiver, $transfer_docs]);
+//$wh2->update_transfer(['quantity'], [8], ['sender', 'receiver', 'transfer_docs'], [3,5, 'docs']);
+//$wh2->delete_transfer(['sender', 'receiver', 'transfer_docs'], [3,5, 'docs']);
+$wh2->create_stock([3, 8, 12, 'Damaged']); 
+$trr = $wh2->tee_test(["transact@", "AdamuDaniel"]);
+
 
 if($trr){
     echo"Sxxxx";
