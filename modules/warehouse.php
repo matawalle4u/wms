@@ -13,6 +13,8 @@
     private $racks_tbl = 'racks';
     private $transfer_tbl = 'transfers';
     private $stocks_tbl = 'stocks';
+    private $product_tbl = 'products';
+    private $damage_tbl = 'damages';
 
     
     public function create_ware_house(array $values){
@@ -49,17 +51,29 @@
 
         $columns = array(
             'product',
-            'warehouse',
+            'rack',
             'quantity',
             'status'
         );
 
-        $create = $this->put($this->stocks_tbl, $columns,$values);
-        if($create){
-            return true;
+        //$create = $this->put($this->stocks_tbl, $columns,$values);
+        $product = $values[0];
+        $rack = $values[1];
+        $new_qty = $values[2];
+
+        $create=0;
+        //If the stock doesnt exist it should add new entry
+        $stocks = $this->get($this->stocks_tbl, ['product', 'quantity'], ['product', 'rack'], [$product, $rack], 'single');
+        //print_r($stocks);
+        if(!empty($stocks)){
+            //It exists update the quantity
+            $this->update($this->stocks_tbl, ['quantity'], [$new_qty+$stocks[0]['quantity']], ['product', 'rack'], [$product, $rack]);
         }else{
-            return false;
+            //Doesnt exists make new entry
+            $this->put($this->stocks_tbl, $columns,$values);
+            
         }
+
 
     }
 
@@ -202,6 +216,43 @@
     public function delete_transfer(array $conds, array $conds_vals){
         $this->delete($this->transfer_tbl, $conds, $conds_vals);
 
+
+    }
+
+    public function delete_rack($rack_id){
+        //check if the rack has product we delete else
+        $product = $this->get($this->stocks_tbl, ['quantity'], ['rack'], [$rack_id], 'single');
+        if(!empty($product)){
+            $quantity = $product[sizeof($product)-1]['quantity'];
+            if($quantity<1){
+                //You can delete
+                $deleted = $this->delete($this->racks_tbl,['rack_id'], [$rack_id]);
+                return $deleted;
+            }else{
+                //You cannot delete
+                return false;
+            }
+        }else{
+            $deleted = $this->delete($this->racks_tbl,['rack_id'], [$rack_id]);
+            return $deleted;
+        }
+    }
+
+    public function record_damage($product, array $values){
+        //upload the image given
+        $columns = array(
+            'product',
+            'quantity',
+            'details',
+            'img_src'
+        );
+
+        $record  = $this->put($this->damage_tbl, $columns, $values);
+        if($record){
+            //reduce the stock
+            //Stock reduced already by trigger set
+            return true;
+        }
 
     }
 
@@ -379,7 +430,6 @@ if(isset($_POST['rack_created'])){
     $level =$_POST['level'];
     $position =$_POST['position'];
     echo 'Warehouse'.$warehouse. 'Zone'.$zone. 'Row'.$row .'Column'.$column.'Level'. $level. 'Position'.$position;
-
     $wh2->create_rack(["'$warehouse'", "'$zone'", "'$row'", "'$column'", "'$level'", "'$position'"]); 
 }
 
@@ -398,8 +448,13 @@ $time ='20/20/2020';
 //$trr = $wh2->transfer([$product, $qty, $driver, $sender, $receiver, $transfer_docs]);
 //$wh2->update_transfer(['quantity'], [8], ['sender', 'receiver', 'transfer_docs'], [3,5, 'docs']);
 //$wh2->delete_transfer(['sender', 'receiver', 'transfer_docs'], [3,5, 'docs']);
-$wh2->create_stock([3, 8, 12, 'Damaged']); 
-$trr = $wh2->tee_test(["transact@", "AdamuDaniel"]);
+$wh2->create_stock([5, 11, 7, 'Damaged']); 
+//$trr = $wh2->tee_test(["transact@", "AdamuDaniel"]);
+if($wh2->delete_rack(10)){
+    echo 'Done';
+}else{
+    echo 'failed';
+}
 
 
 if($trr){
