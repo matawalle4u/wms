@@ -9,7 +9,7 @@
 CREATE TRIGGER `after_damages_insert` 
   AFTER INSERT ON `damages` 
     FOR EACH ROW
-      UPDATE stocks SET quantity=quantity-new.quantity WHERE product=new.product AND quantity>0
+      UPDATE stocks SET quantity=quantity-new.quantity WHERE product=new.product AND quantity>0 AND quantity-new.quantity>-1
 
 CREATE TRIGGER `after_sales_insert` 
   AFTER INSERT ON `sales` 
