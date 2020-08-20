@@ -3,6 +3,28 @@
 -- Sales -> Stocks|Request
 
 
+--Inititate automatic Reuest trigger
+CREATE TRIGGER after_sales_update
+AFTER UPDATE
+ON sales FOR EACH ROW
+BEGIN
+    IF new.quantity <> 0 THEN
+        INSERT INTO requests(product, quantity, warehouse) VALUES (new.product, new.quantity, new.warehouse);
+    END IF;
+END
+
+
+CREATE TRIGGER `after_transfer_insert` 
+  AFTER INSERT ON `transfers` 
+    FOR EACH ROW
+    --udate two warehouses sender is reduced receiver is increased
+      UPDATE stocks SET quantity=quantity-new.quantity WHERE product=new.product AND warehouse=new.sender
+      -- update receiver increase the stock
+      UPDATE stocks SET quantity=quantity+new.quantity WHERE product=new.product AND warehouse=new.receiver
+
+
+
+
 CREATE TRIGGER `after_stock_update` 
   AFTER UPDATE ON `stocks` 
     FOR EACH ROW

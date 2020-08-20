@@ -434,7 +434,7 @@ if(isset($_POST['rack_created'])){
 }
 
 $racks2 = $wh2->view_rack(['warehouse_name', 'zone_name', 'rack_zone', 'rack_row', 'rack_column', 'rack_level', 'rack_position'], [], [], 'many');
-
+print_r($racks2);
 $product = 3;
 $qty = 23;
 $driver = 1;
@@ -448,20 +448,16 @@ $time ='20/20/2020';
 //$trr = $wh2->transfer([$product, $qty, $driver, $sender, $receiver, $transfer_docs]);
 //$wh2->update_transfer(['quantity'], [8], ['sender', 'receiver', 'transfer_docs'], [3,5, 'docs']);
 //$wh2->delete_transfer(['sender', 'receiver', 'transfer_docs'], [3,5, 'docs']);
-$wh2->create_stock([5, 11, 7, 'Damaged']); 
+//$wh2->create_stock([5, 11, 7, 'Damaged']); 
 //$trr = $wh2->tee_test(["transact@", "AdamuDaniel"]);
-if($wh2->delete_rack(10)){
-    echo 'Done';
-}else{
-    echo 'failed';
-}
+// if($wh2->delete_rack(10)){
+//     echo 'Done';
+// }else{
+//     echo 'failed';
+// }
 
 
-if($trr){
-    echo"Sxxxx";
-}else{
-    echo"errr";
-}
+
 //Sale
 ?>
 

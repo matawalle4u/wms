@@ -159,13 +159,15 @@
         public function delete($table, array $conditions, array $cond_values){
             // 
             $cond =$this->gen_conds($conditions, $cond_values);
+
             $result =$this->database_obj->query("DELETE FROM $table $cond");
-            //echo "DELETE FROM $table $cond";
-            if($result->num_rows_affected >0){
-                echo "Done";
-            }else{
-                echo "No";
-            }
+           
+            // if($result->affected_rows >0){
+            //     return true;
+            // }else{
+            //     return false;
+            // }
+            return $result;
 
         }
         

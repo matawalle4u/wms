@@ -23,5 +23,18 @@ CREATE TRIGGER `after_sales_delete`
 --END OF WORKING TRIGGERS
 
 
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer` int(11) NOT NULL,
+  `catgory` varchar(65) NOT NULL,
+  `quantity` text NOT NULL,
+  `price` text NOT NULL,
+  `product` text NOT NULL,
+  `delivery_items` text,
+  `delivery_items_price` text,
+  `order_date` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  PRIMARY KEY(`order_id`),
+  FOREIGN KEY (`customer`) REFERENCES `customers`(`customer_id`) ON DELETE CASCADE 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
