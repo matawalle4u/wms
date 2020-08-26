@@ -79,17 +79,34 @@
 
 
 
-        public function decompose_details($order){
-            //
-            $details = $order['details'];
+        public function decompose($order){
 
-            $ord = explode(';',$details);
-            foreach($ord as $key2=>$valu){
-                $ord2 = explode(':',$valu);
-                echo $key2. ' ';
-                print_r($ord2)."<br />";
+            $decomposed = array();
+            $details = explode(';', $order['details']);
+
+            foreach($details as $key=>$valu){
+                $details = explode(':',$valu);
+                
+                foreach($details as $ord_key=>$ord_val){
+                    $index = $details[0];
+                    if($ord_key>0){
+                        $content  = explode(',', $ord_val);
+                        //$result[$index] = $content;
+                        array_push($decomposed, $content);
+                        
+                        // echo "Key => ".$index ." ";
+                        // print_r($content);
+                        // echo "<br />";
+
+                    }
+                }
 
             }
+
+            //print_r($result[4]);
+            //print_r($result['quantity']);
+            //echo $result['products'];
+            return $decomposed;
 
 
         }
@@ -108,7 +125,9 @@
     $orders = $obj->get_order(['customer', 'details', 'order_status'], [], [], 'many');
 
     foreach($orders as $key=>$value){
-        $details = $obj->decompose_details($orders[$key]);
+        $details = $obj->decompose($orders[$key]);
+        print_r($details[1]);
+        echo "<br />";
 
     }
 
