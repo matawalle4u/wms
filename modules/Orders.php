@@ -27,6 +27,18 @@
                 Check whether the item is available
                 Decompose the array and make complex analysis here
 
+                ORDER Details format as below
+
+                $details = "
+                    products:rice,beans,Banana,Mango;
+                    quantity:2,3,47,99;
+                    prices:20,30,40,50;
+                    selling_price:1,2,3,4;
+                    orders:B2B,SalesAgent,Website,Shop
+                ";
+
+                Implode and explode functions are applied for usage 
+
 
             */
 
