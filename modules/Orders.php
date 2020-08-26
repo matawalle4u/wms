@@ -24,7 +24,8 @@
 
             /*
 
-            Check whether the item is available
+                Check whether the item is available
+                Decompose the array and make complex analysis here
 
 
             */
