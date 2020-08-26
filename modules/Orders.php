@@ -113,7 +113,7 @@
     }
 
 
-    $obj->update_order(['order_status'], ['Cancel'], ['order_id'], ['1']);
+    $obj->update_order(['order_status'], ['Cancelled'], ['order_id'], ['1']);
 
     //$obj->delete_order(['order_id'], ['5']);
 
