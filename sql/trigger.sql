@@ -25,6 +25,18 @@ CREATE TRIGGER `after_transfer_insert`
       UPDATE stocks SET quantity=quantity+new.quantity WHERE product=new.product AND warehouse=new.receiver
 
 
+CREATE TRIGGER `after_orders_update` 
+  AFTER UPDATE ON `orders` 
+    FOR EACH ROW
+        DELETE FROM orders WHERE new.order_id=new.order_id AND new.order_status='Deleted'
+
+CREATE TRIGGER `after_orders_update` 
+  AFTER UPDATE ON `orders` 
+    FOR EACH ROW
+      if new.order_status ='Deleted':
+        --delete the entry here
+        DELETE FROM orders WHERE order_id=new.order_id
+      END IF;
 
 
 CREATE TRIGGER `after_stock_update` 

@@ -172,6 +172,7 @@
                }
                 $counter+=1;
             }
+            //echo "UPDATE $table SET $coll $cond";
             $this->database_obj->query("UPDATE $table SET $coll $cond");
         }
 

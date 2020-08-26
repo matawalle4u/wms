@@ -3,8 +3,11 @@
     include('warehouse.php');
 
     class Orders extends Warehouse{
+
         private $orders_tbl = 'orders';
+
         /*
+            $obj->update_order(['order_status'], ['Cancel'], ['order_id'], ['1']); working
             1. Orders from shops (Problem comes when a customer)
             2. Orders from Websites
             3. Orders from B2B Platforms
@@ -19,10 +22,17 @@
 
         public function create_order(array $values){
 
+            /*
+
+            Check whether the item is available
+
+
+            */
+
             $columns = array(
                 'customer',
                 'details',
-                'order_type'
+                'order_status'
             );
 
             $create = $this->put($this->orders_tbl, $columns, $values);
@@ -38,11 +48,28 @@
             return $orders;
         }
 
+        public function update_order(array $columns, array $values, array $conds, array $conds_vals){
+            $update = $this->update($this->orders_tbl, $columns, $values, $conds, $conds_vals);
+            if($update){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+
+        public function delete_order(array $conds, array $conds_vals){
+            $this->delete($this->orders_tbl, $conds, $conds_vals);
+        }
+
+
+
+
+
         public function decompose_details($order){
             //
             $details = $order['details'];
 
-            //print_r($details);
             $ord = explode(';',$details);
             foreach($ord as $key2=>$valu){
                 $ord2 = explode(':',$valu);
@@ -65,12 +92,17 @@
 
 
 
-    $orders = $obj->get_order(['customer', 'details', 'order_type'], [], [], 'many');
+    $orders = $obj->get_order(['customer', 'details', 'order_status'], [], [], 'many');
 
     foreach($orders as $key=>$value){
         $details = $obj->decompose_details($orders[$key]);
 
     }
+
+
+    $obj->update_order(['order_status'], ['Cancel'], ['order_id'], ['1']);
+
+    //$obj->delete_order(['order_id'], ['5']);
 
     // $ord = explode(':',$orders[0]['details']);
     // foreach($ord as $key=>$value){
