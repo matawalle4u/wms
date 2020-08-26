@@ -1,4 +1,6 @@
 # wms
+
+--Fix orders implode explode manipulation for items
 --Fix Prepared statement
 --Fix Transaction commit and rollback
 --Products difference in customer and
