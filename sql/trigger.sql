@@ -3,15 +3,17 @@
 -- Sales -> Stocks|Request
 
 
---Inititate automatic Reuest trigger
-CREATE TRIGGER after_sales_update
-AFTER UPDATE
-ON sales FOR EACH ROW
-BEGIN
-    IF new.quantity <> 0 THEN
-        INSERT INTO requests(product, quantity, warehouse) VALUES (new.product, new.quantity, new.warehouse);
-    END IF;
-END
+--Inititate automatic Request trigger
+DELIMITER $$
+CREATE TRIGGER after_sales_insert_autoreq
+AFTER INSERT ON sales 
+FOR EACH ROW
+	BEGIN
+      
+      INSERT INTO requests (product, quantity, warehouse, status, supplier, request_date) VALUES (new.product, new.sold_qty, new.warehouse, 'Pending', 1, now());
+       
+    END $$
+DELIMITER ;
 
 
 CREATE TRIGGER `after_transfer_insert` 

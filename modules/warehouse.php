@@ -448,7 +448,7 @@ $time ='20/20/2020';
 //$trr = $wh2->transfer([$product, $qty, $driver, $sender, $receiver, $transfer_docs]);
 //$wh2->update_transfer(['quantity'], [8], ['sender', 'receiver', 'transfer_docs'], [3,5, 'docs']);
 //$wh2->delete_transfer(['sender', 'receiver', 'transfer_docs'], [3,5, 'docs']);
-//$wh2->create_stock([5, 11, 7, 'Damaged']); 
+//$wh2->create_stock([6, 11, 3, 'Damaged']); 
 //$trr = $wh2->tee_test(["transact@", "AdamuDaniel"]);
 // if($wh2->delete_rack(10)){
 //     echo 'Done';
