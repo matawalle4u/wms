@@ -91,26 +91,14 @@
                     $index = $details[0];
                     if($ord_key>0){
                         $content  = explode(',', $ord_val);
-                        //$result[$index] = $content;
                         array_push($decomposed, $content);
-                        
-                        // echo "Key => ".$index ." ";
-                        // print_r($content);
-                        // echo "<br />";
-
                     }
                 }
 
             }
 
-            //print_r($result[4]);
-            //print_r($result['quantity']);
-            //echo $result['products'];
             return $decomposed;
-
-
         }
-
 
     }
 
@@ -124,22 +112,37 @@
 
     $orders = $obj->get_order(['customer', 'details', 'order_status'], [], [], 'many');
 
+    //Iterate every order for its details
     foreach($orders as $key=>$value){
+
         $details = $obj->decompose($orders[$key]);
-        print_r($details[1]);
+
+        $customer  = $orders[$key]['customer'];
+        $order_status = $orders[$key]['order_status'];
+
+        //Products details array for every order
+        $products = $details[0];
+        $quantities = $details[1];
+        $prices = $details[2];
+        $selling_price = $details[3];
+        $order_type = $details[4];
+        
+
+        echo 'Customer: ' .$orders[$key]['customer']. ' ';
+
+        print_r($products);
+        print_r($quantities);
+
+        //print_r($prices);
+        //print_r($selling_price);
+        print_r($order_type);
+
         echo "<br />";
 
     }
 
 
-    $obj->update_order(['order_status'], ['Cancelled'], ['order_id'], ['1']);
-
-    //$obj->delete_order(['order_id'], ['5']);
-
-    // $ord = explode(':',$orders[0]['details']);
-    // foreach($ord as $key=>$value){
-    //     echo $value .' ';
-    // }
+    
 
 
 ?>
