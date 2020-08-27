@@ -34,7 +34,7 @@
             $vals = implode(',', $values);
 
             $query  = "INSERT INTO $table ($cols) VALUES ($vals)";
-            echo"$query";
+            //echo"$query";
 
             $result = $this->database_obj->query($query);
 
