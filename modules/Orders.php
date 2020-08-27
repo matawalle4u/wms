@@ -21,37 +21,14 @@
         */
 
         public function create_order(array $values){
-
+            
             /*
-
-                Check whether the item is available
-                Decompose the array and make complex analysis here
-
-                ORDER Details format as below
-
-                $details = "
-                    products:rice,beans,Banana,Mango;
-                    quantity:2,3,47,99;
-                    prices:20,30,40,50;
-                    selling_price:1,2,3,4;
-                    orders:B2B,SalesAgent,Website,Shop;
-                    unit_measure:kg,carton,bottle,pallet;
-                    product_id:1,2,3,4
-                ";
-
-                Implode and explode functions are applied for usage 
-
-
+                $deeetailss = "products:rice;quantity:20;prices:20;selling_price:1;order_types:B2B;unit_measure:kg;product_id:5";
             */
-
-            $columns = array(
-                'customer',
-                'details',
-                'order_status'
-            );
-
-            //Details come at index 1
-            $unwanted_chars  = array("'", ",", "."," ");
+            $unwanted_chars  = array("'",",","."," ");
+            $columns = array('customer','details','order_status');
+            $unavailables = array();
+            
 
             $details = $this->decompose($values[1]);
             
@@ -66,57 +43,47 @@
 
             foreach($products as $key2=>$value2){
 
-                //Strip characters and convert to integer
                 $item_id = str_replace($unwanted_chars, "",$product_id[$key2]);
                 $item_qty = str_replace($unwanted_chars, "", $quantities[$key2]);
+                $unit_mea = $unit[$key2];
+                $item_name = $products[$key2];
+                $order_ty = $order_type[$key2];
+                $price = $prices[$key2];
+                $selling_pri = $selling_price[$key2];
+                
+                
 
                 $produ = $this->get('stocks', ['quantity'], ['product'], [$item_id], 'single');
-                
+                $line = "products:$item_name;quantity:$item_qty;prices:$price;selling_price:$selling_pri;order_types:$order_ty;unit_measure:$unit_mea;product_id:$item_id";
+
                 if(!empty($produ)){
-
                     if($item_qty<$produ[0]['quantity']){
-                        //request Order
-                        echo"Successfully placed and order";
-
+                        $put  = $this->put($this->orders_tbl, $columns, $values);
+                        if($put==false){
+                            //Could not process Other return to user
+                        }
                     }else{
 
-                        //Available quanity doenst exist in store or zero remains after order
-                        /*
-
-                        Make a request here
-
-
-                        */
-
                         if($item_qty==$produ[0]['quantity']){
-                            //Request Order
+                            $put = $this->put($this->orders_tbl, $columns, $values);
+                            if($put==false){
+                                //Could not process Other return to user
+                            }
 
-                            echo"Successfully placed and order";
-
+                        }else{
+                            
+                            array_push($unavailables, $line);
                         }
 
-
-
-
+                        //TODO implement Request logic here
                     }
-                    echo $produ[0]['quantity']. 'Customer is ordering '. $item_qty;
+                    
                 }else{
-                    //No such product in stock push Product details to erro array
-                    echo"No such product exists";
+                    array_push($unavailables, $line);
                 }
-
-
             }
 
-
-
-
-            $create =true; //$this->put($this->orders_tbl, $columns, $values);
-            if($create){
-                return true;
-            }else{
-                return false;
-            }
+            return $unavailables;
         }
 
         public function get_order(array $columns, array $conditions, array $values, $limit){
@@ -169,9 +136,45 @@
     $obj = new Orders();
     $customer = 1;
 
-    $deeetailss = "products:rice;quantity:2;prices:20;selling_price:1;order_types:B2B;unit_measure:kg;product_id:5";
+    $deeetailss = "products:rice;quantity:5000;prices:20;selling_price:1;order_types:B2B;unit_measure:kg;product_id:5";
     $values = ["'$customer'", "'$deeetailss'", "'Pending'"];
-    $obj->create_order($values);
+    $una = $obj->create_order($values);
+    if(empty($una)){
+        echo"Order Requested No any problem";
+    }else{
+        //print_r($una);
+        //Trying to process each returned lined
+        foreach($una as $lineKey=>$lineVal){
+            //echo"$lineVal";
+
+
+            $details = $obj->decompose($lineVal);
+
+           
+
+            //Products details array for every order
+            $products = $details[0];
+            $quantities = $details[1];
+            $prices = $details[2];
+            $selling_price = $details[3];
+            $order_type = $details[4];
+            $unit = $details[5];
+            $product_id = $details[6];
+
+            foreach($products as $key2=>$value2){
+
+                echo"<br />$value2 ($unit[$key2])
+                <input type=text name=$value2 value=$quantities[$key2]> <br />";
+                //echo 'ID '.$product_id[$key2]. ' ' .$value2 . ' Qty '. $quantities[$key2]. ' Unit '. $unit[$key2].' ';
+            }
+        
+        echo "<br />";
+
+
+
+
+        }
+    }
 
 
 
