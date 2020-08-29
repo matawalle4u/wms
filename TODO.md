@@ -12,6 +12,12 @@
 --Print to PDF and Export into excel
 --Fix 3 tables join
 
+# Order
+--Automate Request based on average days it takes a product to finish 
+(e.g If Banana takes 1 week to finish send request 1 week before stock is 0)
+
+--Error handling should be properly done with arrays
+
 
 
 
