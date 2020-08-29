@@ -1,4 +1,11 @@
-
+<?php
+    /*
+    update_order(['order_status','details'], ['Gwaji',"$deeetailss"], ['order_id'], ['1']); working
+    During order
+    Order details format
+    $deeetailss = "products:rice;quantity:20;prices:20;selling_price:1;order_types:B2B;unit_measure:kg;product_id:5";
+    */
+?>
 <h1>Create Zone</h1>
 <form action="" method="post">
 
@@ -204,3 +211,87 @@ $time ='20/20/2020';
             }
     )
 </script>
+<?php
+
+$orders = $obj->get_order(['customer', 'details', 'order_status'], ['order_id'], ['7'], 'many');
+
+echo"
+    <form method=post action=>
+";
+
+//Iterate every order for its details
+foreach($orders as $key=>$value){
+
+    $details = $obj->decompose($orders[$key]['details']);
+
+    $customer  = $orders[$key]['customer'];
+    $order_status = $orders[$key]['order_status'];
+
+    //Products details array for every order
+    $products = $details[0];
+    $quantities = $details[1];
+    $prices = $details[2];
+    $selling_price = $details[3];
+    $order_type = $details[4];
+    $unit = $details[5];
+    $product_id = $details[6];
+
+    foreach($products as $key2=>$value2){
+
+        echo"$value2 ($unit[$key2])
+        <input type=text name=$value2 value=$quantities[$key2]> <br />";
+        //echo 'ID '.$product_id[$key2]. ' ' .$value2 . ' Qty '. $quantities[$key2]. ' Unit '. $unit[$key2].' ';
+    }
+    
+    echo "<br />";
+
+
+}
+
+
+$obj = new Orders();
+    $customer = 1;
+
+    $deeetailss = "products:rice,beans;quantity:500,20;prices:20,25;selling_price:1,3;order_types:B2B,Shop;unit_measure:kg,bag;product_id:5,5";
+    $values = ["'$customer'", "'$deeetailss'", "'Pending'"];
+    $una = $obj->create_order($values);
+    if(empty($una)){
+        echo"Order Requested No any problem";
+    }else{
+        //print_r($una);
+        //Trying to process each returned lined
+        foreach($una as $lineKey=>$lineVal){
+            //echo"$lineVal";
+
+
+            $details = $obj->decompose($lineVal);
+
+           
+
+            //Products details array for every order
+            $products = $details[0];
+            $quantities = $details[1];
+            $prices = $details[2];
+            $selling_price = $details[3];
+            $order_type = $details[4];
+            $unit = $details[5];
+            $product_id = $details[6];
+
+            foreach($products as $key2=>$value2){
+
+                echo"<br />$value2 ($unit[$key2])
+                <input type=text name=$value2 value=$quantities[$key2]> <br />";
+                //echo 'ID '.$product_id[$key2]. ' ' .$value2 . ' Qty '. $quantities[$key2]. ' Unit '. $unit[$key2].' ';
+            }
+        
+        echo "<br />";
+
+
+
+
+        }
+    }
+
+
+
+?>
