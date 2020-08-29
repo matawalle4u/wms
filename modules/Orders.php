@@ -5,34 +5,17 @@
     class Orders extends Warehouse{
 
         private $orders_tbl = 'orders';
-
-        /*
-            update_order(['order_status','details'], ['Gwaji',"$deeetailss"], ['order_id'], ['1']); working
-            1. Orders from shops (Problem comes when a customer)
-            2. Orders from Websites
-            3. Orders from B2B Platforms
-            4. Orders from Sales Agent
-        */
-
-        //TODO
-        /*
-            Check the order work flow
-
-        */
-
+        
         public function create_order(array $values){
-            
-            /*
-                $deeetailss = "products:rice;quantity:20;prices:20;selling_price:1;order_types:B2B;unit_measure:kg;product_id:5";
-            */
+            $return;
+            $columns = array('customer','details','order_status');
             $unavailables = $this->check_qty_details($values[1]);
             if(empty($unavailables)){
-                echo 'make an roder';
+                $return =  $this->put($this->orders_tbl, $columns, $values);
             }else{
-                echo'Some items are not available';
+                $return =$unavailables;
             }
-
-            
+            return $return; 
         }
 
         public function get_order(array $columns, array $conditions, array $values, $limit){
@@ -124,14 +107,25 @@
         }
     }
 
-    // $obj = new Orders();
+    $obj = new Orders();
     // // $deeetailss = "products:rice, beans;quantity:200, 900;prices:20,90;selling_price:1,99;order_types:B2B,shop;unit_measure:kg, bag;product_id:5,5";
     // // $un = $or->check_qty_details($deeetailss);
     // // print_r($un);
-    // $customer =1;
-    // $deeetailss = "products:rice,beans;quantity:10,20;prices:20,25;selling_price:1,3;order_types:B2B,Shop;unit_measure:kg,bag;product_id:5,5";
-    // $values = ["'$customer'", "'$deeetailss'", "'Pending'"];
-    // $una = $obj->create_order($values);
+     $customer =1;
+    $deeetailss = "products:rice,beans;quantity:10,20;prices:20,25;selling_price:1,3;order_types:B2B,Shop;unit_measure:kg,bag;product_id:5,5";
+    $values = ["'$customer'", "'$deeetailss'", "'Pend'"];
+    $una = $obj->create_order($values);
+    if(is_array($una)){
+        echo"Order couldnt be processed";
+    }else{
+        //echo"succss $una" .gettype($una);
+        if($una){
+            echo"done successfully";
+        }else{
+            echo "failed";
+        }
+
+    }
     // //echo $obj->update_order(['details', 'order_status'], ["$deeetailss", 'oee'], ['order_id'], ['1']);
 
 
