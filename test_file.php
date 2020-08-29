@@ -142,6 +142,22 @@ function Dan(){
 // }
 //make_order([], [], []);
 $f = "1";
-echo gettype($f);
+//echo gettype($f);
+
+
+function gwaji(){
+    $succ = false;
+    if($succ){
+        return 0;
+    }else{
+        return array('Adam', 'Ahmad');
+    }
+}
+$gwaj = gwaji();
+if(gettype($gwaj)=='array'){
+    print_r($gwaj);
+}else{
+    echo $gwaj;
+}
 
 ?>
