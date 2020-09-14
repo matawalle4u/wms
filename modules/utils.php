@@ -30,19 +30,10 @@
         }
 
         public function upload($fil, $unique_param, $doc, $owner){
-
-            $h = date('g');
-            $m = date('i');
-            $s = date('s');
-
-            $day = date('j');
-            $month = date('M');
-            $year =  date('Y');
-            $format = date('a');
             $upload_flag=false;
-           
-            $date = $day.$month . $year;
-            $time = $date.$h.$m.$s.$format;
+
+            $h = date('g'); $m = date('i'); $s = date('s'); $day = date('j');$month = date('M');$year =  date('Y'); $format = date('a');
+            $date = $day.$month . $year; $time = $date.$h.$m.$s.$format;
             $poped  = explode("/", $_FILES[$fil]['type']);
             $picN = 'uploads/'.$year.'/'.$month.'/'.$doc .'/'.$owner. '/'. $owner. ($time.$unique_param). '.'.array_pop($poped);
 
@@ -73,4 +64,5 @@
         public function __destruct(){
         }
     }
+    
 ?>

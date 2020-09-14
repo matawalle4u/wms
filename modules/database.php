@@ -1,15 +1,24 @@
 <?php
-    require('../modules/Manifest.php');
+    
     ini_set('display_errors', 1);
 
-     class DataBase extends DatabaseManifest{
+     class DataBase {
 
-        //public $database_obj;
-        //protected $current_db;
         private static $instance;
+        public $database_obj;
+
+        protected $host;
+        protected $username;
+        protected $password;
+        protected $dbname;
 
 
         public function __construct(){
+
+            $this->host = 'localhost';
+            $this->username ='root';
+            $this->password = '';
+            $this->dbname = 'crm';
 
             $this->establish_conn();
 
@@ -19,6 +28,52 @@
             }else{
                 return self::$instance;
             }
+        }
+
+
+        public function create_or_del($operation, $name){
+            $newname = "`{$name}`";
+
+            //TODO if operation is CREATE check wether db exists
+            $execute = $this->database_obj->query("$operation DATABASE $newname");
+            if($execute){
+
+                //connect to the the database created and select it
+                $this->database_obj = new mysqli($this->host, $this->username, $this->password, $name);
+                $this->database_obj->select_db($name);
+
+                return true;
+            }else{
+                return false;
+            }
+            
+        }
+
+        public function get_active_db(){
+            $result = $this->database_obj->query("SELECT DATABASE()");
+            if($result){
+                $row = $result->fetch_row();
+                $this->current_db= $row[0];
+                $result->close();
+                return $this->current_db;
+            }else{
+                return false;
+            }
+        }
+
+        public function set_active_db($name){
+            // TODO check if DB Exists before setting to avoid error
+            $this->dbname = $name;
+            $this->database_obj = new mysqli($this->host, $this->username, $this->password, $this->dbname);
+        }
+
+        public function establish_conn(){
+            $this->database_obj =  new mysqli($this->host, $this->username, $this->password, $this->dbname);
+            if(!$this->database_obj){
+                throw new Exception('Could not connect');
+            }
+
+            //return $this->database_obj;
         }
 
         
@@ -255,30 +310,30 @@
         
     }
 
-    class Dele extends DataBase {
+    // class Dele extends DataBase {
 
-        public function truct(){
+    //     public function truct(){
 
-            //$sql = new mysqli($this->host, $this->username, $this->password, 'crm');
-            //$this->establish_conn();
-            //parent::__construct();
-            //DataBase::__construct();
+    //         //$sql = new mysqli($this->host, $this->username, $this->password, 'crm');
+    //         //$this->establish_conn();
+    //         //parent::__construct();
+    //         //DataBase::__construct();
 
-            $r =  $this->database_obj->query("SELECT DATABASE()");
+    //         $r =  $this->database_obj->query("SELECT DATABASE()");
 
-            $row2 = $r->fetch_row();
-            echo "<h1>sss ".$row2[0] ."</h1>";
+    //         $row2 = $r->fetch_row();
+    //         echo "<h1>sss ".$row2[0] ."</h1>";
 
-            $r  = $this->get('users', ['name', 'phone'], ['phone'],["2349028163380"], 'many');
-            print_r($r);
+    //         $r  = $this->get('users', ['name', 'phone'], ['phone'],["2349028163380"], 'many');
+    //         print_r($r);
 
-        }
+    //     }
 
         
         
-    }
+    // }
 
-$d = new Dele();
+//$d = new Dele();
 //$d->truct();
 
 

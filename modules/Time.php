@@ -6,6 +6,7 @@
             //Throw an exception
         }
         parent::modify('+' . intval($days) . 'days');
+        return parent::format('Y-m-d');
     }
 
     public function sub_days($days){
@@ -83,6 +84,6 @@
 
 }
 
-$m = new DateManip();
+
 
 ?>

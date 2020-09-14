@@ -5,17 +5,20 @@
     class Orders extends Warehouse{
 
         private $orders_tbl = 'orders';
-        
+
         public function create_order(array $values){
+
             $return;
             $columns = array('customer','details','order_status');
+            
             $unavailables = $this->check_qty_details($values[1]);
             if(empty($unavailables)){
                 $return =  $this->put($this->orders_tbl, $columns, $values);
             }else{
-                $return =$unavailables;
+                $return = $unavailables;
             }
-            return $return; 
+
+            return $return;
         }
 
         public function get_order(array $columns, array $conditions, array $values, $limit){
@@ -55,7 +58,7 @@
                 $line = "products:$item_name;quantity:$item_qty;prices:$price;selling_price:$selling_pri;order_types:$order_ty;unit_measure:$unit_mea;product_id:$item_id";
                 if(!empty($produ)){
                     if($item_qty>$produ[0]['quantity']){
-                        //Requesting too many 
+                        
                         array_push($unavailables, $line);
                     }
                 }else{
@@ -107,26 +110,7 @@
         }
     }
 
-    $obj = new Orders();
-    // // $deeetailss = "products:rice, beans;quantity:200, 900;prices:20,90;selling_price:1,99;order_types:B2B,shop;unit_measure:kg, bag;product_id:5,5";
-    // // $un = $or->check_qty_details($deeetailss);
-    // // print_r($un);
-     $customer =1;
-    $deeetailss = "products:rice,beans;quantity:10,20;prices:20,25;selling_price:1,3;order_types:B2B,Shop;unit_measure:kg,bag;product_id:5,5";
-    $values = ["'$customer'", "'$deeetailss'", "'Pend'"];
-    $una = $obj->create_order($values);
-    if(is_array($una)){
-        echo"Order couldnt be processed";
-    }else{
-        //echo"succss $una" .gettype($una);
-        if($una){
-            echo"done successfully";
-        }else{
-            echo "failed";
-        }
-
-    }
-    // //echo $obj->update_order(['details', 'order_status'], ["$deeetailss", 'oee'], ['order_id'], ['1']);
-
+    //$obj = new Orders();
+    
 
 ?>

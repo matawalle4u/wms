@@ -1,5 +1,6 @@
  <?php
-    include('../interfaces/Users.php');
+ 
+    include('UsersInterface.php');
     include('auth.php');
     include('warehouse.php');
 
@@ -120,8 +121,12 @@
     
 
     class WareHouseManager extends Users implements WareHouseAdmin {
+        public $warehouse_obj;
+        public function __construct(){
+            $this->warehouse_obj = new Warehouse();
+        }
 
-        public $warehouse_obj = new Warehouse();
+        
        
         //Only Implemented by Admin
         public function add_staff(array $columns, array $values){
@@ -249,57 +254,6 @@
         */
     }
 
-    
-
-    // $dri = new Driver("users", "phone", "crm");
-    // $col = ['staff_code', 'first_name', 'last_name', 'identity_card', 'role', 'dept', 'phone', 'email', 'address', 'img_src', 'status'];
-    // $vas = ["'test_Code102'", "'Popa Adam'", "'Daniel'", "'890988'", "'Manager'", "'Production'", "'09023467777'", "'matawallepopa@gmail.com'", "'Romania'", "'uploads/logo.png'", "'1'"];
-    // $mana = new WareHouseManager("users", "phone", "crm");
-    // $mana->add_staff($col, $vas);
-
-
-    //$mana->view_update_history('user_updates', ['updater', 'update_user'], [], [], 'many');
-
-
-
-    //$dri->update_user_info(1, ['name', 'role'], ["DDDDD Adam", "Deve"], ['phone'], ["2349028163380"]);
-    //update_user_info(array $columns, array $values, array $conditions, array $conditional_values)
-    
-    // $lo = $dri->login("2349028163380", "as");
-    // if($lo){
-    //     echo 1;
-    // }
-
-    //$a = new Admin("users", "phone", "crm");
-   
-    //$a->update_previlege(1, 3, "added_new");
-    //$dri = new Driver("users", "phone", "crm");
-    //$lo = $dri->login("2349028163380", "a");
-   
-
-    //$wman = new WareHouseManager("users", "phone", "crm");
-    //$wman->add_staff();
-    
-
-    $users = new Admin("users", "phone", "crm");
-    // $hist  = $users->view_update_history('user_updates', ['updater', 'updated_user', 'update_time'], [], [], 'many');
-   $dd = $users->view_staffs(['first_name', 'last_name', 'status'], ['role'], ["Manager"], 'single');
-   
-  foreach($dd as $va){
-      echo $va['first_name']."<br />";
-  }
+  
     
 ?>
-
-
-
-<!-- <script type="text/javascript">
-    function tee(){
-    var comp = <?php echo json_encode($hist);?>;
-    for(var i=0; i<=comp.length-1; i++){
-        document.write(comp[i]['update_time']+"<br />");
-    }
-    }
-    //alert('hell');
-    
-</script> -->

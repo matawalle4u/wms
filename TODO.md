@@ -18,6 +18,20 @@
 
 --Error handling should be properly done with arrays
 
+# Warehouse
+-- Implement avarage selling time of a product (Used to place order before it finishes)
+-- Product summary (Ins and Outs)
+
+# Sales
+
+-- Sales form should shave product selection tool name, barcode (When chosen it display product information)
+
+-- The customer it\s comining in the shop, Customer Choose items, payout
+
+-- Chooses collects customer items scans the items and enter details to generate receipt and sales invoice
+
+
+
 
 
 
