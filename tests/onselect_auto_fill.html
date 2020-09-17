@@ -1,0 +1,68 @@
+<form action="#" method="post" id="demoForm" class="demoForm">
+
+    
+    <select id="scripts" name="scripts">
+        <option value="200">Banana</option>
+        <option value="300">Apple</option>
+        <option value="400">Mango</option>
+        <option value="500">Guava</option>
+        
+    </select>
+    
+    <input type="text" size="30" name="display" id="display" readonly>
+    <input type="number" size="30" name="quanity" id="quanity">
+    <input type="number" size="30" name="total" id="total" readonly>
+
+
+</form>
+
+
+<script>
+
+//var sel = document.getElementById('scripts');
+
+var sel = document.getElementById('scripts');
+var el = document.getElementById('display');
+
+var qty = document.getElementById('quanity');
+var ttl = document.getElementById('total');
+
+var typingTimer;                
+var doneTypingInterval = 500;
+
+
+
+//user is "finished typing," do something
+
+
+
+(function() {
+
+function getSelectedOption(sel) {
+var opt;
+for ( var i = 0, len = sel.options.length; i <len; i++ ) {
+    opt = sel.options[i];
+    if ( opt.selected === true ) {
+        break;
+    }
+}
+return opt;
+}
+
+// assign onclick handlers to the buttons
+document.getElementById('scripts').onclick = function () {
+el.value = sel.value; 
+}
+
+document.getElementById('quanity').onkeyup = function () {
+clearTimeout(typingTimer);
+typingTimer = setTimeout(calcTotal, doneTypingInterval);
+}
+
+function calcTotal () {ttl.value = el.value * qty.value;}
+
+
+
+}());
+
+</script>
