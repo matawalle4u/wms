@@ -219,17 +219,25 @@
       <div class="content-wrapper">
         <div class="content-header row">
           <div class="content-header-left col-md-6 col-12 mb-2">
-            <h3 class="content-header-title">Bootstrap Cards</h3>
+            <h3 class="content-header-title">Products</h3>
             <div class="row breadcrumbs-top">
               <div class="breadcrumb-wrapper col-12">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="index.html">Home</a>
+                
+                <ul class="nav nav-tabs nav-top-border no-hover-bg">
+                  
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-bars"></i> Categories
+                    </a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" id="dropdownIcon2-tab1" href="products.html" aria-expanded="true">Fruits</a>
+                      <a class="dropdown-item" id="dropdownIcon2-tab2" href="#dropdownIcon02" aria-controls="dropdownIcon02" aria-expanded="true">mdo</a>
+                    </div>
                   </li>
-                  <li class="breadcrumb-item"><a href="#">Components</a>
-                  </li>
-                  <li class="breadcrumb-item active">Bootstrap Cards
-                  </li>
-                </ol>
+                  
+                </ul>
+
+
               </div>
             </div>
           </div>
@@ -253,9 +261,11 @@
 						<div class="card-content">
 							<img class="card-img-top img-fluid" src="../app-assets/images/carousel/05.jpg" alt="Card image cap"/>
 							<div class="card-body">
-								<h4 class="card-title">Card title</h4>
+								<h4 class="card-title">Product name [$19.8]</h4>
 								<p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-								<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                <button type="submit" class="btn btn-info">
+                  <i class="fa fa-shopping-cart"></i> Order
+                </button>
 							</div>
 						</div>
 					</div>
@@ -263,9 +273,14 @@
 						<div class="card-content">
 							<img class="card-img-top img-fluid" src="../app-assets/images/carousel/09.jpg" alt="Card image cap"/>
 							<div class="card-body">
-								<h4 class="card-title">Card title</h4>
-								<p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-								<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+								<h4 class="card-title">Product name [$19.8]</h4>
+								<p class="card-text">
+                  This card has supporting text below as a natural lead-in to additional content.
+                </p>
+                <button type="submit" class="btn btn-info">
+                  <i class="fa fa-shopping-cart"></i> Order
+                </button>
+
 							</div>
 						</div>
 					</div>
@@ -273,9 +288,28 @@
 						<div class="card-content">
 							<img class="card-img-top img-fluid" src="../app-assets/images/carousel/02.jpg" alt="Card image cap"/>
 							<div class="card-body">
-								<h4 class="card-title">Card title</h4>
-								<p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-								<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                <h4 class="card-title" id="productPrice">Product name [$19.8]</h4>
+                <p>
+                    <input class="col-sm-12 col-md-7 float-right" placeholder="Quantity" type="text" min="1" id="productQty" >
+                    <input class="col-sm-12 col-md-7 float-right" placeholder="Total" type="text" min="1" id="productTotal" readonly>
+                </p>
+                 
+                <p class="card-text">
+                  This is is the description
+                  this is is the is hte
+                  Daniel Popa Adam Mustapha
+                  Mustapa Romania Nigeria
+                </p>
+
+                 
+                
+                <a href="products.html?id=1">
+                  <button type="submit" class="btn btn-info">
+                    <i class="fa fa-shopping-cart"></i> Order
+                  </button>
+                </a>
+
+                
 							</div>
 						</div>
 					</div>
@@ -283,9 +317,15 @@
 						<div class="card-content">
 							<img class="card-img-top img-fluid" src="../app-assets/images/carousel/03.jpg" alt="Card image cap"/>
 							<div class="card-body">
-								<h4 class="card-title">Card title</h4>
+								<h4 class="card-title">Product name [$19.8]</h4>
 								<p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-								<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                
+                  <button type="submit" class="btn btn-info">
+                    <i class="fa fa-shopping-cart"></i> Order
+                  </button>
+               
+                
+
 							</div>
 						</div>
 					</div>
@@ -303,6 +343,40 @@
       </div>
     </div>
     <!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+    <script>
+
+
+      (function() {
+      
+      
+          var typingTimer;                
+          var doneTypingInterval = 500;
+      
+         
+          var qty = document.getElementById('productQty');
+          var ttl = document.getElementById('productTotal');
+          
+          
+          qty.onkeyup = function () {
+              clearTimeout(typingTimer);
+              typingTimer = setTimeout(calcTotal, doneTypingInterval);
+          }
+      
+          function calcTotal () {
+              if(Number.isInteger(parseInt(qty.value)) ){
+                  ttl.value = qty.value * 19.8;
+              }else{
+                  ttl.value =0;
+              }
+          }
+      
+      
+      
+      }());
+      
+      </script>
 
 
     <footer class="footer footer-static footer-dark navbar-border navbar-shadow">
