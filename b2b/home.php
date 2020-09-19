@@ -9,9 +9,9 @@
     <meta name="author" content="PIXINVENT">
     <title>Title here</title>
     <link rel="apple-touch-icon" href="../app-assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="../app-assets/images/ico/favicon.ico">
-    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
-    BEGIN VENDOR CSS -->
+    <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
+    <!-- BEGIN VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="../app-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/tables/datatable/datatables.min.css">
     <!-- END VENDOR CSS-->
@@ -24,9 +24,9 @@
     <!-- END Page Level CSS-->
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
-    <!-- END Custom CSS-->
     <script type="text/javascript" src="../my_custom_js.js"></script>
     
+    <!-- END Custom CSS-->
   </head>
   <body class="vertical-layout vertical-compact-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="2-columns">
 
@@ -137,7 +137,7 @@
                   <li class="dropdown-menu-footer"><a class="dropdown-item text-muted text-center" href="javascript:void(0)">Read all messages</a></li>
                 </ul>
               </li>
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Adam</span></a>
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Warehouse Manager</span></a>
                 <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a><a class="dropdown-item" href="chat-application.html"><i class="ft-message-square"></i> Chats</a>
                   <div class="dropdown-divider"></div><a class="dropdown-item" href="login-with-bg-image.html"><i class="ft-power"></i> Logout</a>
                 </div>
@@ -150,43 +150,40 @@
 
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
+
     <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
       <div class="main-menu-content">
 
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 
-         
-
-          
-          <li class=" nav-item"><a href="#"><i class="icon-user"></i><span class="menu-title">Users</span></a>
+          <li class=" nav-item"><a href="#"><i class="icon-folder"></i><span class="menu-title" data-i18n="nav.category.general">Warehouse</span></a>
             <ul class="menu-content">
-              <li><a  data-toggle="modal" data-target="#daniel">Add new user</a> 
+              <li><a class="menu-item" href="#" data-i18n="nav.color_palette.main">Add warehouse</a> 
               </li>
-              <li><a class="menu-item" href="#" data-i18n="nav.navbars.main">Update user</a>   
+              <li><a class="menu-item" href="#" data-i18n="nav.starter_kit.main">Add Rack</a>  
               </li>
-              <li><a class="menu-item" href="#" data-i18n="nav.vertical_nav.main">View users</a> 
+
+              <li><a class="menu-item" href="#" data-i18n="nav.starter_kit.main">Add product</a>  
               </li>
-               
+
+
             </ul>
           </li>
           
-         
           
-
         </ul>
       </div>
     </div>
 
-    
     <div class="app-content content">
       <div class="content-wrapper">
         <div class="content-header row">
           <div class="content-header-left col-md-6 col-12 mb-2">
-            <h3 class="content-header-title">User Orders</h3>
+            
             <div class="row breadcrumbs-top">
               <div class="breadcrumb-wrapper col-12">
                 <ol class="breadcrumb">
-
+                  
                   <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#newOrder" href="#">New Order</a>
                   </li>
 
@@ -194,122 +191,138 @@
                   </li>
                   <li class="breadcrumb-item"><a data-toggle="modal" data-target="#updatewarehouse" href="#">Update Order</a>
                   </li>
-                
 
                 </ol>
               </div>
             </div>
           </div>
+
+          <!-- search field starts here -->
+
           <div class="content-header-right col-md-6 col-12">
             <fieldset class="form-group relative has-icon-left col-md-5 col-12 float-right p-0">
               <input class="form-control" id="iconLeft" type="text" onKeyUp="mess()" placeholder="Search..."/>
               <div class="form-control-position"><i class="fa fa-search"></i></div>
             </fieldset>
           </div>
-        </div>
-<div class="content-body"><!-- Change Log -->
 
-<script type="text/javascript">
-    function mess(){
-        var info = document.getElementById('iconLeft').value;
-        if(event.keyCode===13){
-            alert('You typed '+ info);
-        }
-        //alert(event.keyCode);
-    }
-</script>
-
-
-
-        
-
-
-<div class="card">
-   <div class="card-header">
-      <h4 id="v10" class="card-title">Daniel's Order summary</h4>
-      <p>[Total Items 5]</p>
-      <div class="heading-elements">
-         <ul class="list-inline mb-0">
-            <li>
-               <a data-action="expand"><i class="ft-maximize"></i></a>
-            </li>
-         </ul>
+          <!-- search field ends here -->
+          
       </div>
-   </div>
-   <div class="card-content" aria-expanded="true">
-      <div class="card-body">
+  <div class="content-body"><!-- HTML (DOM) sourced data -->
+  <section id="html">
 
-          <div class="row">
+    <div class="card">
+        
+        <div class="card-header">
+          <h4 id="v10" class="card-title">Daniel's Order summary</h4>
+          <p>[Total Items 5]</p>
+          <div class="heading-elements">
+            <ul class="list-inline mb-0">
+              <li>
+                <a data-action="expand"><i class="ft-maximize"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
 
+        <div class="card-content" aria-expanded="true">
+          <!-- card content starts here -->
+          
+          <div class="card-body">
+            <!-- card body starts here -->
+
+            <div class="row">
+            <!-- row starts here -->
+
+              
               <div class="col-xl-6 col-md-12">
+                <!-- an item summary starts here -->
                 <div class="card">
                     <div class="card-content">
-                          <div class="media align-items-stretch bg-gradient-x-info text-white rounded">
-                              <div class="p-2 media-middle">
-                                  <h3 class="text-white">$76,456.00</h3>
-                              </div>
-                              <div class="media-body p-2">
-                                  <p class="text-white">Total Cost</p>
-                                  <span>Monthly Cost</span>
-                              </div>
-                              <div class="media-right p-2 media-middle">
-                                <button type="submit" class="btn btn-info">
-                                  <i class="fa fa-book"></i> Details
-                                </button>
-                              </div>
+                      <div class="media align-items-stretch bg-gradient-x-info text-white rounded">
+
+                        <div class="p-2 media-middle">
+                          <h3 class="text-white">$76,456.00</h3>
+                        </div>
+
+                        <div class="media-body p-2">
+                        <p class="text-white">Total Cost</p>
+                          <span>Monthly Cost</span>
+                        </div>
+
+                        <div class="media-right p-2 media-middle">
+                            <button type="submit" class="btn btn-info" data-toggle="modal" data-target="#viewOrder">
+                              <i class="fa fa-book"></i> Details
+                            </button>
                           </div>
+
+                      </div>
                     </div>
                 </div>
+                <!-- an item summary ends here -->
               </div>
-            
+
+
+
               <div class="col-xl-6 col-md-12">
-                  <div class="card">
-                      <div class="card-content">
-                          <div class="media align-items-stretch bg-gradient-x-info text-white rounded">
-                              <div class="p-2 media-middle">
-                                  <h3 class="text-white">$76,456.00</h3>
-                              </div>
-                              <div class="media-body p-2">
-                                  <p class="text-white">Total Cost</p>
-                                  <span>Monthly Cost</span>
-                              </div>
-                              <div class="media-right p-2 media-middle">
-                                <button type="submit" class="btn btn-info">
-                                  <i class="fa fa-book"></i> Details
-                                </button>
-                                  
-                              </div>
+                <!-- an item summary starts here -->
+                <div class="card">
+                    <div class="card-content">
+                      <div class="media align-items-stretch bg-gradient-x-info text-white rounded">
+
+                        <div class="p-2 media-middle">
+                          <h3 class="text-white">$76,456.00</h3>
+                        </div>
+
+                        <div class="media-body p-2">
+                        <p class="text-white">Total Cost</p>
+                          <span>Monthly Cost</span>
+                        </div>
+
+                        <div class="media-right p-2 media-middle">
+                            <button type="submit" class="btn btn-info" data-toggle="modal" data-target="#viewOrder">
+                              <i class="fa fa-book"></i> Details
+                            </button>
                           </div>
+
                       </div>
-                  </div>
+                    </div>
+                </div>
+                <!-- an item summary ends here -->
               </div>
 
-        </div>
+
+             <!-- row ends here -->
+            </div>
+            
 
 
-        
+            <!-- Card body ends here -->
+          </div>
          
-      </div>
-   </div>
-</div>
 
 
+        <!-- card contentent ends here -->
+        </div>
+    </div>
 
-
-
-
-<!-- / Change Log -->
-
+      
+    </section>
+    </div>
   </div>
 </div>
-</div>
-<!-- ////////////////////////////////////////////////////////////////////////////-->
+    <!-- ////////////////////////////////////////////////////////////////////////////-->
 
-<div class="modal fade text-left" id="newOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+    
+    
+
+
+    <div class="modal fade text-left" id="addwharehouse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
       <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel1">Make new Order</h4>
+        <h4 class="modal-title" id="myModalLabel1">Add Wharehouse</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -320,22 +333,15 @@
           <form class="form form-horizontal form-bordered" method="post">
           <div class="form-body">
 
-            <script type="text/javascript">  
+          <script type="text/javascript">
               generate_form(
-                  ['product', 'qty', 'quantity', 'unit', 'file'],
-                  ['select', 'number', 'text', 'select', 'file'],
-                  [
-                    ['Banana','Apple', 'Guava']
-                    
-                  ], 
-                  [
-                    ['bn', 'appl', 'gv'],
-                    ['kg1', 'bag1', 'pal']
-                  ],   
-                  ['Product', 'Quantity']
-              );
-                   
-            </script>
+                  ['name', 'address'],
+                  ['text', 'textarea'],
+                  [], 
+                  [],   
+                  ['Warehouse Name', 'Warehouse Address']
+              );      
+          </script>
 
             <div class="col-md-6 col-sm-12">
                 <input type="submit" class="btn btn-info btn-outline-secondary" value="Add" name="warehouse_added">
@@ -358,23 +364,216 @@
             }
         ?>
       </div>
-    </div>
+        
+      </div>
     </div>
 
-<footer class="footer footer-static footer-dark navbar-border navbar-shadow">
-  <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">Copyright  &copy; <?php echo date('Y'); ?><a class="text-bold-800 grey darken-2" href="#" target="_blank"> Popa Daniel </a>, All rights reserved. </span><span class="float-md-right d-block d-md-inline-blockd-none d-lg-block">Hand-crafted & Made with <i class="ft-heart pink"></i></span></p>
-</footer>
 
-  <!-- BEGIN VENDOR JS-->
-  <script src="../app-assets/vendors/js/vendors.min.js"></script>
-  <!-- BEGIN VENDOR JS-->
-  <!-- BEGIN PAGE VENDOR JS-->
-  <!-- END PAGE VENDOR JS-->
-  <!-- BEGIN ROBUST JS-->
-  <script src="../app-assets/js/core/app-menu.js"></script>
-  <script src="../app-assets/js/core/app.js"></script>
-  <!-- END ROBUST JS-->
-  <!-- BEGIN PAGE LEVEL JS-->
-  <!-- END PAGE LEVEL JS-->
-</body>
+    <div class="modal fade text-left" id="updatewarehouse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Update Wharehouse</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Put our form data here -->
+          <form class="form form-horizontal form-bordered" method="post">
+          <div class="form-body">
+
+          <div class="form-group row">
+              <label class="col-md-3 label-control" for="projectinput6">Warehouse</label>
+              <div class="col-md-9">
+                  <select id="projectinput6" name="interested" class="form-control">
+                      <option value="none" selected="" disabled="">Warehouse</option>
+                      <option value="design">Iasi</option>
+                      <option value="development">Kaduna Nigeria</option>
+                      <option value="illustration">Bucharest Romania</option>
+                      
+                  </select>
+                </div>
+            </div>
+
+			<div class="form-group row">
+	            <label class="col-md-3 label-control" for="projectinput1">Wharehouse Name</label>
+		        <div class="col-md-9">
+                    <input type="text" id="projectinput1" name="name" class="form-control" placeholder="New Name" name="fname" value="<?php echo 'Iasi';?>">
+		        </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3 label-control" for="projectinput2">Wharehouse Address</label>
+                <div class="card-body">
+                    <fieldset class="form-group">
+                        <textarea name="address" class="form-control" id="placeTextarea" rows="3" placeholder="Wharehouse Address"></textarea>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+                <input type="submit" class="btn btn-info btn-outline-secondary" value="Save" name="warehouse_added">
+            </div>
+          </div>
+        </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+        </div>
+        <?php
+
+            if(isset($_POST['warehouse_added'])){
+
+                $name = $_POST['name'];
+                $address = $_POST['address'];
+
+                echo $name .$address;
+
+            }
+        ?>
+      </div>
+        
+      </div>
+    </div>
+    
+
+    <div class="modal fade text-left" id="addrack" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Create Rack</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Put our form data here -->
+          <form class="form form-horizontal form-bordered" method="post">
+          <div class="form-body">
+
+          <script type="text/javascript">
+              generate_form(
+                  ['warehouse', 'row', 'column', 'level', 'zone', 'position'],
+                  ['select', 'text', 'text', 'text', 'text', 'select'],
+                  [
+                    ['Rack1','Rack2', 'Rack3'],
+                    ['Left', 'Right', 'Middle']
+                  ], 
+                  [
+                    ['r1', 'r2', 'r3'],
+                    ['kg1', 'bag1', 'pal']
+                  ],   
+                  ['Warehouse', 'Row', 'Column', 'Level', 'Zone', 'Position']
+              );      
+          </script>
+
+            
+
+            <div class="col-md-6 col-sm-12">
+                <input type="submit" class="btn btn-info btn-outline-secondary" value="Add" name="warehouse_added">
+            </div>
+          </div>
+        </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+        </div>
+        <?php
+
+            if(isset($_POST['warehouse_added'])){
+
+                $name = $_POST['name'];
+                $address = $_POST['address'];
+
+                echo $name .$address;
+
+            }
+        ?>
+      </div>
+        
+      </div>
+    </div>
+
+
+    <div class="modal fade text-left" id="viewOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">View Order</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Put our form data here -->
+          <form class="form form-horizontal form-bordered" method="post">
+            <div class="form-body">
+                <div class="card">
+                    <div class="card-content">
+                      <img class="card-img-top img-fluid" src="../app-assets/images/carousel/09.jpg" alt="Card image cap"/>     
+                      <div class="card-body">
+                        <h4 class="card-title" id="productPrice">Product name [$19.8]</h4>
+                        <p>
+                          <input class="col-sm-12 col-md-7 float-right" placeholder="Quantity" type="text" min="1" id="productQty" >
+                          <input class="col-sm-12 col-md-7 float-right" placeholder="Total" type="text" min="1" id="productTotal" readonly>
+                        </p>
+                                  
+                        <p class="card-text">
+                            This is is the description      
+                        </p>
+                  
+                        <a href="products.html?id=1">
+                          <button type="submit" name="order_update" class="btn btn-info">
+                            <i class="fa fa-save"></i> Update
+                          </button>
+                        </a>
+                      </div>
+                  </div>
+              </div>
+            </div>
+        </form> 
+        </div>
+        
+        <?php
+
+            if(isset($_POST['order_updated'])){
+
+                $name = $_POST['name'];
+                $address = $_POST['address'];
+
+                echo $name .$address;
+
+            }
+        ?>
+      </div>
+        
+      </div>
+    </div>
+
+    <footer class="footer footer-static footer-dark navbar-border navbar-shadow">
+      <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">Copyright  &copy; <?php echo date('Y'); ?><a class="text-bold-800 grey darken-2" href="#" target="_blank"> Popa Daniel </a>, All rights reserved. </span> </p>
+    </footer>
+    
+    <!-- BEGIN VENDOR JS-->
+    <script src="../app-assets/vendors/js/vendors.min.js"></script>
+    <!-- BEGIN VENDOR JS-->
+    <!-- BEGIN PAGE VENDOR JS-->
+    <script src="../app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
+    <!-- END PAGE VENDOR JS-->
+    <!-- BEGIN ROBUST JS-->
+    <script src="../app-assets/js/core/app-menu.js"></script>
+    <script src="../app-assets/js/core/app.js"></script>
+    <!-- END ROBUST JS-->
+    <!-- BEGIN PAGE LEVEL JS-->
+    <script src="../app-assets/js/scripts/tables/datatables-extensions/datatables-sources.js"></script>
+    <!-- END PAGE LEVEL JS-->
+
+    <script type="text/javascript" src="../src/my_custom_js.js"></script>
+
+
+  </body>
 </html>
