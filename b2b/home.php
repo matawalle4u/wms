@@ -137,7 +137,7 @@
                   <li class="dropdown-menu-footer"><a class="dropdown-item text-muted text-center" href="javascript:void(0)">Read all messages</a></li>
                 </ul>
               </li>
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Warehouse Manager</span></a>
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Adam</span></a>
                 <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a><a class="dropdown-item" href="chat-application.html"><i class="ft-message-square"></i> Chats</a>
                   <div class="dropdown-divider"></div><a class="dropdown-item" href="login-with-bg-image.html"><i class="ft-power"></i> Logout</a>
                 </div>
@@ -291,18 +291,10 @@
                 </div>
                 <!-- an item summary ends here -->
               </div>
-
-
              <!-- row ends here -->
             </div>
-            
-
-
             <!-- Card body ends here -->
           </div>
-         
-
-
         <!-- card contentent ends here -->
         </div>
     </div>
@@ -312,191 +304,8 @@
     </div>
   </div>
 </div>
+
     <!-- ////////////////////////////////////////////////////////////////////////////-->
-
-    
-    
-
-
-    <div class="modal fade text-left" id="addwharehouse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel1">Add Wharehouse</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-        <div class="modal-body">
-
-          <!-- Put our form data here -->
-          <form class="form form-horizontal form-bordered" method="post">
-          <div class="form-body">
-
-          <script type="text/javascript">
-              generate_form(
-                  ['name', 'address'],
-                  ['text', 'textarea'],
-                  [], 
-                  [],   
-                  ['Warehouse Name', 'Warehouse Address']
-              );      
-          </script>
-
-            <div class="col-md-6 col-sm-12">
-                <input type="submit" class="btn btn-info btn-outline-secondary" value="Add" name="warehouse_added">
-            </div>
-          </div>
-        </form> 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-        </div>
-        <?php
-
-            if(isset($_POST['warehouse_added'])){
-
-                $name = $_POST['name'];
-                $address = $_POST['address'];
-
-                echo $name .$address;
-
-            }
-        ?>
-      </div>
-        
-      </div>
-    </div>
-
-
-    <div class="modal fade text-left" id="updatewarehouse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel1">Update Wharehouse</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-        <div class="modal-body">
-
-          <!-- Put our form data here -->
-          <form class="form form-horizontal form-bordered" method="post">
-          <div class="form-body">
-
-          <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput6">Warehouse</label>
-              <div class="col-md-9">
-                  <select id="projectinput6" name="interested" class="form-control">
-                      <option value="none" selected="" disabled="">Warehouse</option>
-                      <option value="design">Iasi</option>
-                      <option value="development">Kaduna Nigeria</option>
-                      <option value="illustration">Bucharest Romania</option>
-                      
-                  </select>
-                </div>
-            </div>
-
-			<div class="form-group row">
-	            <label class="col-md-3 label-control" for="projectinput1">Wharehouse Name</label>
-		        <div class="col-md-9">
-                    <input type="text" id="projectinput1" name="name" class="form-control" placeholder="New Name" name="fname" value="<?php echo 'Iasi';?>">
-		        </div>
-            </div>
-
-            <div class="form-group row">
-                <label class="col-md-3 label-control" for="projectinput2">Wharehouse Address</label>
-                <div class="card-body">
-                    <fieldset class="form-group">
-                        <textarea name="address" class="form-control" id="placeTextarea" rows="3" placeholder="Wharehouse Address"></textarea>
-                    </fieldset>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-sm-12">
-                <input type="submit" class="btn btn-info btn-outline-secondary" value="Save" name="warehouse_added">
-            </div>
-          </div>
-        </form> 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-        </div>
-        <?php
-
-            if(isset($_POST['warehouse_added'])){
-
-                $name = $_POST['name'];
-                $address = $_POST['address'];
-
-                echo $name .$address;
-
-            }
-        ?>
-      </div>
-        
-      </div>
-    </div>
-    
-
-    <div class="modal fade text-left" id="addrack" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel1">Create Rack</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-        <div class="modal-body">
-
-          <!-- Put our form data here -->
-          <form class="form form-horizontal form-bordered" method="post">
-          <div class="form-body">
-
-          <script type="text/javascript">
-              generate_form(
-                  ['warehouse', 'row', 'column', 'level', 'zone', 'position'],
-                  ['select', 'text', 'text', 'text', 'text', 'select'],
-                  [
-                    ['Rack1','Rack2', 'Rack3'],
-                    ['Left', 'Right', 'Middle']
-                  ], 
-                  [
-                    ['r1', 'r2', 'r3'],
-                    ['kg1', 'bag1', 'pal']
-                  ],   
-                  ['Warehouse', 'Row', 'Column', 'Level', 'Zone', 'Position']
-              );      
-          </script>
-
-            
-
-            <div class="col-md-6 col-sm-12">
-                <input type="submit" class="btn btn-info btn-outline-secondary" value="Add" name="warehouse_added">
-            </div>
-          </div>
-        </form> 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-        </div>
-        <?php
-
-            if(isset($_POST['warehouse_added'])){
-
-                $name = $_POST['name'];
-                $address = $_POST['address'];
-
-                echo $name .$address;
-
-            }
-        ?>
-      </div>
-        
-      </div>
-    </div>
-
 
     <div class="modal fade text-left" id="viewOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -525,18 +334,19 @@
                         <p class="card-text">
                             This is is the description      
                         </p>
-                  
-                        <a href="products.html?id=1">
-                          <button type="submit" name="order_update" class="btn btn-info">
-                            <i class="fa fa-save"></i> Update
-                          </button>
-                        </a>
+
                       </div>
                   </div>
               </div>
             </div>
         </form> 
         </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn gray btn-outline-secondary" data-dismiss="modal">Update</button>
+          <button type="button" class="btn gray btn-outline-secondary danger" data-dismiss="modal">Delete</button>
+        </div>
+        
         
         <?php
 
