@@ -1,3 +1,19 @@
+<?php
+
+session_start();
+
+include('modules/Compl_Classes.php');
+    
+$us = new Admin('admin', 'phone', 'crm');
+
+
+//include('../modules/Compl_Classes.php');
+//$us = new Admin('customers', 'email', 'crm');
+
+
+
+?>
+
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
   <head>
@@ -12,6 +28,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
     <!-- BEGIN VENDOR CSS-->
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
     <link rel="stylesheet" type="text/css" href="app-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/forms/icheck/icheck.css">
     <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/forms/icheck/custom.css">
@@ -61,10 +80,8 @@
                             </fieldset>
 
                             <?php
-                                include('modules/Compl_Classes.php');
-    
-                                $us = new Admin('admin', 'phone', 'crm');
-
+                            
+                                
                                 
                                 if(isset($_POST['login'])){
 
@@ -73,23 +90,33 @@
 
                                     $login = $us->login($phone, $pass);
                                     if($login){
-                                        echo"
-                                        <h3 align=center><font color=green>Successfully logged in</font></h3>
-                                       ";
+
+                                        $_SESSION['phone'] = $_POST['phone'];
+                                        $us->redirect('admin_home.php');
+                                        
                                     }else{
                                         echo"
-                                        <h3 align=center><font color=red>Invalid credentials</font></h3>
+
+                                        <script type=\"text/javascript\">
+
+                                            swal(\"Invalid credentials\");
+
+
+                                        </script>
+
+
+                                        
                                         ";
                                     }
                                 }
 
                             ?>
 
-                    <div class="col-md-6 col-sm-12">
+                    <!-- <div class="col-md-6 col-sm-12">
                         <button type="button" class="btn btn-lg btn-block btn-outline-success mb-2" id="type-success">Success</button>
-                    </div>
+                    </div> -->
                             
-                            <button type="submit" name="login" class="btn btn-info btn-lg btn-block"><i class="ft-unlock"></i> Login</button>
+                        <button type="submit" name="login" class="btn btn-info btn-lg btn-block"><i class="ft-unlock"></i> Login</button>
                         </form>
                     </div>
                 </div>
