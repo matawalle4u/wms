@@ -1,3 +1,17 @@
+<?php
+  session_start();
+  
+  include('../modules/Compl_Classes.php');
+  $us = new Admin('customers', 'email', 'crm');
+
+
+  if(!isset($_SESSION['email'])){
+    $us->logout('index.php');
+  }else{
+    $email = $_SESSION['email'];
+  }
+
+?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
   <head>
@@ -332,7 +346,13 @@
                         </p>
                                   
                         <p class="card-text">
-                            This is is the description      
+                            This is is the description
+                            <?php
+                            
+
+                            echo $_SESSION['email'];
+                            
+                            ?>
                         </p>
 
                       </div>
