@@ -12,7 +12,7 @@
         public function get_previleges($user_id);
         public function get_notification($id, $type);
         public  function reset_password($username, $old, $new);
-        public function logout();
+        public function logout($page);
         
         
     }
@@ -459,8 +459,9 @@
             echo"<script type='text/javascript'>window.location.href='$page';</script>";
         }
 
-        public function logout(){
+        public function logout($page){
             session_destroy(); 
+            $this->redirect($page);
         }
 
           public function __destruct(){
