@@ -5,10 +5,10 @@
   $us = new Admin('admin', 'phone', 'crm');
 
 
-  if(!isset($_SESSION['email'])){
+  if(!isset($_SESSION['phone'])){
     $us->logout('login.php');
   }else{
-    $email = $_SESSION['email'];
+    $email = $_SESSION['phone'];
   }
 
 ?>
@@ -41,6 +41,8 @@
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <!-- END Custom CSS-->
+    <script type="text/javascript" src="my_custom_js.js"></script>
+    
   </head>
   <body class="vertical-layout vertical-compact-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="2-columns">
 
@@ -199,6 +201,7 @@
 
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#adduser"><i class="ft-plus white"></i> New User</button>
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateuser"><i class="fa fa-pencil white"></i> Update user</button>
+          <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateuser"><i class="fa fa-pencil white"></i> New Customer</button>
             
             
           </div>
@@ -521,7 +524,7 @@
       <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel1">Update user</h4>
+        <h4 class="modal-title" id="myModalLabel1">Create Partner</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -529,90 +532,74 @@
         <div class="modal-body">
 
           <!-- Put our form data here -->
-          <form class="form form-horizontal form-bordered" method="post">
-          <div class="form-body">
-
-          <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput6">User</label>
-              <div class="col-md-9">
-                  <select id="projectinput6" name="interested" class="form-control">
-                      <option value="none" selected="" disabled="">Select user</option>
-                      <option value="design">Adam</option>
-                      <option value="development">Daniel</option>
-                      <option value="illustration">Wasea</option>
-                      
-                  </select>
-                </div>
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput6">Role</label>
-              <div class="col-md-9">
-                  <select id="projectinput6" name="interested" class="form-control">
-                      <option value="none" selected="" disabled="">User role</option>
-                      <option value="design">Drvier</option>
-                      <option value="development">Developer</option>
-                      <option value="illustration">CEO</option>
-                      
-                  </select>
-                </div>
-            </div>
-
-
-            <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput6">Status</label>
-              <div class="col-md-9">
-                  <select id="projectinput6" name="interested" class="form-control">
-                      <option value="none" selected="" disabled="">Status</option>
-                      <option value="design">Active</option>
-                      <option value="development">Suspended</option>
-                      <option value="illustration">Deactivated</option>
-                      <option value="illustration">Terminated</option>
-                      
-                  </select>
-                </div>
-            </div>
-
-            
-            <div class="form-group row last">
-                <label class="col-md-3 label-control">Permissions</label>
-                <div class="col-md-9">
-                      <div class="input-group col-md-9">
-                                      
-                          <div class="d-inline-block custom-control custom-checkbox">
-                            <input type="checkbox" name="customer2" class="custom-control-input" id="yes1">
-                            <label class="custom-control-label" for="yes1">Assign Previleges</label>
-                          </div>
-
-                          <div class="d-inline-block custom-control custom-checkbox">
-                            <input type="checkbox" name="customer2" class="custom-control-input" id="no1">
-                            <label class="custom-control-label" for="no1">Revoke Previledges</label>
-                          </div>
-
-                          <div class="d-inline-block custom-control custom-checkbox">
-                            <input type="checkbox" name="customer2" class="custom-control-input" id="no1">
-                            <label class="custom-control-label" for="no1">Revoke Previledges</label>
-                          </div>
-
-                          <div class="d-inline-block custom-control custom-checkbox">
-                            <input type="checkbox" name="customer2" class="custom-control-input" id="no1">
-                            <label class="custom-control-label" for="no1">Revoke Previledges</label>
-                          </div>
-
-                      </div>
-                </div>
-		        </div>
-
-
-            
 
 
 
-            <div class="col-md-6 col-sm-12">
-                <input type="submit" class="btn btn-info btn-outline-secondary" value="Add" name="warehouse_added">
-            </div>
-          </div>
-        </form> 
+          <form class="form-horizontal form-simple" method="post" novalidate>
+							
+              <script type="text/javascript">
+                  generate_form(
+                      ['partner', 'partnership', 'part_code', 'part_reg_code', 'email', 'contact','address','category', 'password', 'repeat'],
+                      ['text', 'select', 'text', 'text','email','text', 'text', 'select', 'password', 'password'],
+                      [
+                        ['Supplier', 'Customer', 'Supplier&Customer'],
+                        ['B2B', 'Normal']
+                        
+                      ], 
+                      [
+                        ['supplier', 'customer', 'supplier_customer'],
+                        ['b2b', 'norm']
+                        
+                      ],   
+                      ['Partner', 'Partnership Type', 'Partner Code', 'Partner Reg. Code', 'Email', 'Contact', 'Address', 'Category', 'Password', 'Confirm']
+                  );      
+              </script>
+
+              
+              <?php
+
+                  if(isset($_POST['customer_added'])){
+
+                    $auth = new Admin('customers', 'email', 'crm');
+
+                    $name = $_POST['partner'];
+                    $email = $_POST['email'];
+                    $code = $_POST['part_code'];
+                    $reg_code = $_POST['part_reg_code'];
+                    $contact = $_POST['contact'];
+                    $address = $_POST['address'];
+                    $password = $_POST['password'];
+                    $confirm = $_POST['repeat'];
+                    $category = $_POST['category'];
+                    $status =1;
+
+                    $values = ["'$name'", "'$code'", "'$reg_code'", "'$email'", "'$contact'", "'$address'", "'$password'", "'$category'", "'$status'"];
+                    $columns = ['name', 'customer_code', 'cust_reg_code', 'email', 'contact', 'address', 'password', 'category', 'status'];
+
+
+
+
+                    $reg = $auth->register($columns, $values);
+
+                    if($reg){
+                      echo"hurray";
+                    }else{
+                      echo"Sorry";
+                    }
+
+                  }
+
+                
+
+              ?>
+              
+
+							<button type="submit" name="customer_added" class="btn btn-info btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
+						</form>
+
+
+
+           
         </div>
         <div class="modal-footer">
           <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -621,7 +608,7 @@
 
             if(isset($_POST['warehouse_added'])){
 
-                
+              //$us->register();
 
             }
         ?>
