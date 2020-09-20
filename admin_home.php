@@ -1,3 +1,19 @@
+<?php
+  session_start();
+  
+  include('modules/Compl_Classes.php');  
+  $us = new Admin('admin', 'phone', 'crm');
+
+
+  if(!isset($_SESSION['email'])){
+    $us->logout('login.php');
+  }else{
+    $email = $_SESSION['email'];
+  }
+
+?>
+
+
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
   <head>
@@ -339,7 +355,7 @@
 
                           </td>
                           <td>2011/04/25</td>
-                          <td>View</td>
+                          <td><a href="user_log.php">View activity</a></td>
 					                
 					            </tr>
 					            <tr>
@@ -362,7 +378,7 @@
                               </ul>
                           </td>
                           <td>2020-01-01</td>
-                          <td>View</td>
+                          <td><a href="user_log.php">View activity</a></td>
 					            </tr>
 					            
 					            
@@ -385,7 +401,7 @@
                             </ul>
                           </td>
                           <td>2020-02-11</td>
-                          <td>View</td>
+                          <td><a href="user_log.php">View activity</a></td>
 					            </tr>
 					            
 					            
@@ -394,11 +410,12 @@
 					        <tfoot>
 					            <tr>
 					                <th>Name</th>
-					                <th>Position</th>
-					                <th>Office</th>
-					                <th>Age</th>
-					                <th>Start date</th>
-					                <th>Salary</th>
+					                <th>Role</th>
+					                <th>Contact number</th>
+					                <th>Status</th>
+					                <th>Previleges</th>
+                          <th>Last logged in</th>
+                          <th>Activity log</th>
 					            </tr>
 					        </tfoot>
 					    </table>
@@ -557,6 +574,35 @@
             </div>
 
             
+            <div class="form-group row last">
+                <label class="col-md-3 label-control">Permissions</label>
+                <div class="col-md-9">
+                      <div class="input-group col-md-9">
+                                      
+                          <div class="d-inline-block custom-control custom-checkbox">
+                            <input type="checkbox" name="customer2" class="custom-control-input" id="yes1">
+                            <label class="custom-control-label" for="yes1">Assign Previleges</label>
+                          </div>
+
+                          <div class="d-inline-block custom-control custom-checkbox">
+                            <input type="checkbox" name="customer2" class="custom-control-input" id="no1">
+                            <label class="custom-control-label" for="no1">Revoke Previledges</label>
+                          </div>
+
+                          <div class="d-inline-block custom-control custom-checkbox">
+                            <input type="checkbox" name="customer2" class="custom-control-input" id="no1">
+                            <label class="custom-control-label" for="no1">Revoke Previledges</label>
+                          </div>
+
+                          <div class="d-inline-block custom-control custom-checkbox">
+                            <input type="checkbox" name="customer2" class="custom-control-input" id="no1">
+                            <label class="custom-control-label" for="no1">Revoke Previledges</label>
+                          </div>
+
+                      </div>
+                </div>
+		        </div>
+
 
             
 
