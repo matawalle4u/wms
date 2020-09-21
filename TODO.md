@@ -29,7 +29,7 @@
 -- The customer it\s comining in the shop, Customer Choose items, payout
 
 -- Chooses collects customer items scans the items and enter details to generate receipt and sales invoice
-
+-- View order on b2b home.php should 
 
 
 
