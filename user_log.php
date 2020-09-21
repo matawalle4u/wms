@@ -1,3 +1,30 @@
+<?php
+  session_start();
+  
+  include('modules/Compl_Classes.php');  
+  $us = new Admin('admin', 'phone', 'crm');
+
+
+  if(!isset($_SESSION['phone'])){
+    $us->logout('index.php');
+  }else{
+    $email = $_SESSION['phone'];
+
+    if(isset($_GET['user_id'])){
+
+      $user_id = $_GET['user_id'];
+      $logs = $us->get('users_log', ['log_details', 'activity_date', 'log_table', 'primary_key_val'], ['user'], [$user_id], 'many');
+      $user = $us->get('users', ['name', 'role'], ['user_id'], [$user_id], 'single');
+      $name = $user[0]['name'];
+      $role = $user[0]['role'];
+
+    }else{
+      $us->redirect('admin_home.php');
+    }
+    
+ }
+
+?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
   <head>
@@ -7,11 +34,11 @@
     <meta name="description" content="Robust admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template.">
     <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
     <meta name="author" content="PIXINVENT">
-    <title>Title here</title>
+    <title>Title here </title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
-    <!-- BEGIN VENDOR CSS-->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
+    BEGIN VENDOR CSS -->
     <link rel="stylesheet" type="text/css" href="app-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/tables/datatable/datatables.min.css">
     <!-- END VENDOR CSS-->
@@ -211,8 +238,8 @@
 
 <div class="card">
    <div class="card-header">
-      <h4 id="v10" class="card-title">Daniel's Acitivity log</h4>
-      <p>[Warehouse Manager]</p>
+      <h4 id="v10" class="card-title"><?php echo $name; ?> Acitivity log</h4>
+      <p>[<?php echo $role; ?>]</p>
       <div class="heading-elements">
          <ul class="list-inline mb-0">
             <li>
@@ -224,9 +251,20 @@
    <div class="card-content" aria-expanded="true">
       <div class="card-body">
          <div class="card-text">
-            <ul class="no-">
-               <li class="ft-plus-square"> <b class="success">Added Gulp support</b> for template generation on <b class="info">[2017-03-16]</b></li>
-            </ul>
+            <?php
+              foreach($logs as $log){
+                $details = $log['log_details'];
+                $date = substr($log['activity_date'], 0, 16);
+                $table = $log['log_table'];
+                $prim_key = $log['primary_key_val'];
+                echo"
+                <ul class=\"no-\">
+                  <li class=\"ft-plus-square\"> <b class=\"success\">$details</b> on $table entry at index $prim_key on <b class=\"info\">[$date]</b></li>
+                </ul>
+                ";
+              }
+            ?>
+
          </div>
       </div>
    </div>
