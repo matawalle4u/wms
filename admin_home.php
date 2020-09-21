@@ -6,9 +6,11 @@
 
 
   if(!isset($_SESSION['phone'])){
-    $us->logout('login.php');
+    $us->logout('index.php');
   }else{
     $email = $_SESSION['phone'];
+
+    $users = $us->join_get('users', 'privelages', 'user_id', 'user' , ['user', 'name', 'phone', 'role', 'status', 'actions', 'last_login'], [], [], 'many');
   }
 
 ?>
@@ -325,90 +327,65 @@
 	                <table class="table table-striped table-bordered sourced-data">
 					        <thead>
 					            <tr>
-					                <th>Name</th>
+					                <th>S/N</th>
+                          <th>Name</th>
 					                <th>Role</th>
 					                <th>Contact number</th>
 					                <th>Status</th>
 					                
                           <th>Previledges</th>
                           <th>Last logged in</th>
-                          <th>Activity log</th>
+                          <th>Log</th>
 					            </tr>
 					        </thead>
 					        <tbody>
-					            <tr>
-					                <td>Adam</td>
-					                <td>Programmer</td>
-					                <td>2349028163380</td>
-                          <td>
-                            <span class="badge badge-success badge-primary">
-                              Active
-                            </span>
-                          </td>
-                          <td>
 
-                            <ul>
-                              <li>Add warehouse</li>
-                              <li>Add Racks</li>
-                              <li>Update All</li>
-                            </ul>
-                            
-                            
-                            
+                      <?php
 
-                          </td>
-                          <td>2011/04/25</td>
-                          <td><a href="user_log.php">View activity</a></td>
-					                
-					            </tr>
-					            <tr>
-					                <td>Popa Daniel</td>
-					                <td>Boss</td>
-                          <td>323456789</td>
-                          
-					                <td>
-                            
-                            <span class="badge badge-success badge-primary">
-                              Active
-                            </span>
+                        foreach($users as $index=>$user){
 
-                          </td>
-					                <td>
-                            <ul>
-                                <li>Add warehouse</li>
-                                <li>Add Racks</li>
-                                <li>Update All</li>
-                              </ul>
-                          </td>
-                          <td>2020-01-01</td>
-                          <td><a href="user_log.php">View activity</a></td>
-					            </tr>
-					            
-					            
-					            <tr>
-					                <td>Wasea</td>
-					                <td>Accountant</td>
-					                <td>343456634</td>
-					                <td>
+                          $sn = $index+1;
+                          $name = $user['name'];
+                          $role = $user['role'];
+                          $number = $user['phone'];
+                          $status = $user['status'];
+                          $prev = $user['actions'];
+                          $last_logged = $user['last_login'];
+                          $user_id = $user['user'];
 
-                            <span class="badge badge-danger badge-primary">
-                              Deactivated
-                            </span>
+                          $actions = explode(',', $prev);
 
-                          </td>
-					                <td>
-                            <ul>
-                              <li>Add warehouse</li>
-                              <li>Add Racks</li>
-                              <li>Update All</li>
-                            </ul>
-                          </td>
-                          <td>2020-02-11</td>
-                          <td><a href="user_log.php">View activity</a></td>
-					            </tr>
-					            
-					            
+                          if($status==1){
+                            $stat_colo = "<span class='badge badge-success badge-primary'>Active</span>";
+                          }else{
+                            $stat_colo = "<span class='badge badge-danger badge-primary'>Deactivated</span>";
+                          }
 
+
+
+                          echo"<tr>";
+
+                            echo"<td>". $sn ."</td>";
+                            echo"<td>". $name."</td>";
+                        
+                            echo"<td>". $role."</td>";
+                            echo"<td>". $number ."</td>";
+                            echo"<td>". $stat_colo ."</td>";
+                            echo"<td>";
+                              echo"<ul>";
+                              foreach($actions as $action){
+                                echo"<li>$action</li>";
+                              }
+                              echo"</ul>";
+                            echo"</td>";
+                            echo"<td>". substr($last_logged,0,10)."</td>";
+                            echo"<td><a href=\"user_log.php?user_id=$user_id\">View</a></td>";      
+											    echo"</tr>";
+                        }
+
+
+                      ?>
+					           
 					        </tbody>
 					        <tfoot>
 					            <tr>
@@ -533,11 +510,10 @@
 
           <!-- Put our form data here -->
 
-
-
           <form class="form-horizontal form-simple" method="post" novalidate>
 							
               <script type="text/javascript">
+
                   generate_form(
                       ['partner', 'partnership', 'part_code', 'part_reg_code', 'email', 'contact','address','category', 'password', 'repeat'],
                       ['text', 'select', 'text', 'text','email','text', 'text', 'select', 'password', 'password'],
@@ -555,45 +531,6 @@
                   );      
               </script>
 
-              
-              <?php
-
-                  if(isset($_POST['customer_added'])){
-
-                    $auth = new Admin('customers', 'email', 'crm');
-
-                    $name = $_POST['partner'];
-                    $email = $_POST['email'];
-                    $code = $_POST['part_code'];
-                    $reg_code = $_POST['part_reg_code'];
-                    $contact = $_POST['contact'];
-                    $address = $_POST['address'];
-                    $password = $_POST['password'];
-                    $confirm = $_POST['repeat'];
-                    $category = $_POST['category'];
-                    $status =1;
-
-                    $values = ["'$name'", "'$code'", "'$reg_code'", "'$email'", "'$contact'", "'$address'", "'$password'", "'$category'", "'$status'"];
-                    $columns = ['name', 'customer_code', 'cust_reg_code', 'email', 'contact', 'address', 'password', 'category', 'status'];
-
-
-
-
-                    $reg = $auth->register($columns, $values);
-
-                    if($reg){
-                      echo"hurray";
-                    }else{
-                      echo"Sorry";
-                    }
-
-                  }
-
-                
-
-              ?>
-              
-
 							<button type="submit" name="customer_added" class="btn btn-info btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
 						</form>
 
@@ -606,11 +543,41 @@
         </div>
         <?php
 
-            if(isset($_POST['warehouse_added'])){
+            //if(isset($_POST['warehouse_added'])){
 
-              //$us->register();
+              if(isset($_POST['customer_added'])){
 
-            }
+                $auth = new Admin('customers', 'email', 'crm');
+
+                $name = $_POST['partner'];
+                $email = $_POST['email'];
+                $code = $_POST['part_code'];
+                $reg_code = $_POST['part_reg_code'];
+                $contact = $_POST['contact'];
+                $address = $_POST['address'];
+                $password = $_POST['password'];
+                $confirm = $_POST['repeat'];
+                $category = $_POST['category'];
+                $partnership = $_POST['partnership'];
+                $status =1;
+
+                $values = ["'$name'", "'$code'", "'$reg_code'", "'$email'", "'$contact'", "'$address'", "'$password'", "'$category'","'$partnership'", "'$status'"];
+                $columns = ['name', 'customer_code', 'cust_reg_code', 'email', 'contact', 'address', 'password', 'category','type', 'status'];
+
+
+
+
+                $reg = $auth->register($columns, $values);
+
+                if($reg){
+                  echo"hurray";
+                }else{
+                  echo"Sorry";
+                }
+
+              }
+
+            
         ?>
       </div>
         
