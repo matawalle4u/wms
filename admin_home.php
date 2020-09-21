@@ -28,8 +28,8 @@
     <title>Title here</title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
-    <!-- BEGIN VENDOR CSS-->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
+    BEGIN VENDOR CSS -->
     <link rel="stylesheet" type="text/css" href="app-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/tables/datatable/datatables.min.css">
     <!-- END VENDOR CSS-->
@@ -341,63 +341,25 @@
 					        <tbody>
 
                       <?php
-
                         foreach($users as $index=>$user){
-
                           $sn = $index+1;
-                          $name = $user['name'];
-                          $role = $user['role'];
-                          $number = $user['phone'];
-                          $status = $user['status'];
-                          $prev = $user['actions'];
-                          $last_logged = $user['last_login'];
-                          $user_id = $user['user'];
-
-                          $actions = explode(',', $prev);
-
-                          if($status==1){
-                            $stat_colo = "<span class='badge badge-success badge-primary'>Active</span>";
-                          }else{
-                            $stat_colo = "<span class='badge badge-danger badge-primary'>Deactivated</span>";
-                          }
-
-
-
+                          if($user['status']==1){$stat_colo = "<span class='badge badge-success badge-primary'>Active</span>";}else{$stat_colo = "<span class='badge badge-danger badge-primary'>Inactive</span>";}
                           echo"<tr>";
-
                             echo"<td>". $sn ."</td>";
-                            echo"<td>". $name."</td>";
-                        
-                            echo"<td>". $role."</td>";
-                            echo"<td>". $number ."</td>";
+                            echo"<td>". $user['name']."</td>";
+                            echo"<td>". $user['role']."</td>";
+                            echo"<td>". $user['phone'] ."</td>";
                             echo"<td>". $stat_colo ."</td>";
-                            echo"<td>";
-                              echo"<ul>";
-                              foreach($actions as $action){
-                                echo"<li>$action</li>";
-                              }
-                              echo"</ul>";
-                            echo"</td>";
-                            echo"<td>". substr($last_logged,0,10)."</td>";
-                            echo"<td><a href=\"user_log.php?user_id=$user_id\">View</a></td>";      
+                            echo"<td>"; echo"<ul>";foreach(explode(',', $user['actions']) as $action){echo"<li>$action</li>";}echo"</ul></td>";
+                            echo"<td>". substr($user['last_login'],0,16)."</td>";
+                            echo"<td><a href=\"user_log.php?user_id={$user['user']}\">View</a></td>";
 											    echo"</tr>";
                         }
-
 
                       ?>
 					           
 					        </tbody>
-					        <tfoot>
-					            <tr>
-					                <th>Name</th>
-					                <th>Role</th>
-					                <th>Contact number</th>
-					                <th>Status</th>
-					                <th>Previleges</th>
-                          <th>Last logged in</th>
-                          <th>Activity log</th>
-					            </tr>
-					        </tfoot>
+					        
 					    </table>
 					</div>
 	            </div>
@@ -405,18 +367,7 @@
 	    </div>
 	</div>
 </section>
-<!--/ HTML (DOM) sourced data -->
 
-<!-- Ajax sourced data -->
-<!--/ Ajax sourced data -->
-
-<!-- Javascript sourced data -->
-
-<!--/ Javascript sourced data -->
-
-<!-- Server-side processing -->
-
-<!--/ Javascript sourced data -->
         </div>
       </div>
     </div>
@@ -432,56 +383,63 @@
         </button>
         </div>
         <div class="modal-body">
-
           <!-- Put our form data here -->
           <form class="form form-horizontal form-bordered" method="post">
-          <div class="form-body">
-
-
             <h4 class="form-section"><i class="ft-user"></i> User details</h4>
-			      <div class="form-group row">
-	              <label class="col-md-3 label-control" for="projectinput1">First Name</label>
-		            <div class="col-md-9">
-                  <input type="text" id="projectinput1" class="form-control" placeholder="First Name" name="fname">
-		          </div>
-            </div>
+            <script type="text/javascript">
+              generate_form(
+                  ['name', 'phone', 'email', 'role', 'password'],
+                  ['text', 'text', 'email', 'select','password'],
+                  [
+                    ['Driver', 'Warehouse Manager', 'Sales Agent']
+                  ], 
+                  [
+                    ['Drvier', 'Warehouse Manager', 'Sales Agent'] 
+                  ],   
+                  ['Full name', 'Phone', 'Email', 'Role', 'Password']
+              );
 
-            <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput2">Phone</label>
-              <div class="col-md-9">
-                <input type="text" id="projectinput2" class="form-control" placeholder="Phone" name="lname">
-              </div>
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput2">Email</label>
-              <div class="col-md-9">
-                <input type="email" id="projectinput2" class="form-control email-inputmask" placeholder="Email" name="lname">
-              </div>
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput6">Role</label>
-              <div class="col-md-9">
-                  <select id="projectinput6" name="interested" class="form-control">
-                      <option value="none" selected="" disabled="">Role</option>
-                      <option value="design">Driver</option>
-                      <option value="development">Wharehouse Manager</option>
-                      <option value="illustration">Sales Agent</option>
-                      
-                  </select>
-                </div>
-            </div>
-
-            <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput2">Password</label>
-              <div class="col-md-9">
-                <input type="Password" id="projectinput2" class="form-control" placeholder="Password" name="lname">
-              </div>
-            </div>
-
-          </div>
+            </script>
+            <button type="submit" name="user_added" class="btn btn-info btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
         </form>
+            
+            <script>
+              function validate(){
+                //Handle
+                //alert('Hey');
+                return [];
+              }
+
+              var errors = validate();
+            
+            </script>
+
+          <?php 
+            if(isset($_POST['user_added'])){
+
+              $auth = new Admin('users', 'phone', 'crm');
+             
+              $name = $_POST['name'];
+              $phone = $_POST['phone'];
+              $email = $_POST['email'];
+              $role = $_POST['role'];
+              $password = $_POST['password'];
+              $status = 1;
+
+              $columns = ['name', 'phone', 'email', 'role', 'password', 'status'];
+              $values = ["'$name'", "'$phone'", "'$email'", "'$role'", "'$password'", "'$status'"];
+
+              //echo "$name $phone $email $role $password ";
+              $reg = $auth->register($columns, $values);
+              if($reg){
+                echo"sxxx";
+              }else{
+                echo"errrr";
+              }
+
+
+            }
+          ?>
            
         </div>
         <div class="modal-footer">
@@ -491,7 +449,8 @@
       </div>
       </div>
     </div>
-
+      
+  
     
 
 
@@ -530,7 +489,6 @@
                       ['Partner', 'Partnership Type', 'Partner Code', 'Partner Reg. Code', 'Email', 'Contact', 'Address', 'Category', 'Password', 'Confirm']
                   );      
               </script>
-
 							<button type="submit" name="customer_added" class="btn btn-info btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
 						</form>
 
