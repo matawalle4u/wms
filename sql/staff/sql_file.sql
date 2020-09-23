@@ -17,17 +17,19 @@
 --   UNIQUE KEY (`staff_code`),
 -- ) ENGINE=InnoDB DEFAULT CHARSuser_updatesET=latin1;
 
-
-CREATE TABLE `` (
-  `user_updates_id` int(11) NOT NULL AUTO_INCREMENT,
-  `updater` int(11) NOT NULL,
-  `updated_user` int(11) NOT NULL,
-  `updated_previleges` TEXT NOT NULL,
-  `update_time` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL,
-  PRIMARY KEY (`user_updates_id`),
-  FOREIGN KEY (`updater`) REFERENCES  `users`(`user_id`) ON DELETE CASCADE,
-  FOREIGN KEY (`updated_user`) REFERENCES  `users`(`user_id`) ON DELETE CASCADE
+CREATE TABLE `users_log`(
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` int(11) NOT NULL,
+  `log_table` varchar(35) NOT NULL,
+  `table_primary_key` varchar(35) NOT NULL,
+  `primary_key_val` int(11) NOT NULL,
+  `log_details` TEXT NOT NULL,
+  `activity_date` TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL,
+  PRIMARY KEY (`log_id`),
+  FOREIGN KEY (`user`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 
 -- CREATE TABLE `staffs_rotation` (
 --   `rotation_id` int(11) NOT NULL AUTO_INCREMENT,

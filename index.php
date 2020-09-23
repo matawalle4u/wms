@@ -2,13 +2,8 @@
 
 session_start();
 
-include('modules/Compl_Classes.php');
-    
-$us = new Admin('admin', 'phone', 'crm');
-
-
-//include('../modules/Compl_Classes.php');
-//$us = new Admin('customers', 'email', 'crm');
+include('modules/Compl_Classes.php');  
+$us = new Admin('users', 'phone', 'crm');
 
 
 
@@ -65,7 +60,7 @@ $us = new Admin('admin', 'phone', 'crm');
                 </div>
                 <div class="card-content">
                     <div class="card-body">
-                        <form class="form-horizontal form-simple" action="login.php" method="post" novalidate>
+                        <form class="form-horizontal form-simple" action="index.php" method="post" novalidate>
                             <fieldset class="form-group position-relative has-icon-left mb-0">
                                 <input type="text" name="phone" class="form-control form-control-lg input-lg" id="user-name" placeholder="Your Username" required>
                                 <div class="form-control-position">
@@ -92,7 +87,16 @@ $us = new Admin('admin', 'phone', 'crm');
                                     if($login){
 
                                         $_SESSION['phone'] = $_POST['phone'];
-                                        $us->redirect('admin_home.php');
+
+                                        $user_details = $us->get('users', ['role'], ['phone'], [$phone], 'single');
+                                        
+                                        if($user_details[0]['role']=='Warehouse Manager'){
+
+                                            $us->redirect('warehouse_manager.php');
+
+                                        }
+
+                                        
                                         
                                     }else{
                                         echo"

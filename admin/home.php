@@ -1,7 +1,7 @@
 <?php
   session_start();
   
-  include('modules/Compl_Classes.php');  
+  include('../modules/Compl_Classes.php');  
   $us = new Admin('admin', 'phone', 'crm');
 
 
@@ -10,7 +10,18 @@
   }else{
     $email = $_SESSION['phone'];
 
-    $users = $us->join_get('users', 'privelages', 'user_id', 'user' , ['user', 'name', 'phone', 'role', 'status', 'actions', 'last_login'], [], [], 'many');
+    $users = $us->join_get('users', 'privelages', 'user_id', 'user' , ['user_id','user', 'name', 'phone', 'role', 'status', 'actions', 'last_login'], [], [], 'many');
+    $users_names = array();
+    $users_ids = array();
+
+    foreach($users as $user){
+      array_push($users_names, $user['name']);
+      array_push($users_ids, $user['user_id']);
+    }
+  }
+
+  if(isset($_GET['logout'])){
+    $us->logout('index.php');
   }
 
 ?>
@@ -26,24 +37,24 @@
     <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
     <meta name="author" content="PIXINVENT">
     <title>Title here</title>
-    <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
+    <link rel="apple-touch-icon" href="../app-assets/images/ico/apple-icon-120.png">
+    <link rel="shortcut icon" type="../image/x-icon" href="app-assets/images/ico/favicon.ico">
     <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
     BEGIN VENDOR CSS -->
-    <link rel="stylesheet" type="text/css" href="app-assets/css/vendors.css">
-    <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/tables/datatable/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/vendors.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/tables/datatable/datatables.min.css">
     <!-- END VENDOR CSS-->
     <!-- BEGIN ROBUST CSS-->
-    <link rel="stylesheet" type="text/css" href="app-assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/app.css">
     <!-- END ROBUST CSS-->
     <!-- BEGIN Page Level CSS-->
-    <link rel="stylesheet" type="text/css" href="app-assets/css/core/menu/menu-types/vertical-compact-menu.css">
-    <link rel="stylesheet" type="text/css" href="app-assets/css/core/colors/palette-gradient.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/core/menu/menu-types/vertical-compact-menu.css">
+    <link rel="stylesheet" type="text/css" href="../app-assets/css/core/colors/palette-gradient.css">
     <!-- END Page Level CSS-->
     <!-- BEGIN Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
     <!-- END Custom CSS-->
-    <script type="text/javascript" src="my_custom_js.js"></script>
+    <script type="text/javascript" src="../my_custom_js.js"></script>
     
   </head>
   <body class="vertical-layout vertical-compact-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="2-columns">
@@ -155,11 +166,15 @@
                   <li class="dropdown-menu-footer"><a class="dropdown-item text-muted text-center" href="javascript:void(0)">Read all messages</a></li>
                 </ul>
               </li>
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Admin</span></a>
-                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a><a class="dropdown-item" href="chat-application.html"><i class="ft-message-square"></i> Chats</a>
-                  <div class="dropdown-divider"></div><a class="dropdown-item" href="login-with-bg-image.html"><i class="ft-power"></i> Logout</a>
+
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Adam</span></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
+                    <a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a>
+                  <div class="dropdown-divider"></div><a class="dropdown-item" href="?logout=true"><i class="ft-power"></i> Logout</a>
                 </div>
               </li>
+              
             </ul>
           </div>
         </div>
@@ -203,7 +218,7 @@
 
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#adduser"><i class="ft-plus white"></i> New User</button>
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateuser"><i class="fa fa-pencil white"></i> Update user</button>
-          <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateuser"><i class="fa fa-pencil white"></i> New Customer</button>
+          <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newPartner"><i class="fa fa-pencil white"></i> New Partner</button>
             
             
           </div>
@@ -307,7 +322,7 @@
                                     <i class="fa fa-user info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h4>9</h4>
+                                        <h4><?php echo sizeof($users);?></h4>
                                 <span>Staffs</span>
                             </div>
                         </div>
@@ -432,9 +447,11 @@
               //echo "$name $phone $email $role $password ";
               $reg = $auth->register($columns, $values);
               if($reg){
-                echo"sxxx";
+                $us->redirect('admin_home.php');
               }else{
-                echo"errrr";
+                echo"
+                <script>alert('Error, Try again')</script>
+                ";
               }
 
 
@@ -456,7 +473,7 @@
 
     
 
-    <div class="modal fade text-left" id="updateuser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div class="modal fade text-left" id="newPartner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
       <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -543,22 +560,117 @@
     </div>
 
 
+
+    <div class="modal fade text-left" id="updateuser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Update user</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Put our form data here -->
+
+          <form class="form-horizontal form-simple" method="post" novalidate>
+							
+              <script type="text/javascript">
+
+                  var users = <?php echo json_encode($users_names);?>;
+                  var ids = <?php echo json_encode($users_ids);?>;
+
+                  generate_form(
+                      ['user', 'name', 'phone', 'email'],
+                      ['select', 'text', 'text', 'email'],
+                      [
+                        users
+                      ], 
+                      [
+                        ids 
+                      ],   
+                      ['User', 'Name', 'Phone', 'Email']
+                  );      
+              </script>
+
+
+            
+                  
+                <div class="col-md-6 col-sm-12">
+                    <fieldset>
+                    <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      <label for="input-radio-15">Add Users</label>
+                    </fieldset>
+                    <fieldset>
+                    <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      <label for="input-radio-16">Delete User</label>
+                    </fieldset>
+                    <fieldset>
+                    <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      <label for="input-radio-17">Update user</label>
+                    </fieldset>
+                    <fieldset>
+                    <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      <label for="input-radio-18">Update User account</label>
+                    </fieldset>
+                  </div>
+
+
+              
+							<button type="submit" name="user_updated" class="btn btn-info float-right"><i class="fa fa-pencil"></i> Update</button>
+						</form>
+
+
+
+           
+        </div>
+        
+        <?php
+
+            //if(isset($_POST['warehouse_added'])){
+
+              if(isset($_POST['user_updated'])){
+
+                
+                $updated_user = $_POST['user'];
+                $phone = $_POST['phone'];
+
+                $name = $_POST['name'];
+                $email = $_POST['email'];
+                
+                
+
+
+                
+
+              }
+
+            
+        ?>
+      </div>
+        
+      </div>
+    </div>
+
+
+
     <footer class="footer footer-static footer-dark navbar-border navbar-shadow">
       <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block"> </span></p>
     </footer>
 
     <!-- BEGIN VENDOR JS-->
-    <script src="app-assets/vendors/js/vendors.min.js"></script>
+    <script src="../app-assets/vendors/js/vendors.min.js"></script>
     <!-- BEGIN VENDOR JS-->
     <!-- BEGIN PAGE VENDOR JS-->
-    <script src="app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
+    <script src="../app-assets/vendors/js/tables/datatable/datatables.min.js"></script>
     <!-- END PAGE VENDOR JS-->
     <!-- BEGIN ROBUST JS-->
-    <script src="app-assets/js/core/app-menu.js"></script>
-    <script src="app-assets/js/core/app.js"></script>
+    <script src="../app-assets/js/core/app-menu.js"></script>
+    <script src="../app-assets/js/core/app.js"></script>
     <!-- END ROBUST JS-->
     <!-- BEGIN PAGE LEVEL JS-->
-    <script src="app-assets/js/scripts/tables/datatables-extensions/datatables-sources.js"></script>
+    <script src="../app-assets/js/scripts/tables/datatables-extensions/datatables-sources.js"></script>
     <!-- END PAGE LEVEL JS-->
   </body>
 </html>

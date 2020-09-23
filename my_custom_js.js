@@ -51,3 +51,8 @@ function load_container(containers, classes, contents){
     
     document.write('Loading container');
 }
+
+
+function validate_input(){
+    //Handle input validation and return an array
+}

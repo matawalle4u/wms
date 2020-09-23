@@ -1,3 +1,46 @@
+<?php
+  session_start();
+  
+  include('modules/Compl_Classes.php');  
+  $us = new Admin('users', 'phone', 'crm');
+
+
+  if(!isset($_SESSION['phone'])){
+    $us->logout('index.php');
+  }else{
+    $phone = $_SESSION['phone'];
+
+    $user_details = $us->get('users', ['role','name'], ['phone'], [$phone], 'single');
+    $role =$user_details[0]['role'];
+    $name =$user_details[0]['name'];
+
+    $warehouses = $us->get('warehouses', ['warehouse_name','warehouse_id'], [], [], 'many');
+    $warehouse_names = array();
+    $warehouse_ids = array();
+
+    foreach($warehouses as $item){
+      array_push($warehouse_names, $item['warehouse_name']);
+      array_push($warehouse_ids, $item['warehouse_id']);
+    }
+
+    
+    $racks = $us->join_get('racks', 'warehouses', 'rack_warehouse', 'warehouse_id' , ['rack_id','rack_row','rack_column','rack_level','rack_position', 'warehouse_name'], [], [], 'many');
+    $rack_names = array();
+    $rack_ids = array();
+
+    foreach($racks as $rack){
+      $details = $rack['warehouse_name'].' [Row '.$rack['rack_row']. ' Column '.$rack['rack_column']. ' Level ' .$rack['rack_level'] .' '.$rack['rack_position'].']';
+      array_push($rack_names, $details);
+      }
+    
+  }
+
+  if(isset($_GET['logout'])){
+    $us->logout('index.php');
+  }
+
+?>
+
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
   <head>
@@ -137,11 +180,17 @@
                   <li class="dropdown-menu-footer"><a class="dropdown-item text-muted text-center" href="javascript:void(0)">Read all messages</a></li>
                 </ul>
               </li>
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Warehouse Manager</span></a>
-                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a><a class="dropdown-item" href="chat-application.html"><i class="ft-message-square"></i> Chats</a>
-                  <div class="dropdown-divider"></div><a class="dropdown-item" href="login-with-bg-image.html"><i class="ft-power"></i> Logout</a>
+
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name"><?php echo $name; ?></span></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
+                    <a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a>
+                  <div class="dropdown-divider"></div><a class="dropdown-item" href="?logout=true"><i class="ft-power"></i> Logout</a>
                 </div>
               </li>
+
+              
+
             </ul>
           </div>
         </div>
@@ -392,21 +441,11 @@
 	    </div>
 	</div>
 </section>
-<!--/ HTML (DOM) sourced data -->
 
-<!-- Ajax sourced data -->
-<!--/ Ajax sourced data -->
 
-<!-- Javascript sourced data -->
-
-<!--/ Javascript sourced data -->
-
-<!-- Server-side processing -->
-<
-<!--/ Javascript sourced data -->
-        </div>
-      </div>
     </div>
+  </div>
+</div>
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
     
@@ -479,37 +518,30 @@
           <form class="form form-horizontal form-bordered" method="post">
           <div class="form-body">
 
-          <div class="form-group row">
-              <label class="col-md-3 label-control" for="projectinput6">Warehouse</label>
-              <div class="col-md-9">
-                  <select id="projectinput6" name="interested" class="form-control">
-                      <option value="none" selected="" disabled="">Warehouse</option>
-                      <option value="design">Iasi</option>
-                      <option value="development">Kaduna Nigeria</option>
-                      <option value="illustration">Bucharest Romania</option>
-                      
-                  </select>
-                </div>
-            </div>
 
-			<div class="form-group row">
-	            <label class="col-md-3 label-control" for="projectinput1">Wharehouse Name</label>
-		        <div class="col-md-9">
-                    <input type="text" id="projectinput1" name="name" class="form-control" placeholder="New Name" name="fname" value="<?php echo 'Iasi';?>">
-		        </div>
-            </div>
+          <script type="text/javascript">
 
-            <div class="form-group row">
-                <label class="col-md-3 label-control" for="projectinput2">Wharehouse Address</label>
-                <div class="card-body">
-                    <fieldset class="form-group">
-                        <textarea name="address" class="form-control" id="placeTextarea" rows="3" placeholder="Wharehouse Address"></textarea>
-                    </fieldset>
-                </div>
-            </div>
+            var warehouse_names = <?php echo json_encode($warehouse_names);?>;
+            var warehouse_ids = <?php echo json_encode($warehouse_ids);?>;
+
+
+            generate_form(
+                ['warehouse', 'name', 'address'],
+                ['select', 'text', 'textarea'],
+                [
+                  warehouse_names
+                  
+                ], 
+                [
+                  warehouse_ids,
+                  
+                ],   
+                ['Warehouse', 'Name', 'Address']
+            );      
+            </script>
 
             <div class="col-md-6 col-sm-12">
-                <input type="submit" class="btn btn-info btn-outline-secondary" value="Save" name="warehouse_added">
+                <input type="submit" class="btn btn-info btn-outline-secondary" value="Save" name="warehouse_updated">
             </div>
           </div>
         </form> 
@@ -550,16 +582,17 @@
           <div class="form-body">
 
           <script type="text/javascript">
+
               generate_form(
                   ['warehouse', 'row', 'column', 'level', 'zone', 'position'],
                   ['select', 'text', 'text', 'text', 'text', 'select'],
                   [
-                    ['Rack1','Rack2', 'Rack3'],
+                    warehouse_names,
                     ['Left', 'Right', 'Middle']
                   ], 
                   [
-                    ['r1', 'r2', 'r3'],
-                    ['kg1', 'bag1', 'pal']
+                    warehouse_ids,
+                    ['Left', 'Right', 'Middle']
                   ],   
                   ['Warehouse', 'Row', 'Column', 'Level', 'Zone', 'Position']
               );      
@@ -609,18 +642,20 @@
           <div class="form-body">
 
             <script type="text/javascript">  
+              var rack_names = <?php echo json_encode($rack_names);?>;
+
               generate_form(
-                  ['rack', 'product', 'quantity', 'unit'],
-                  ['select', 'text', 'text', 'select'],
+                  ['rack', 'product', 'quantity', 'unit', 'file'],
+                  ['select', 'text', 'text', 'select', 'file'],
                   [
-                    ['Rack1','Rack2', 'Rack3'],
+                    rack_names,
                     ['KG', 'Bag', 'Pallet']
                   ], 
                   [
                     ['r1', 'r2', 'r3'],
-                      ['kg1', 'bag1', 'pal']
+                    ['kg1', 'bag1', 'pal']
                   ],   
-                  ['Rack', 'Product', 'Quantity', 'Unit']
+                  ['Rack', 'Product', 'Quantity', 'Unit', 'Picture']
               );
                    
             </script>
