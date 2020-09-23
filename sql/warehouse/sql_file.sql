@@ -26,6 +26,15 @@ CREATE TABLE `warehouse_zones`(
   FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- CREATE TABLE `warehouse_users` (
+--   `warehouse_user_id` int(11) AUTO_INCREMENT NOT NULL,
+--   `user` int(11) NOT NULL,
+--   `warehouse` int(11) NOT NULL,
+--   `role` VARCHAR(65) NOT NULL,
+--   PRIMARY KEY (`warehouse_user_id`),
+--   FOREIGN KEY (`user`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+--   FOREIGN KEY (`warehouse`) REFERENCES `warehouses`(`warehouse_id`) ON DELETE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 -- CREATE TABLE  `racks`(
