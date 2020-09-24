@@ -10,11 +10,15 @@
   }else{
     $phone = $_SESSION['phone'];
 
-    $user_details = $us->get('users', ['role','name'], ['phone'], [$phone], 'single');
+    $user_details = $us->get('users', ['user_id', 'role','name'], ['phone'], [$phone], 'single');
     $role =$user_details[0]['role'];
     $name =$user_details[0]['name'];
+    $user_id = $user_details[0]['user_id'];
 
-    $warehouses = $us->get('warehouses', ['warehouse_name','warehouse_id'], [], [], 'many');
+    //$warehouses = $us->get('warehouses', ['warehouse_name','warehouse_id'], [], [], 'many');
+
+    $warehouses = $us->join_get('warehouse_users', 'warehouses', 'warehouse', 'warehouse_id' , ['warehouse_id', 'warehouse_name'], ['user'], [$user_id], 'many');
+
     $warehouse_names = array();
     $warehouse_ids = array();
 
@@ -30,7 +34,10 @@
 
     foreach($racks as $rack){
       $details = $rack['warehouse_name'].' [Row '.$rack['rack_row']. ' Column '.$rack['rack_column']. ' Level ' .$rack['rack_level'] .' '.$rack['rack_position'].']';
-      array_push($rack_names, $details);
+      
+        if(in_array($rack['warehouse_name'], $warehouse_names)){
+          array_push($rack_names, $details);
+        }
       }
     
   }
@@ -53,8 +60,8 @@
     <title>Title here</title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
-    <!-- BEGIN VENDOR CSS-->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
+    BEGIN VENDOR CSS -->
     <link rel="stylesheet" type="text/css" href="app-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/tables/datatable/datatables.min.css">
     <!-- END VENDOR CSS-->
