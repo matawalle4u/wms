@@ -75,6 +75,12 @@ $us = new Admin('admin', 'phone', 'crm');
                             </fieldset>
 
                             <?php
+
+
+                                $redir = array(
+                                    'System'=>'home.php',
+                                    'b2b'=>'b2b_admin.php'
+                                );
                             
                                 
                                 
@@ -86,22 +92,17 @@ $us = new Admin('admin', 'phone', 'crm');
                                     $login = $us->login($phone, $pass);
                                     if($login){
 
+                                        $user_details = $us->get('admin', ['admin_id','name', 'role'], ['phone'], [$_POST['phone']], 'single');
+
                                         $_SESSION['phone'] = $_POST['phone'];
-                                        $us->redirect('home.php');
+                                        $_SESSION['role'] = $user_details[0]['role'];
+
+                                        $us->redirect($redir[$user_details[0]['role']]);
+
+                                       
                                         
                                     }else{
-                                        echo"
-
-                                        <script type=\"text/javascript\">
-
-                                            swal(\"Invalid credentials\");
-
-
-                                        </script>
-
-
-                                        
-                                        ";
+                                        echo"Invalid";
                                     }
                                 }
 
