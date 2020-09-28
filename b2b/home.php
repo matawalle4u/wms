@@ -6,7 +6,7 @@
 
   
 
-  if(!isset($_SESSION['email'])){
+  if(!isset($_SESSION['email']) || isset($_GET['logout'])){
     $us->logout('index.php');
   }else{
     $email = $_SESSION['email'];
@@ -16,9 +16,7 @@
 
   }
 
-  if(isset($_GET['logout'])){
-    $us->logout('index.php');
-  }
+  
 
 ?>
 
