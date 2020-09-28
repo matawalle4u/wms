@@ -3,15 +3,21 @@
   
   include('modules/Compl_Classes.php');  
   $us = new Admin('users', 'phone', 'crm');
+  $orderClass = new Orders();
+
 
 
   if(!isset($_SESSION['phone']) || isset($_GET['logout']) || $_SESSION['role']!='Warehouse Supervisor'){
     $us->logout('index.php');
   }else{
 
+
+    $orders = $us->join_get('orders', 'customers', 'customer', 'customer_id' , ['order_id','details', 'order_date', 'order_status', 'name', 'contact', 'address'], [], [], 'many');
     
     
-    $warehouses = $us->join_get('warehouse_users', 'warehouses', 'warehouse', 'warehouse_id' , ['warehouse_id', 'warehouse_name'], ['user'], [$_SESSION['user_id']], 'many');
+    //$warehouses = $us->join_get('warehouse_users', 'warehouses', 'warehouse', 'warehouse_id' , ['warehouse_id', 'warehouse_name'], ['user'], [$_SESSION['user_id']], 'many');
+
+    $warehouses = $us->get('warehouses', ['warehouse_id', 'warehouse_name'], [], [], 'many');
 
     $warehouse_names = array();
     $warehouse_ids = array();
@@ -49,7 +55,7 @@
     <meta name="description" content="Robust admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template.">
     <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
     <meta name="author" content="PIXINVENT">
-    <title>Title here</title>
+    <title>Warehouse Supervisor</title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
     <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
@@ -206,7 +212,7 @@
 
           <li class=" nav-item"><a href="#"><i class="icon-folder"></i><span class="menu-title" data-i18n="nav.category.general">Warehouse</span></a>
             <ul class="menu-content">
-              <li><a class="menu-item" href="#" data-i18n="nav.color_palette.main">Add warehouse</a> 
+              <li><a class="menu-item" href="warehouse_list.php" data-i18n="nav.color_palette.main">View Warehouses</a> 
               </li>
               <li><a class="menu-item" href="#" data-i18n="nav.starter_kit.main">Add Rack</a>  
               </li>
@@ -238,6 +244,12 @@
 
             <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#updatezone" href="#">Update Zone</a>
             </li>
+
+            <li class="breadcrumb-item"> <a href="warehouse_list.php">Warehouse List</a>
+            </li>
+
+            <li class="breadcrumb-item"> <a href="warehouse_reports.php">View Report</a>
+            </li>
             
            
 
@@ -249,17 +261,18 @@
                     <div class="card-body">
                         <div class="media d-flex">
                             <div class="align-self-center">
-                                    <i class="fa fa-building info font-large-2 float-left"></i>
+                                    <i class="fa fa-shopping-cart info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h5><?php ?></h5>
-                                <span>Warehouse</span>
+                                        <h5><?php echo sizeof($orders);?></h5>
+                                <span>Orders</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-xl-2 col-lg-6 col-12">
             <div class="card">
                 <div class="card-content">
@@ -269,31 +282,15 @@
                                     <i class="fa fa-list info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h3>278</h3>
-                                <span>Racks</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-lg-6 col-12">
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-body">
-                        <div class="media d-flex">
-                            <div class="align-self-center">
-                                    <i class="fa fa-shopping-cart success font-large-2 float-left"></i>
-                                </div>
-                            <div class="media-body text-right">
                                         <h4>278</h4>
-                                <span>Products</span>
+                                <span>Finished</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-xl-2 col-lg-6 col-12">
             <div class="card">
                 <div class="card-content">
@@ -353,79 +350,81 @@
 	            
 	            <div class="card-content collpase show">
 	                <div class="card-body card-dashboard">
-	                
-	                <table class="table table-striped table-bordered sourced-data">
+
+
+
+                  <table class="table table-striped table-bordered sourced-data">
 					        <thead>
 					            <tr>
-					                <th>Name</th>
-					                <th>Location</th>
-					                <th>Category</th>
-					                <th>Date Stcoked</th>
-					                <th>Unit Measure</th>
-					                <th>Available Quantity</th>
+					                <th>S/N</th>
+                          <th>Order Date</th>
+					                <th>Details</th>
+                          <th>Customer</th>
+                          <th>Contact</th>
+                          <th>Address</th>
+					                <th>Status</th>
+                          <th>Validate List</th>
 					            </tr>
 					        </thead>
 					        <tbody>
 
-					            <tr>
-					                <td>Apple</td>
-					                <td>
+                      <?php
+                        foreach($orders as $index=>$order){
+                          $sn = $index+1;
 
-                              <ul>
+                          if($order['order_status']=='Approved'){
+                            $stat_colo = "<span class='badge badge-success badge-primary'><a data-toggle=\"modal\" data-target=\"#processOrder\" href=?order_id={$order['order_id']}>{$order['order_status']}</a></span>";
+                          }else{
+                            $stat_colo = "
+                            <a href=?order_id={$order['order_id']} data-toggle=\"modal\" data-target=\"#processOrder\">
+                              <span class='badge badge-danger badge-primary'>
+                                {$order['order_status']}
                                 
-                                  <li>Iasi Warehouse</li>
+                              </span>
+                            </a>";}
+                          
+                          echo"<tr>";
 
-                                
-                                  <li>Production Zone</li>
-                                    
-                                  <li> Row 2, Col 3 ,Level 3, Middle</li>
-                                    
-                              </ul>       
+                            echo"<td>". $sn ."</td>";
+                            echo"<td>". substr($order['order_date'],0,16)."</td>";
+                            //Decompose details here
 
-                          </td>
-					                <td>Fruits</td>
-					                
-					                <td>2011/04/25</td>
-                           <td>KG</td>
-                           <td>29</td>
-                      </tr>
-                                
+                            $details = $orderClass->decompose($order['details']);
 
-                                <tr>
-					                <td>Banana</td>
-					                <td>
-                              
-                              <ul>
-                                  <li>Kaduna Warehouse</li>
-                                  <li>Production Zone</li>
-                                  <li> Row 2, Col 3 ,Level 3, Middle</li>  
-                              </ul>
+                            $products = $details[0];
+                            $quantities = $details[1];
+                            $prices = $details[2];
+                            $selling_price = $details[3];
+                            $order_type = $details[4];
+                            $unit = $details[5];
+                            $product_id = $details[6];
 
-                          </td>
-					                <td>Fruits</td>
-					                <td>2011/04/25</td>
-                          <td>Pallet</td>
-                          <td>9</td>
-					            </tr>
+                            
+                            echo"<td><ol>";
+                            foreach($details[0] as $key=>$value){
+                              echo '<li>' .$details[0][$key] .' '. $details[1][$key] . $details[5][$key] .'</li>';
+                            }
+
+                            echo"</ol></td>";
+
+
+                            //echo"<td>". $products."</td>";
+                            echo"<td>". $order['name']."</td>";
+                            echo"<td>". $order['contact']."</td>";
+                            echo"<td>". $order['address']."</td>";
+                           
+                            echo"<td>". $stat_colo ."</td>";
+                            echo"<td>Validate" ."</td>";
+                            
+											    echo"</tr>";
+                        }
+
+                      ?>
 					           
-					            
-					            
-					            
-					            
-					            
-
 					        </tbody>
-					        <!-- <tfoot>
-					            <tr>
-					                <th>Name</th>
-					                <th>Position</th>
-					                <th>Office</th>
-					                <th>Age</th>
-					                <th>Start date</th>
-					                <th>Salary</th>
-					            </tr>
-					        </tfoot> -->
+					        
 					    </table>
+
 					</div>
 	            </div>
 	        </div>
@@ -502,7 +501,7 @@
       <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel1">Create Rack</h4>
+        <h4 class="modal-title" id="myModalLabel1">Create Zone</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -541,6 +540,52 @@
         
       </div>
     </div>
+
+
+    <div class="modal fade text-left" id="processOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Process Oder <?php echo $_GET['order_id'];?></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Put our form data here -->
+          <form class="form form-horizontal form-bordered" method="post">
+          <div class="form-body">
+
+            <script type="text/javascript">
+                generate_form(['warehouse', 'description'],['select', 'text'],[warehouse_names], [warehouse_ids],['Warehouse', 'Description']);      
+            </script>
+
+            <div class="col-md-6 col-sm-12">
+                <input type="submit" class="btn btn-info btn-outline-secondary" value="Add" name="warehouse_added">
+            </div>
+          </div>
+        </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+        </div>
+        <?php
+
+            if(isset($_POST['warehouse_added'])){
+
+                $name = $_POST['name'];
+                $address = $_POST['address'];
+
+                echo $name .$address;
+
+            }
+        ?>
+      </div>
+        
+      </div>
+    </div>
+
 
 
     <footer class="footer footer-static footer-dark navbar-border navbar-shadow">
