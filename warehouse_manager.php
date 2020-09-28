@@ -5,19 +5,13 @@
   $us = new Admin('users', 'phone', 'crm');
 
 
-  if(!isset($_SESSION['phone'])){
+  if(!isset($_SESSION['phone']) || isset($_GET['logout']) || $_SESSION['role']!='Warehouse Manager'){
     $us->logout('index.php');
   }else{
-    $phone = $_SESSION['phone'];
 
-    $user_details = $us->get('users', ['user_id', 'role','name'], ['phone'], [$phone], 'single');
-    $role =$user_details[0]['role'];
-    $name =$user_details[0]['name'];
-    $user_id = $user_details[0]['user_id'];
-
-    //$warehouses = $us->get('warehouses', ['warehouse_name','warehouse_id'], [], [], 'many');
-
-    $warehouses = $us->join_get('warehouse_users', 'warehouses', 'warehouse', 'warehouse_id' , ['warehouse_id', 'warehouse_name'], ['user'], [$user_id], 'many');
+    
+    
+    $warehouses = $us->join_get('warehouse_users', 'warehouses', 'warehouse', 'warehouse_id' , ['warehouse_id', 'warehouse_name'], ['user'], [$_SESSION['user_id']], 'many');
 
     $warehouse_names = array();
     $warehouse_ids = array();
@@ -42,9 +36,7 @@
     
   }
 
-  if(isset($_GET['logout'])){
-    $us->logout('index.php');
-  }
+ 
 
 ?>
 
@@ -188,7 +180,7 @@
                 </ul>
               </li>
 
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name"><?php echo $name; ?></span></a>
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name"><?php echo $_SESSION['name']; ?></span></a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
                     <a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a>
@@ -233,31 +225,24 @@
 
     <div class="app-content content">
       <div class="content-wrapper">
-        <div class="content-header row">
-          <div class="content-header-left col-md-6 col-12 mb-2">
-            
-            <div class="row breadcrumbs-top">
-              <div class="breadcrumb-wrapper col-12">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a data-toggle="modal" data-target="#addwharehouse" href="#">Add warehouse</a>
-                  </li>
-                  <li class="breadcrumb-item"><a data-toggle="modal" data-target="#updatewarehouse" href="#">Update warehouse</a>
-                  </li>
-                  <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#addrack" href="#">Add Rack</a>
-                  </li>
-
-                  <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#addproduct" href="#">Add Product</a>
-                  </li>
-
-                </ol>
-              </div>
-            </div>
-          </div>
-          
-        </div>
+        
         <div class="content-body"><!-- HTML (DOM) sourced data -->
     <section id="html">
     <!-- SUMMARY STARTS HERE -->
+        <ol class="breadcrumb">
+
+            <li class="breadcrumb-item"><a data-toggle="modal" data-target="#addwharehouse" href="#">New warehouse</a>
+            </li>
+            <li class="breadcrumb-item"><a data-toggle="modal" data-target="#updatewarehouse" href="#">Update warehouse</a>
+            </li>
+            <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#addstaff" href="#">Add Staff</a>
+            </li>
+            <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#addrack" href="#">New Rack</a>
+            </li>
+            <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#addproduct" href="#">New Product</a>
+            </li>
+
+        </ol>
      <div class="row">
         <div class="col-xl-2 col-lg-6 col-12">
             <div class="card">
@@ -268,7 +253,7 @@
                                     <i class="fa fa-building info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h5>28</h5>
+                                        <h5><?php ?></h5>
                                 <span>Warehouse</span>
                             </div>
                         </div>
@@ -687,6 +672,89 @@
 
             }
         ?>
+      </div>
+        
+      </div>
+    </div>
+
+
+
+    <div class="modal fade text-left" id="addstaff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Add Warehouse Staff</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Put our form data here -->
+          <form class="form form-horizontal form-bordered" method="post">
+          <div class="form-body">
+
+            <script type="text/javascript">
+              generate_form(
+                ['role', 'name', 'phone', 'email', 'password'],
+                ['select', 'text', 'text', 'text', 'password'],
+                [
+                  ['Warehouse Supervisor']
+                ],
+                [
+                  ['Warehouse Supervisor']
+                ],
+                ['Role', 'Name', 'Phone', 'Email','Password']
+                );      
+            </script>
+
+            <div class="col-md-6 col-sm-12">
+                <input type="submit" class="btn btn-info btn-outline-secondary" value="Add" name="staff_added">
+            </div>
+          </div>
+        </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+        </div>
+
+
+        <?php
+
+            //if(isset($_POST['warehouse_added'])){
+
+              if(isset($_POST['staff_added'])){
+
+                $auth = new Admin('users', 'phone', 'crm');
+
+                $name = $_POST['name'];
+                $email = $_POST['email'];
+                $phone = $_POST['phone'];
+                $role = $_POST['role'];
+                $password = $_POST['password']; 
+                $status =1;
+
+                $values = ["'$name'", "'$role'", "'$phone'", "'$email'", "'$password'", "'$status'"];
+                $columns = ['name', 'role', 'phone', 'email', 'password', 'status'];
+
+
+
+
+                $reg = $auth->register($columns, $values);
+
+                if($reg){
+                  echo"hurray";
+                }else{
+                  echo"Sorry";
+                }
+
+              }
+
+            
+        ?>
+
+        
+
       </div>
         
       </div>
