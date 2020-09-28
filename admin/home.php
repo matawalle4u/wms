@@ -5,7 +5,7 @@
   $us = new Admin('admin', 'phone', 'crm');
 
 
-  if(!isset($_SESSION['phone'])){
+  if(!isset($_SESSION['phone']) || isset($_GET['logout']) || $_SESSION['role']!='System'){
     $us->logout('index.php');
   }else{
     $email = $_SESSION['phone'];
@@ -20,9 +20,6 @@
     }
   }
 
-  if(isset($_GET['logout'])){
-    $us->logout('index.php');
-  }
 
 ?>
 
@@ -218,8 +215,8 @@
 
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#adduser"><i class="ft-plus white"></i> New User</button>
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateuser"><i class="fa fa-pencil white"></i> Update user</button>
-          <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newPartner"><i class="fa fa-pencil white"></i> New Partner</button>
-            
+          <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newPartner"><i class="fa fa-pencil white"></i> New Partner</button>
+             -->
             
           </div>
           
@@ -473,92 +470,7 @@
 
     
 
-    <div class="modal fade text-left" id="newPartner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel1">Create Partner</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-        <div class="modal-body">
-
-          <!-- Put our form data here -->
-
-          <form class="form-horizontal form-simple" method="post" novalidate>
-							
-              <script type="text/javascript">
-
-                  generate_form(
-                      ['partner', 'partnership', 'part_code', 'part_reg_code', 'email', 'contact','address','category', 'password', 'repeat'],
-                      ['text', 'select', 'text', 'text','email','text', 'text', 'select', 'password', 'password'],
-                      [
-                        ['Supplier', 'Customer', 'Supplier&Customer'],
-                        ['B2B', 'Normal']
-                        
-                      ], 
-                      [
-                        ['supplier', 'customer', 'supplier_customer'],
-                        ['b2b', 'norm']
-                        
-                      ],   
-                      ['Partner', 'Partnership Type', 'Partner Code', 'Partner Reg. Code', 'Email', 'Contact', 'Address', 'Category', 'Password', 'Confirm']
-                  );      
-              </script>
-							<button type="submit" name="customer_added" class="btn btn-info btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
-						</form>
-
-
-
-           
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
-        </div>
-        <?php
-
-            //if(isset($_POST['warehouse_added'])){
-
-              if(isset($_POST['customer_added'])){
-
-                $auth = new Admin('customers', 'email', 'crm');
-
-                $name = $_POST['partner'];
-                $email = $_POST['email'];
-                $code = $_POST['part_code'];
-                $reg_code = $_POST['part_reg_code'];
-                $contact = $_POST['contact'];
-                $address = $_POST['address'];
-                $password = $_POST['password'];
-                $confirm = $_POST['repeat'];
-                $category = $_POST['category'];
-                $partnership = $_POST['partnership'];
-                $status =1;
-
-                $values = ["'$name'", "'$code'", "'$reg_code'", "'$email'", "'$contact'", "'$address'", "'$password'", "'$category'","'$partnership'", "'$status'"];
-                $columns = ['name', 'customer_code', 'cust_reg_code', 'email', 'contact', 'address', 'password', 'category','type', 'status'];
-
-
-
-
-                $reg = $auth->register($columns, $values);
-
-                if($reg){
-                  echo"hurray";
-                }else{
-                  echo"Sorry";
-                }
-
-              }
-
-            
-        ?>
-      </div>
-        
-      </div>
-    </div>
-
+    
 
 
     <div class="modal fade text-left" id="updateuser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
