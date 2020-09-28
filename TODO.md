@@ -31,6 +31,12 @@
 -- Chooses collects customer items scans the items and enter details to generate receipt and sales invoice
 -- View order on b2b home.php should 
 
+-- Sales should not happen without items in stock from the sql query
+
+--Every User Transaction should keep a log/History in the log table
+
+--On b2b_admin.php orders should be from the modules not hardcoded as I did now, just call the get_order function from Orders class
+
 
 
 
