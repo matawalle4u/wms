@@ -740,5 +740,394 @@
  }
 
 
+
+ class Warehouse extends DataBase{
+
+
+    private $warehouse_tbl = 'warehouses';
+    private $zone_tbl = 'warehouse_zones';
+    private $racks_tbl = 'racks';
+    private $transfer_tbl = 'transfers';
+    private $stocks_tbl = 'stocks';
+    private $product_tbl = 'products';
+    private $damage_tbl = 'damages';
+
+    
+    public function create_ware_house(array $values){
+
+        $columns = array(
+            'warehouse_name',
+            'warehouse_address'
+        );
+
+        $create = $this->put($this->warehouse_tbl, $columns,$values);
+        if($create){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function create_warehouse_zone(array $values){
+
+        $columns = array(
+            'zone_name',
+            'zone_warehouse'
+        );
+
+        $create = $this->put($this->zone_tbl, $columns,$values);
+        if($create){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function create_stock(array $values){
+
+        $columns = array(
+            'product',
+            'rack',
+            'quantity',
+            'status'
+        );
+
+        //$create = $this->put($this->stocks_tbl, $columns,$values);
+        $product = $values[0];
+        $rack = $values[1];
+        $new_qty = $values[2];
+
+        $create=0;
+        //If the stock doesnt exist it should add new entry
+        $stocks = $this->get($this->stocks_tbl, ['product', 'quantity'], ['product', 'rack'], [$product, $rack], 'single');
+        //print_r($stocks);
+        if(!empty($stocks)){
+            //It exists update the quantity
+            $this->update($this->stocks_tbl, ['quantity'], [$new_qty+$stocks[0]['quantity']], ['product', 'rack'], [$product, $rack]);
+        }else{
+            //Doesnt exists make new entry
+            $this->put($this->stocks_tbl, $columns,$values);
+            
+        }
+
+
+    }
+
+
+
+
+    public function create_rack(array $values){
+        $columns = array(
+            'rack_warehouse',
+            'rack_zone',
+            'rack_row',
+            'rack_column',
+            'rack_level',
+            'rack_position'
+        );
+        print_r($columns);
+
+        $create = $this->put($this->racks_tbl, $columns, $values);
+        if($create){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function update_warehouse_zone(array $columns, array $values, array $conds, array $conds_vals){
+        $flag  = false;
+        $update = $this->update($this->zone_tbl, $columns, $values, $conds, $conds_vals);
+        if($update){
+            $flag= true;
+        }
+
+        return $flag;
+    }
+
+    public function update_warehouse(array $columns, array $values, array $conds, array $conds_vals){
+        $update = $this->update($this->warehouse_tbl, $columns, $values, $conds, $conds_vals);
+        if($update){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function update_rack(array $columns, array $values, array $conds, array $conds_vals){
+        $update = $this->update($this->racks_tbl, $columns, $values, $conds, $conds_vals);
+        if($update){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    
+
+
+    public function view_rack(array $columns, array $conditions, array $values, $limit){
+
+        //Warehouse Zone
+
+        //$racks = $this->join_get('racks', 'warehouses', 'racks.warehouse', 'warehouses.warehouse_id', $columns, $conditions, $values, $limit);
+        $racks = $this->join_3_get('racks', 'warehouses','warehouse_zones', 'racks.rack_id', 'warehouses.warehouse_id', 'warehouse_zones.zone_id', $columns, $conditions, $values, $limit);
+        
+
+        //$racks = $this->get($this->racks_tbl, $columns, $conditions, $values, $limit);
+        return $racks;
+        
+
+    }
+
+    public function view_warehouse(array $columns, array $conditions, array $values, $limit){
+
+        $warehouses = $this->get($this->warehouse_tbl, $columns, $conditions, $values, $limit);
+        return $warehouses;
+    }
+
+    public function view_warehouse_zone($columns, $conditions, $values, $limit){
+        $zones = $this->get($this->zone_tbl, $columns, $conditions, $values, $limit);
+        return $zones;
+    }
+
+
+    public function tee_test($values){
+
+        $columns = array("email", "suna");
+
+        //print_r($this->database_obj);autocommit(FALSE);
+        //$this->database_obj->begin_transaction();
+
+        $insert  = $this->put('tee', $columns, $values);
+
+        if($insert){
+            return true;
+        }else{
+            return false;
+        }
+        
+
+    }
+
+    public function transfer(array $values){
+        $columns = array(
+
+            'product',
+            'quantity',
+            'driver',
+            'sender',
+            'receiver',
+            'transfer_docs'
+        );
+
+        //Wrap the two in a transaction
+
+        //$this->database_obj->query("START TRANSACTION");
+        $transfer  = $this->put($this->transfer_tbl, $columns, $values);
+        
+        if($transfer){
+            //this should affect the two warehouses
+            return true;
+        }else{
+            return false;
+        }
+
+        //$this->roll_or_commit("COMMIT");
+    }
+
+    public function update_transfer(array $columns, array $values, array $conds, array $conds_vals){
+
+        //Update the warehouse
+
+        $update = $this->update($this->transfer_tbl, $columns, $values, $conds, $conds_vals);
+        if($update){
+            return true;
+        }else{
+            return false;
+        }
+    
+    }
+
+    public function delete_transfer(array $conds, array $conds_vals){
+        $this->delete($this->transfer_tbl, $conds, $conds_vals);
+
+
+    }
+
+    public function delete_rack($rack_id){
+        //check if the rack has product we delete else
+        $product = $this->get($this->stocks_tbl, ['quantity'], ['rack'], [$rack_id], 'single');
+        if(!empty($product)){
+            $quantity = $product[sizeof($product)-1]['quantity'];
+            if($quantity<1){
+                //You can delete
+                $deleted = $this->delete($this->racks_tbl,['rack_id'], [$rack_id]);
+                return $deleted;
+            }else{
+                //You cannot delete
+                return false;
+            }
+        }else{
+            $deleted = $this->delete($this->racks_tbl,['rack_id'], [$rack_id]);
+            return $deleted;
+        }
+    }
+
+    public function record_damage($product, array $values){
+        //upload the image given
+        $columns = array(
+            'product',
+            'quantity',
+            'details',
+            'img_src'
+        );
+
+        $record  = $this->put($this->damage_tbl, $columns, $values);
+        if($record){
+            //reduce the stock
+            //Stock reduced already by trigger set
+            return true;
+        }
+
+    }
+
+
+
+
+   }
+
+
+
+ class Orders extends Warehouse{
+
+    private $orders_tbl = 'orders';
+
+    public function create_order(array $values){
+
+        $return;
+        $columns = array('customer','details','order_status');
+        
+        $unavailables = $this->check_qty_details($values[1]);
+        if(empty($unavailables)){
+            $return =  $this->put($this->orders_tbl, $columns, $values);
+        }else{
+            $return = $unavailables;
+        }
+
+        return $return;
+    }
+
+    public function get_order(array $columns, array $conditions, array $values, $limit){
+        $orders = $this->get($this->orders_tbl, $columns, $conditions, $values, $limit);
+        return $orders;
+    }
+
+
+    public function check_qty_details($details){
+
+        $unwanted_chars  = array("'",",","."," ");
+        $columns = array('customer','details','order_status');
+        $unavailables = array();
+
+        $details = $this->decompose($details);
+        
+        $products = $details[0];
+        $quantities = $details[1];
+        $prices = $details[2];
+        $selling_price = $details[3];
+        $order_type = $details[4];
+        $unit = $details[5];
+        $product_id = $details[6];
+
+        foreach($products as $key2=>$value2){
+
+            $item_id = str_replace($unwanted_chars, "",$product_id[$key2]);
+            $item_qty = str_replace($unwanted_chars, "", $quantities[$key2]);
+            
+            $unit_mea = $unit[$key2];
+            $item_name = $products[$key2];
+            $order_ty = $order_type[$key2];
+            $price = $prices[$key2];
+            $selling_pri = $selling_price[$key2];
+
+            $produ = $this->get('stocks', ['quantity'], ['product'], [$item_id], 'single');
+            $line = "products:$item_name;quantity:$item_qty;prices:$price;selling_price:$selling_pri;order_types:$order_ty;unit_measure:$unit_mea;product_id:$item_id";
+            if(!empty($produ)){
+                if($item_qty>$produ[0]['quantity']){
+                    
+                    array_push($unavailables, $line);
+                }
+            }else{
+                array_push($unavailables, $line);
+            }
+        }
+        return $unavailables;
+    }
+
+    public function update_order(array $columns, array $values, array $conds, array $conds_vals){
+
+        $flag = 0;
+        if(in_array('details', $columns)){
+            $unav = $this->check_qty_details($values[array_search('details', $columns)]);
+            if(empty($unav)){
+                $this->update($this->orders_tbl, $columns, $values, $conds, $conds_vals);
+                $flag = 1;
+            }
+        }else{
+            $this->update($this->orders_tbl, $columns, $values, $conds, $conds_vals);
+            $flag = 1;
+        }
+        return $flag;
+    }
+
+
+    public function delete_order(array $conds, array $conds_vals){
+        $this->delete($this->orders_tbl, $conds, $conds_vals);
+    }
+
+
+    public function decompose($text){
+
+        $decomposed = array();
+        $details = explode(';', $text);
+
+        foreach($details as $key=>$valu){
+            $details = explode(':',$valu);
+            
+            foreach($details as $ord_key=>$ord_val){
+                $index = $details[0];
+                if($ord_key>0){
+                    $content  = explode(',', $ord_val);
+                    array_push($decomposed, $content);
+                }
+            }
+        }
+        return $decomposed;
+    }
+
+    public function format_details($details){
+
+
+        $details = $this->decompose($details);
+        
+        $products = $details[0];
+        $quantities = $details[1];
+        $prices = $details[2];
+        $selling_price = $details[3];
+        $order_type = $details[4];
+        $unit = $details[5];
+        $product_id = $details[6];
+
+        foreach($products as $key=>$value){
+
+        }
+
+    }
+
+}
+
+
+
  
 ?>
