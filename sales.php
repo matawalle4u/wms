@@ -1,3 +1,52 @@
+<?php
+  session_start();
+  
+  include('modules/Compl_Classes.php');  
+  $us = new Admin('users', 'phone', 'crm');
+
+
+  if(!isset($_SESSION['phone']) || isset($_GET['logout']) || $_SESSION['role']!='Sales Agent' ){
+    $us->logout('index.php');
+  }else{
+
+
+
+    $sales = $us->join_get('sales', 'products', 'product', 'product_id' , ['sales_id', 'sales_date', 'invoice', 'description','category', 'sold_qty', 'sales_date'], ['user'], [$_SESSION['user_id']], 'many');
+    $warehouses = $us->join_get('warehouse_users', 'warehouses', 'warehouse', 'warehouse_id' , ['warehouse_id', 'warehouse_name'], ['user'], [$_SESSION['user_id']], 'many');
+
+    $warehouse_names = array();
+    $warehouse_ids = array();
+
+    foreach($warehouses as $item){
+      array_push($warehouse_names, $item['warehouse_name']);
+      array_push($warehouse_ids, $item['warehouse_id']);
+    }
+
+
+
+
+    
+    $racks = $us->join_get('racks', 'warehouses', 'rack_warehouse', 'warehouse_id' , ['rack_id','rack_row','rack_column','rack_level','rack_position', 'warehouse_name'], [], [], 'many');
+    $rack_names = array();
+    $rack_ids = array();
+
+    foreach($racks as $rack){
+      $details = $rack['warehouse_name'].' [Row '.$rack['rack_row']. ' Column '.$rack['rack_column']. ' Level ' .$rack['rack_level'] .' '.$rack['rack_position'].']';
+      
+        if(in_array($rack['warehouse_name'], $warehouse_names)){
+          array_push($rack_names, $details);
+        }
+      }
+    
+  }
+
+
+    
+  
+
+?>
+
+
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
   <head>
@@ -10,8 +59,8 @@
     <title>Title here</title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
-    <!-- BEGIN VENDOR CSS-->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
+    BEGIN VENDOR CSS -->
     <link rel="stylesheet" type="text/css" href="app-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/tables/datatable/datatables.min.css">
     <!-- END VENDOR CSS-->
@@ -137,9 +186,9 @@
                   <li class="dropdown-menu-footer"><a class="dropdown-item text-muted text-center" href="javascript:void(0)">Read all messages</a></li>
                 </ul>
               </li>
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Sales Manager</span></a>
-                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a><a class="dropdown-item" href="chat-application.html"><i class="ft-message-square"></i> Chats</a>
-                  <div class="dropdown-divider"></div><a class="dropdown-item" href="login-with-bg-image.html"><i class="ft-power"></i> Logout</a>
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name"><?php echo $_SESSION['name'];?></span></a>
+                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="messenger.php"><i class="ft-message-square"></i> Chats</a>
+                  <div class="dropdown-divider"></div><a class="dropdown-item" href="?logout=true"><i class="ft-power"></i> Logout</a>
                 </div>
               </li>
             </ul>
@@ -212,7 +261,7 @@
                                     <i class="fa fa-building info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h5>28</h5>
+                                        <h5><?php echo sizeof($sales);?></h5>
                                 <span>Sales</span>
                             </div>
                         </div>
@@ -265,35 +314,24 @@
 					        </thead>
 					        <tbody>
 
-					            <tr>
-                          <td>1</td>
-					                <td><a href="#">3452322</a></td>
-					                <td>Apple</td>
-					                <td>Fruits</td>
-                          <td>KG</td>
-					                <td>20</td>
-                           <td>2020-09-01</td>
-                           
-                      </tr>
-                                
 
-                      <tr>
-                          <td>2</td>
-                          <td><a href="#">3452321</a></td>
-					                <td>Banana</td>
-					                <td>Fruits</td>
-					                <td>KG</td>
-                          <td>5</td>
-					                <td>2011/04/25</td>
-                          
-                          
-					            </tr>
-					           
-					            
-					            
-					            
-					            
-					            
+                    <?php
+                        foreach($sales as $index=>$sale){
+                          $sn = $index+1;
+
+                          echo"<tr>";
+                            echo"<td>". $sn ."</td>";
+                            echo"<td><a href=>". $sale['invoice']."</a></td>";
+                            echo"<td>". $sale['description']."</td>";
+                            echo"<td>". $sale['category'] ."</td>";
+                            echo"<td>" ."</td>";
+                            echo"<td>". $sale['sold_qty'] ."</td>";
+                            echo"<td>". substr($sale['sales_date'], 0, 10) ."</td>";
+											    echo"</tr>";
+                        }
+
+                    ?>
+  
 
 					        </tbody>
 					        <!-- <tfoot>
