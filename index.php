@@ -21,11 +21,11 @@ $us = new Admin('users', 'phone', 'crm');
     <title>Login</title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
-    <!-- BEGIN VENDOR CSS-->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
+    BEGIN VENDOR CSS -->
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    
+    <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+     -->
     <link rel="stylesheet" type="text/css" href="app-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/forms/icheck/icheck.css">
     <link rel="stylesheet" type="text/css" href="app-assets/vendors/css/forms/icheck/custom.css">
@@ -75,42 +75,33 @@ $us = new Admin('users', 'phone', 'crm');
                             </fieldset>
 
                             <?php
+
+
+                                $redir = array(
+                                    'Warehouse Manager'=>'warehouse_manager.php',
+                                    'Sales Agent'=>'sales.php',
+                                    'Warehouse Supervisor'=>'warehouse_supervisor.php'
+                                );
                             
                                 
                                 
                                 if(isset($_POST['login'])){
 
-                                    $phone = $_POST['phone'];
-                                    $pass = $_POST['password'];
 
-                                    $login = $us->login($phone, $pass);
+                                    $login = $us->login($_POST['phone'], $_POST['password']);
                                     if($login){
 
+                                        $user_details = $us->get('users', ['user_id','name', 'role'], ['phone'], [$_POST['phone']], 'single');
+
                                         $_SESSION['phone'] = $_POST['phone'];
+                                        $_SESSION['role'] = $user_details[0]['role'];
+                                        $_SESSION['name'] = explode(' ', $user_details[0]['name'])[0];
+                                        $_SESSION['user_id'] = $user_details[0]['user_id'];
 
-                                        $user_details = $us->get('users', ['role'], ['phone'], [$phone], 'single');
-                                        
-                                        if($user_details[0]['role']=='Warehouse Manager'){
-
-                                            $us->redirect('warehouse_manager.php');
-
-                                        }
-
-                                        
+                                        $us->redirect($redir[$user_details[0]['role']]);
                                         
                                     }else{
-                                        echo"
-
-                                        <script type=\"text/javascript\">
-
-                                            swal(\"Invalid credentials\");
-
-
-                                        </script>
-
-
-                                        
-                                        ";
+                                        echo"Invalid ";
                                     }
                                 }
 
