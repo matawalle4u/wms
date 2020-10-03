@@ -57,7 +57,7 @@
     <meta name="description" content="Robust admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template.">
     <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
     <meta name="author" content="PIXINVENT">
-    <title>Warehouse Reports</title>
+    <title>Warehouse Reports <?php echo date('Y').'-'. date('m').'-'.date('j');?></title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
     <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
@@ -242,7 +242,7 @@
       <div class="content-wrapper">
         
         <div class="content-body"><!-- HTML (DOM) sourced data -->
-    <section id="html">
+    <section id="html5">
     <!-- SUMMARY STARTS HERE -->
         <ol class="breadcrumb">
 
@@ -257,6 +257,13 @@
            
 
         </ol>
+
+        <script type="text/javascript">
+          summary_icons(['Adam'], ['fa-fa-shopping-cart'], ['45']);
+          validate_input();
+        </script>
+
+
      <div class="row">
         <div class="col-xl-2 col-lg-6 col-12">
             <div class="card">
@@ -370,6 +377,8 @@
 		<div class="col-12">
 			<div class="card">
 				<div class="card-header">
+
+          <h4>Damages Report</h4>
 					
 					<a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
 					<div class="heading-elements">
@@ -575,7 +584,7 @@
     <!-- BEGIN PAGE LEVEL JS-->
     <script src="app-assets/js/scripts/tables/datatables-extensions/datatables-sources.js"></script>
     <!-- END PAGE LEVEL JS-->
-    <script type="text/javascript" src="src/my_custom_js.js"></script>
+    <script type="text/javascript" src="my_custom_js.js"></script>
 
     <script src="app-assets/js/scripts/tables/datatables-extensions/datatable-button/datatable-html5.js"></script>
     
