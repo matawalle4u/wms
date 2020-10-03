@@ -11,7 +11,7 @@
 
     
     
-    $warehouses = $us->join_get('warehouse_users', 'warehouses', 'warehouse', 'warehouse_id' , ['warehouse_id', 'warehouse_name'], ['user'], [$_SESSION['user_id']], 'many');
+    $warehouses = $us->get('warehouses', ['warehouse_id', 'warehouse_name'], [], [], 'many');
 
     $warehouse_names = array();
     $warehouse_ids = array();
@@ -33,11 +33,41 @@
           array_push($rack_names, $details);
         }
       }
+
+
+    $users = $us->get('users', ['user_id', 'name', 'phone', 'role', 'status'], [], [], 'many');
+
+    $users_names = array();
+    $users_ids = array();
+
+    foreach($users as $user){
+
+      if($user['user_id'] !=$_SESSION['user_id'] && $user['status'] !=0){
+        $details = $user['name']. ' ('. $user['role']. ' '.$user['phone'].')';
+
+        array_push($users_names, $details);
+        array_push($users_ids, $user['user_id']);
+
+      }
+      
+    }
+
+    $damages = $us->get('damages', ['damage_id'], [], [], 'many');
+
+    $finishing = $us->get('stocks', ['stock_id'], ['quantity'], [0], 'many');
+
+    $prod_warehouse = $us->join_get('stocks', 'products', 'product', 'product_id', ['description', 'category', 'quantity', 'status', 'warehouse','last_stocked'],[], [], 'many');
+
+    $stock_details = array();
+    foreach($prod_warehouse as $prd){
+      array_push($stock_details, $prd['description']);
+      array_push($stock_details, $prd['warehouse']);
+    }
+    
+    // ALTER TABLE stocks
+    // ADD COLUMN `last_stocked` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
     
   }
-
- 
-
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +79,7 @@
     <meta name="description" content="Robust admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template.">
     <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
     <meta name="author" content="PIXINVENT">
-    <title>Title here</title>
+    <title>Warehouse Admin Page</title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
     <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
@@ -198,12 +228,19 @@
 
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
+    <script>
+
+      //load_menu(menu_icon, main,sub_menu, hrefs);
+
+      //load_menu([''], ['Mess'],[['A'], ['B']], [['', '', '']]);
+    
+    </script>
+
 
     <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
       <div class="main-menu-content">
 
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-
           <li class=" nav-item"><a href="#"><i class="icon-folder"></i><span class="menu-title" data-i18n="nav.category.general">Warehouse</span></a>
             <ul class="menu-content">
               <li><a class="menu-item" href="#" data-i18n="nav.color_palette.main">Add warehouse</a> 
@@ -214,12 +251,12 @@
               <li><a class="menu-item" href="#" data-i18n="nav.starter_kit.main">Add product</a>  
               </li>
 
-
             </ul>
           </li>
-          
-          
         </ul>
+
+
+      
       </div>
     </div>
 
@@ -233,17 +270,36 @@
 
             <li class="breadcrumb-item"><a data-toggle="modal" data-target="#addwharehouse" href="#">New warehouse</a>
             </li>
+
+            <li class="breadcrumb-item"><a href="warehouse_list.php">Warehouse list</a>
+            </li>
+
+
             <li class="breadcrumb-item"><a data-toggle="modal" data-target="#updatewarehouse" href="#">Update warehouse</a>
             </li>
             <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#addstaff" href="#">Add Staff</a>
+            </li>
+            <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#assignStaffWarehouse" href="#">Assign Staff</a>
             </li>
             <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#addrack" href="#">New Rack</a>
             </li>
             <li class="breadcrumb-item"> <a data-toggle="modal" data-target="#addproduct" href="#">New Product</a>
             </li>
 
+            
+
+
+            
+
         </ol>
+
+       
+
      <div class="row">
+          <!-- <script>
+            summary_icons([''],[''],[]);
+          </script> -->
+          
         <div class="col-xl-2 col-lg-6 col-12">
             <div class="card">
                 <div class="card-content">
@@ -253,7 +309,7 @@
                                     <i class="fa fa-building info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h5><?php ?></h5>
+                                        <h5><?php echo sizeof($warehouses);?></h5>
                                 <span>Warehouse</span>
                             </div>
                         </div>
@@ -261,6 +317,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="col-xl-2 col-lg-6 col-12">
             <div class="card">
                 <div class="card-content">
@@ -270,7 +327,7 @@
                                     <i class="fa fa-list info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h3>278</h3>
+                                        <h3><?php echo sizeof($warehouses);?></h3>
                                 <span>Racks</span>
                             </div>
                         </div>
@@ -304,7 +361,7 @@
                                     <i class="fa fa-recycle danger font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h4>278</h4>
+                                        <h4><?php echo sizeof($finishing);?></h4>
                                 <span>Finished</span>
                             </div>
                         </div>
@@ -321,7 +378,7 @@
                                     <i class="fa fa-trash danger font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h4>278</h4>
+                                        <h4><?php echo sizeof($damages);?></h4>
                                 <span>Damaged</span>
                             </div>
                         </div>
@@ -338,7 +395,7 @@
                                     <i class="fa fa-chevron-down warning font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h4>9</h4>
+                                        <h4><?php echo sizeof($finishing);?></h4>
                                 <span>Finishing</span>
                             </div>
                         </div>
@@ -368,52 +425,31 @@
 					        </thead>
 					        <tbody>
 
-					            <tr>
-					                <td>Apple</td>
-					                <td>
+                      <?php
+                     
+                        foreach($prod_warehouse as $index=>$record){
+                          echo"<tr>";
+                                  echo"<td>{$record['description']}</td>";
+                                  $ware_name = $us->get('warehouses', ['warehouse_name', 'warehouse_address'], ['warehouse_id'], [$record['warehouse']], 'single');
+                                  $zone_name = $us->get('warehouse_zones', ['zone_name'], ['zone_warehouse'], [$record['warehouse']], 'single');
+                                  
+                                  echo"
+                                  <td>
+                                      <ul>
+                                        <li>{$ware_name[0]['warehouse_name']}</li>
+                                        <li>Working on Rack conflict</li>
+                                        <li>{$zone_name[0]['zone_name']} Zone</li>
+                                      </ul>
+                                    </td>";
 
-                              <ul>
-                                
-                                  <li>Iasi Warehouse</li>
-
-                                
-                                  <li>Production Zone</li>
-                                    
-                                  <li> Row 2, Col 3 ,Level 3, Middle</li>
-                                    
-                              </ul>       
-
-                          </td>
-					                <td>Fruits</td>
-					                
-					                <td>2011/04/25</td>
-                           <td>KG</td>
-                           <td>29</td>
-                      </tr>
-                                
-
-                                <tr>
-					                <td>Banana</td>
-					                <td>
-                              
-                              <ul>
-                                  <li>Kaduna Warehouse</li>
-                                  <li>Production Zone</li>
-                                  <li> Row 2, Col 3 ,Level 3, Middle</li>  
-                              </ul>
-
-                          </td>
-					                <td>Fruits</td>
-					                <td>2011/04/25</td>
-                          <td>Pallet</td>
-                          <td>9</td>
-					            </tr>
-					           
-					            
-					            
-					            
-					            
-					            
+                                  echo"<td>{$record['category']}</td>";
+                                  echo"<td>". substr($record['last_stocked'], 0, 16) ."</td>";
+                                  echo"<td>Measurement</td>";
+                                  echo"<td>{$record['quantity']}</td>";
+                          echo "</tr>";
+                        }
+                     
+                      ?>
 
 					        </tbody>
 					        <!-- <tfoot>
@@ -557,6 +593,88 @@
       </div>
     </div>
     
+
+    
+
+
+
+    <div class="modal fade text-left" id="assignStaffWarehouse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Assign Staff To Warehouse</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+
+          <!-- Put our form data here -->
+          <form class="form form-horizontal form-bordered" method="post">
+          <div class="form-body">
+
+
+          <script type="text/javascript">
+
+            var staff_names = <?php echo json_encode($users_names);?>;
+            var staff_ids = <?php echo json_encode($users_ids);?>;
+
+
+            generate_form(
+                ['staff', 'warehouse', 'role'],
+                ['select', 'select','select'],
+                [
+                  staff_names,
+                  warehouse_names,
+                  ['Warehouse Supervisor']
+                  
+                ], 
+                [
+                  staff_ids,
+                  warehouse_ids,
+                  ['Warehouse Supervisor']
+                  
+                  
+                ],   
+                ['Staff', 'Warehouse', 'Role']
+            );      
+            </script>
+
+            <div class="col-md-6 col-sm-12">
+                <input type="submit" class="btn btn-info btn-outline-secondary" value="Save" name="staff_assigned">
+            </div>
+          </div>
+        </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+        </div>
+        <?php
+
+            if(isset($_POST['staff_assigned'])){
+
+                // $user = $_POST['staff'];
+                // $warehouse = $_POST['warehouse'];
+                // $role = $_POST['role'];
+
+                $assigned = $us->put('warehouse_users',['user', 'warehouse', 'role'],["'{$_POST['staff']}'", "'{$_POST['warehouse']}'", "'{$_POST['role']}'"]);
+                if($assigned){
+                  echo"sxxxx";
+                }else{
+                  echo "errrr";
+                }
+
+            }
+        ?>
+      </div>
+        
+      </div>
+    </div>
+
+
+
+
+
 
     <div class="modal fade text-left" id="addrack" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -732,7 +850,7 @@
                 $phone = $_POST['phone'];
                 $role = $_POST['role'];
                 $password = $_POST['password']; 
-                $status =1;
+                $status =0;
 
                 $values = ["'$name'", "'$role'", "'$phone'", "'$email'", "'$password'", "'$status'"];
                 $columns = ['name', 'role', 'phone', 'email', 'password', 'status'];
@@ -743,7 +861,7 @@
                 $reg = $auth->register($columns, $values);
 
                 if($reg){
-                  echo"hurray";
+                  $auth->redirect('warehouse_manager.php');
                 }else{
                   echo"Sorry";
                 }
