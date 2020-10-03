@@ -37,6 +37,9 @@
 
 --On b2b_admin.php orders should be from the modules not hardcoded as I did now, just call the get_order function from Orders class
 
+--Damages Shouldn't record without items from stock
+-- Need to fix Stock Rack column and Product Rack column conflict (Remove Expiry date on product and put it on Stock, also remove rack from Product)
+
 
 
 
