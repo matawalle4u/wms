@@ -12,7 +12,7 @@
         public function get_previleges($user_id);
         public function get_notification($id, $type);
         public  function reset_password($username, $old, $new);
-        public function logout($page);
+        public function logout($page, $role);
         
         
     }
@@ -455,13 +455,16 @@
             
         }
 
-        public function redirect($page){
-            echo"<script type='text/javascript'>window.location.href='$page';</script>";
-        }
-
-        public function logout($page){
-            session_destroy(); 
-            $this->redirect($page);
+        public function redirect($page){echo"<script type='text/javascript'>window.location.href='$page';</script>";}
+        public function logout($page, $role){
+            if(isset($_GET['logout']) || !isset($_SESSION[$this->__auth_column]) || $_SESSION['role']!=$role ){
+                session_destroy(); 
+                $this->redirect($page);
+                return true;
+            }else{
+                return false;
+            }
+            
         }
 
           public function __destruct(){
