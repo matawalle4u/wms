@@ -41,6 +41,11 @@
 -- Need to fix Stock Rack column and Product Rack column conflict (Remove Expiry date on product and put it on Stock, also remove rack from Product)
 
 
+--Seperate all the PHP code with the html pages (Logout logics handled on auth, File URLs should)
+-- Fix on Select item fetch its corresponding from database (E.g While adding Stock Select warehouse to fetch all racks under that warehouse)
+--fix creation of double rack with same address (Every Rack is Unique)
+
+
 
 
 
