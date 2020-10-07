@@ -95,7 +95,7 @@ if(isset($_SESSION['role'])){
             <div class="card border-grey border-lighten-3 m-0">
                 <div class="card-header border-0">
                     <div class="card-title text-center">
-                        <div class="p-1"><img src="app-assets/images/logo/logo-dark.png" alt="branding logo"></div>
+                        <div class="p-1"><a href="<?php echo $redir[$_SESSION['role']];?>">Go Back</a></div>
                     </div>
                     <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span>Update</span></h6>
                 </div>
@@ -181,6 +181,7 @@ if(isset($_SESSION['role'])){
 
                         
                     ?>
+                    
                 </div>
             </div>
         </div>
