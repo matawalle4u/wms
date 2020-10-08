@@ -1,24 +1,59 @@
 <?php
   session_start();
+  $_SESSION['page'] = __FILE__;
   
   include('../modules/Compl_Classes.php');  
   $us = new Admin('admin', 'phone', 'crm');
+  $us->logout('index.php', 'System');
+  $wh = new Warehouse();
 
 
-  if(!isset($_SESSION['phone']) || isset($_GET['logout']) || $_SESSION['role']!='System'){
-    $us->logout('index.php');
-  }else{
-    $email = $_SESSION['phone'];
+  
+  $email = $_SESSION['phone'];
 
-    $users = $us->join_get('users', 'privelages', 'user_id', 'user' , ['user_id','user', 'name', 'phone', 'role', 'status', 'actions', 'last_login'], [], [], 'many');
-    $users_names = array();
-    $users_ids = array();
 
-    foreach($users as $user){
-      array_push($users_names, $user['name']);
-      array_push($users_ids, $user['user_id']);
+  $users = $us->join_get('users', 'privelages', 'user_id', 'user' , ['user_id','user', 'name', 'phone', 'role', 'status', 'actions', 'last_login'], [], [], 'many');
+  $users_names = array();
+  $users_ids = array();
+
+  foreach($users as $user){
+    array_push($users_names, $user['name']);
+    array_push($users_ids, $user['user_id']);
+  }
+
+
+  $warehouses = $wh->view_warehouse(['warehouse_id', 'warehouse_name'], [], [], 'many');
+
+  $warehouse_names = array();
+  $warehouse_ids = array();
+
+  foreach($warehouses as $item){
+    array_push($warehouse_names, $item['warehouse_name']);
+    array_push($warehouse_ids, $item['warehouse_id']);
+  }
+
+
+
+  $damages = $us->get('damages', ['damage_id'], [], [], 'many');
+
+  //$stocks = $us->get('stocks', ['stock_id'], [], [], 'many');
+
+  $prod_warehouse = $us->join_get('stocks', 'products', 'product', 'product_id', ['description', 'category', 'quantity', 'status','last_stocked'],[], [], 'many');
+
+  $stock_details = array();
+  $ttl_prods =0;
+  foreach($prod_warehouse as $prd){
+    
+    if($prd['quantity']>0){
+
+      array_push($stock_details, $prd['description']);
+      $ttl_prods+=$prd['quantity'];
+      //array_push($stock_details, $prd['warehouse']);
     }
   }
+
+
+  //}
 
 
 ?>
@@ -33,7 +68,7 @@
     <meta name="description" content="Robust admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template.">
     <meta name="keywords" content="admin template, robust admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
     <meta name="author" content="PIXINVENT">
-    <title>Title here</title>
+    <title>System Admin</title>
     <link rel="apple-touch-icon" href="../app-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="../image/x-icon" href="app-assets/images/ico/favicon.ico">
     <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700" rel="stylesheet">
@@ -164,9 +199,9 @@
                 </ul>
               </li>
 
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name">Adam</span></a>
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><i></i></span><span class="user-name"><?php echo $_SESSION['name'];?></span></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
+                    <a class="dropdown-item" href="../update_profile.php"><i class="ft-user"></i> Edit Profile</a>
                     <a class="dropdown-item" href="email-application.html"><i class="ft-mail"></i> My Inbox</a>
                   <div class="dropdown-divider"></div><a class="dropdown-item" href="?logout=true"><i class="ft-power"></i> Logout</a>
                 </div>
@@ -215,8 +250,8 @@
 
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#adduser"><i class="ft-plus white"></i> New User</button>
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateuser"><i class="fa fa-pencil white"></i> Update user</button>
-          <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newPartner"><i class="fa fa-pencil white"></i> New Partner</button>
-             -->
+          <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newPartner"><i class="fa fa-pencil white"></i> New Partner</button>
+            
             
           </div>
           
@@ -234,7 +269,7 @@
                                     <i class="fa fa-building info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h5>278</h5>
+                                        <h5><?php echo sizeof($warehouses);?></h5>
                                 <span>Warehouse</span>
                             </div>
                         </div>
@@ -251,7 +286,7 @@
                                     <i class="fa fa-shopping-bag info font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h3>278</h3>
+                                        <h3><?php echo $ttl_prods;?></h3>
                                 <span>Products</span>
                             </div>
                         </div>
@@ -268,7 +303,7 @@
                                     <i class="fa fa-recycle danger font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h4>278</h4>
+                                        <h4><?php echo sizeof($damages);?></h4>
                                 <span>Damaged</span>
                             </div>
                         </div>
@@ -364,7 +399,7 @@
                             echo"<td>". $stat_colo ."</td>";
                             echo"<td>"; echo"<ul>";foreach(explode(',', $user['actions']) as $action){echo"<li>$action</li>";}echo"</ul></td>";
                             echo"<td>". substr($user['last_login'],0,16)."</td>";
-                            echo"<td><a href=\"user_log.php?user_id={$user['user']}\">View</a></td>";
+                            echo"<td><a href=\"../user_log.php?user_id={$user['user']}\">View</a></td>";
 											    echo"</tr>";
                         }
 
@@ -399,20 +434,28 @@
           <form class="form form-horizontal form-bordered" method="post">
             <h4 class="form-section"><i class="ft-user"></i> User details</h4>
             <script type="text/javascript">
+
+              var warehouse_names = <?php echo json_encode($warehouse_names);?>;
+              var warehouse_ids = <?php echo json_encode($warehouse_ids);?>;
+
               generate_form(
-                  ['name', 'phone', 'email', 'role', 'password'],
-                  ['text', 'text', 'email', 'select','password'],
+                  ['warehouse', 'role', 'name', 'phone', 'email', 'password'],
+                  ['select', 'select', 'text', 'text', 'email', 'password'],
                   [
-                    ['Driver', 'Warehouse Manager', 'Sales Agent']
+                    warehouse_names,
+                    ['Driver', 'Picker','Warehouse Manager', 'Sales Agent']
                   ], 
                   [
+                    warehouse_ids,
                     ['Drvier', 'Warehouse Manager', 'Sales Agent'] 
                   ],   
-                  ['Full name', 'Phone', 'Email', 'Role', 'Password']
+                  ['Warehouse', 'Role', 'Full name', 'Phone', 'Email', 'Password']
               );
 
             </script>
-            <button type="submit" name="user_added" class="btn btn-info btn-lg btn-block"><i class="ft-unlock"></i> Register</button>
+            <button type="submit" name="user_added" class="btn btn-info"><i class="fa fa-plus"></i> Add</button>
+            <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+        
         </form>
             
             <script>
@@ -436,15 +479,23 @@
               $email = $_POST['email'];
               $role = $_POST['role'];
               $password = $_POST['password'];
+              $warehouse = $_POST['warehouse'];
               $status = 1;
 
               $columns = ['name', 'phone', 'email', 'role', 'password', 'status'];
               $values = ["'$name'", "'$phone'", "'$email'", "'$role'", "'$password'", "'$status'"];
 
-              //echo "$name $phone $email $role $password ";
+              
               $reg = $auth->register($columns, $values);
+
               if($reg){
-                $us->redirect('admin_home.php');
+
+                $get_user_detail = $auth->get('users', ['user_id'], ['phone'], [$phone], 'single');
+                $user_id = $get_user_detail[0]['user_id'];
+                $set_warehouse = $auth->put('warehouse_users', ['user', 'warehouse','role'], ["'$user_id'", "'$warehouse'", "'$role'"]);
+                $us->redirect('home.php');
+
+                
               }else{
                 echo"
                 <script>alert('Error, Try again')</script>
@@ -457,7 +508,6 @@
            
         </div>
         <div class="modal-footer">
-        <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
         
         </div>
       </div>
@@ -494,42 +544,72 @@
                   var ids = <?php echo json_encode($users_ids);?>;
 
                   generate_form(
-                      ['user', 'name', 'phone', 'email'],
-                      ['select', 'text', 'text', 'email'],
+                      ['user', 'name', 'warehouse', 'role', 'phone', 'email'],
+                      ['select', 'text', 'select', 'select', 'text', 'email'],
                       [
-                        users
+                        users,
+                        warehouse_names,
+                        ['Driver', 'Picker', 'Sales Agent', 'Warehouse Manager']
                       ], 
                       [
-                        ids 
+                        ids,
+                        warehouse_ids,
+                        ['Driver', 'Picker', 'Sales Agent', 'Warehouse Manager']
                       ],   
-                      ['User', 'Name', 'Phone', 'Email']
+                      ['User', 'Name', 'Warehouse', 'Role', 'Phone', 'Email']
                   );      
               </script>
 
 
             
                   
-                <div class="col-md-6 col-sm-12">
-                    <fieldset>
+
+                
+                   <center>
+                   <h4 class="form-section"><i class="ft-user"></i> User Previleges</h4>
                     <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
-                      <label for="input-radio-15">Add Users</label>
-                    </fieldset>
-                    <fieldset>
+                      Add Users
+                    
+                   
                     <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
-                      <label for="input-radio-16">Delete User</label>
-                    </fieldset>
-                    <fieldset>
+                      Delete User
+                   
+                   
                     <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
-                      <label for="input-radio-17">Update user</label>
-                    </fieldset>
-                    <fieldset>
+                      Update user
+                   
+                    
                     <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
-                      <label for="input-radio-18">Update User account</label>
-                    </fieldset>
-                  </div>
+                      Update User account <br />
+
+                      <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      Update User account
+
+                      <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      Update User account
 
 
-              
+                      <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      Update User account <br />
+
+                      <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      Update User account
+
+                      <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      Update User account
+
+                      <input type="checkbox" name="drawings_submitted[]" value="Location Plan/Site Plan">
+                      Update User account
+
+
+
+
+                </center>
+                    
+                 
+
+
+              <br />
 							<button type="submit" name="user_updated" class="btn btn-info float-right"><i class="fa fa-pencil"></i> Update</button>
 						</form>
 
