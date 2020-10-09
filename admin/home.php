@@ -6,6 +6,8 @@
   $us = new Admin('admin', 'phone', 'crm');
   $us->logout('index.php', 'System');
   $wh = new Warehouse();
+  $orderClass = new Orders();
+
 
 
   
@@ -46,14 +48,63 @@
     
     if($prd['quantity']>0){
 
-      array_push($stock_details, $prd['description']);
+      //array_push($stock_details, $prd['description']);
       $ttl_prods+=$prd['quantity'];
       //array_push($stock_details, $prd['warehouse']);
     }
   }
 
 
-  //}
+  $sales = $us->get('sales', ['invoice','products_details', 'sales_date','seller'],[], [], 'many');
+
+  
+
+  $prod_warehouse = $us->join_get('stocks', 'products', 'product', 'product_id', ['description', 'category', 'quantity', 'status', 'stocker', 'last_stocked'],[], [], 'many');
+
+    $stock_details = array();
+    $ttl_prods =0;
+    foreach($prod_warehouse as $prd){
+
+      if($prd['quantity']>0){
+
+       
+        $ttl_prods+=$prd['quantity'];
+        array_push($stock_details, $prd['description']);
+        //array_push($stock_details, $prd['warehouse']);
+        
+      }
+
+
+      
+    }
+
+
+    $warehouses = $us->join_get('warehouse_users', 'warehouses', 'warehouse', 'warehouse_id' , ['warehouse_id', 'warehouse_name'], [], [], 'many');
+
+    $warehouse_names = array();
+    $warehouse_ids = array();
+
+    foreach($warehouses as $item){
+      array_push($warehouse_names, $item['warehouse_name']);
+      array_push($warehouse_ids, $item['warehouse_id']);
+    }
+
+    
+    $racks = $us->join_get('racks', 'warehouses', 'rack_warehouse', 'warehouse_id' , ['rack_id','rack_row','rack_column','rack_level','rack_position', 'warehouse_name'], [], [], 'many');
+    $rack_names = array();
+    $rack_ids = array();
+
+    foreach($racks as $rack){
+      $details = $rack['warehouse_name'].' [Row '.$rack['rack_row']. ' Column '.$rack['rack_column']. ' Level ' .$rack['rack_level'] .' '.$rack['rack_position'].']';
+      
+        if(in_array($rack['warehouse_name'], $warehouse_names)){
+          array_push($rack_names, $details);
+        }
+      }
+
+
+
+    $requests = $us->join_get('requests', 'warehouses', 'warehouse', 'warehouse_id' , ['request_id','warehouse_name','products_details','request_date','status'], ['status'], ['Pending'], 'many');
 
 
 ?>
@@ -220,6 +271,47 @@
       <div class="main-menu-content">
 
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+          <li class=" nav-item"><a href="#"><i class="fa fa-building"></i><span class="menu-title">Warehouse</span></a>
+            <ul class="menu-content">
+              <li><a  data-toggle="modal" data-target="#daniel">Add new warehouse</a> 
+              </li>
+              <li><a class="menu-item" href="#" data-i18n="nav.navbars.main">Update Warehouse</a>   
+              </li>
+              <li><a class="menu-item" href="#" data-i18n="nav.vertical_nav.main">Create Zone</a> 
+              </li>
+
+              <li><a class="menu-item" href="#" data-i18n="nav.vertical_nav.main">Update Zone</a> 
+              </li>
+
+              <li><a class="menu-item" href="#" data-i18n="nav.vertical_nav.main">Create Rack</a> 
+              </li>
+
+              <li><a class="menu-item" href="#" data-i18n="nav.vertical_nav.main">Update Rack</a> 
+              </li>
+               
+            </ul>
+          </li>
+        </ul>
+
+
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+          <li class=" nav-item"><a href="#"><i class="fa fa-shopping-cart"></i><span class="menu-title">Products</span></a>
+            <ul class="menu-content">
+              <li><a  data-toggle="modal" data-target="#daniel">Add new user</a> 
+              </li>
+              <li><a class="menu-item" href="#" data-i18n="nav.navbars.main">Update user</a>   
+              </li>
+              <li><a class="menu-item" href="#" data-i18n="nav.vertical_nav.main">View users</a> 
+              </li>
+               
+            </ul>
+          </li>
+        </ul>
+
+
+
+
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 
          
 
@@ -240,6 +332,10 @@
           
 
         </ul>
+
+
+
+
       </div>
     </div>
 
@@ -320,7 +416,7 @@
                                     <i class="fa fa-credit-card success font-large-2 float-left"></i>
                                 </div>
                             <div class="media-body text-right">
-                                        <h4>278</h4>
+                                        <h4><?php echo sizeof($sales);?></h4>
                                 <span>Sales</span>
                             </div>
                         </div>
@@ -370,8 +466,11 @@
 	            
 	            <div class="card-content collpase show">
 	                <div class="card-body card-dashboard">
+
+                  <h4>Users list</h4>
+              
 	                
-	                <table class="table table-striped table-bordered sourced-data">
+	                <table class="table table-striped">
 					        <thead>
 					            <tr>
 					                <th>S/N</th>
@@ -407,12 +506,245 @@
 					           
 					        </tbody>
 					        
+              </table>
+
+
+              
+              
+					</div>
+	            </div>
+	        </div>
+	    </div>
+  </div>
+
+
+
+
+  <div class="row">
+	    <div class="col-12">
+	        <div class="card">
+	            
+	            <div class="card-content collpase show">
+	                <div class="card-body card-dashboard">
+                    
+              <h4>Sales Record</h4>
+              <hr>
+              
+
+              <table class="table table-striped table-bordered sourced-data">
+					        <thead>
+					            <tr>
+					                <th>S/N</th>
+                          <th>Date</th>
+					                <th>Products</th>
+                          <th>Total</th>
+                          <th>Invoice</th>
+                          <th>Seller</th>
+					                
+					            </tr>
+					        </thead>
+					        <tbody>
+
+                      <?php
+                        
+                        foreach($sales as $index=>$sale){
+                          $sn = $index+1;
+                          $seller = $us->get('users', ['name'],['user_id'], [$sale['seller']], 'single');
+
+
+                          $details = $orderClass->decompose($sale['products_details']);
+                          //print_r($details);
+                          
+                          echo"<tr>";
+
+
+
+                            echo"<td>". $sn ."</td>";
+
+                            echo"<td>". substr($sale['sales_date'], 0,16)."</td>";
+
+
+                            echo"<td><ul>";
+                            $ttl_items =0;
+                            foreach($details[0] as $key=>$value){
+                              echo '<li>' .$details[1][$key] .' ' .$details[3][$key] .' of '. $details[0][$key] .'</li>';
+                              $ttl_items +=$details[1][$key];
+                            }
+
+                            echo"</ul></td>";
+                            echo"<td>". $ttl_items ."</td>"; 
+                            echo"<td>". $sale['invoice'] ."</td>"; 
+                           
+                            echo"<td><span class='badge badge-success'>". $seller[0]['name'] ."</span></td>"; 
+											    echo"</tr>";
+                        }
+
+                     
+
+                      ?>
+					           
+					        </tbody>
+					        
+              </table>
+
+
+              
+              
+					</div>
+	            </div>
+	        </div>
+	    </div>
+  </div>
+  
+
+  <div class="row">
+	    <div class="col-12">
+	        <div class="card">
+	            <div class="card-content collpase show">
+	                <div class="card-body card-dashboard">
+              <h4>Stock Record</h4>
+              <hr>
+
+              <table class="table table-striped table-bordered sourced-data">
+					        <thead>
+					            <tr>
+					                <th>Name</th>
+					                <th>Category</th>
+                          <th>Date Stcoked</th>
+                          <th>Stocked By</th>
+					                <th>Unit Measure</th>
+					                <th>Available Quantity</th>
+					            </tr>
+					        </thead>
+					        <tbody>
+                      <?php
+                        foreach($prod_warehouse as $index=>$record){
+                          //$ware_name = $us->get('warehouses', ['warehouse_name', 'warehouse_address'], ['warehouse_id'], [$record['warehouse']], 'single');
+                          //$zone_name = $us->get('warehouse_zones', ['zone_name'], ['zone_warehouse'], [$record['warehouse']], 'single');
+                          
+                          $stocker = $us->get('users', ['name'],['user_id'],[$record['stocker']], 'single');
+                          $category_name = $us->get('product_category', ['category_name'],['prod_category_id'],[$record['category']], 'single');
+                          
+                          $category_name = $us->get('product_category', ['category_name'],['prod_category_id'],[$record['category']], 'single');
+                          
+                          echo"
+                            <tr>
+                              <td>{$record['description']}</td>
+                             
+                              <td>{$category_name[0]['category_name']}</td>".
+                              "<td>". substr($record['last_stocked'], 0, 16) ."</td>".
+                              "<td>{$stocker[0]['name']}</td>".
+                              "<td>Measurement</td>".
+                              "<td>{$record['quantity']}</td>
+                            </tr>";
+                        }
+                     
+                      ?>
+
+					        </tbody>
 					    </table>
+              
 					</div>
 	            </div>
 	        </div>
 	    </div>
 	</div>
+
+
+
+
+  <div class="row">
+	    <div class="col-12">
+	        <div class="card">
+	            
+	            <div class="card-content collpase show">
+	                <div class="card-body card-dashboard">
+                    
+              <h4>Requests</h4>
+              <hr>
+              
+
+              <table class="table table-striped table-bordered sourced-data">
+					        <thead>
+					            <tr>
+					                <th>S/N</th>
+                          <th>Request date</th>
+                          <th>Warehouse</th>
+					                <th>Products</th>
+                          <th>Status</th>
+                          <th>Adjust Qty</th>
+                          
+					                
+					            </tr>
+					        </thead>
+					        <tbody>
+
+                      <?php
+                        
+                        foreach($requests as $index=>$req){
+                          $sn = $index+1;
+                          
+                          $details = $orderClass->decompose($req['products_details']);
+                          //print_r($details);
+                          
+                          echo"<tr>";
+
+
+
+                            echo"<td>". $sn ."</td>";
+
+                            echo"<td>". substr($req['request_date'], 0,16)."</td>";
+
+                            echo"<td>". $req['warehouse_name']."</td>";
+
+
+                            echo"<td><ul>";
+                            
+
+                            echo"
+                            <table>
+                              <tr>
+                                <th>Qty</th>
+                                <th>Unit</th>
+                                <th>Product</th>
+                              </tr>
+                              
+                            ";
+                            
+                            
+                            foreach($details[0] as $key=>$value){
+                              echo '<tr><td>' .$details[1][$key] .' </td>' .'<td>'.$details[2][$key] .'</td><td>'. $details[0][$key] .'</td></tr>';
+                              
+                            }
+
+                            echo"</table></td>";
+                            
+                            echo"<td><span class='badge badge-danger'>". $req['status'] ."</span></td>"; 
+
+                            echo"<td><a href=\"#\">Adjust</a></td>";
+
+											    echo"</tr>";
+                        }
+
+                     
+
+                      ?>
+					           
+					        </tbody>
+					        
+              </table>
+
+
+              
+              
+					</div>
+	            </div>
+	        </div>
+	    </div>
+  </div>
+  
+
+
 </section>
 
         </div>
